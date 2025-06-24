@@ -51,7 +51,6 @@ class UARTBridge {
         const mockPath = "/dev/ESP32_MOCK";
 
         // Create the mock port FIRST
-        // TODO: fix typescript error
         SerialPortMock.binding.createPort(mockPath, {
           echo: true,
           record: true,
@@ -67,11 +66,10 @@ class UARTBridge {
         this.port.on("open", () => {
           console.log("🔌 [Mock] ESP32 port opened, simulating data...");
           setTimeout(() => {
+            // For mocks, we can write to ourselves to simulate ESP32 data
             if (this.port instanceof SerialPortMock) {
-              // Access mock-specific methods
-              // TODO: fix typescript error
-              this.port.port.emitData("TEMP:23.5\n");
-              this.port.port.emitData("STATUS:READY\n");
+              this.port.write("TEMP:23.5\n");
+              this.port.write("STATUS:READY\n");
             }
           }, 2000);
         });
