@@ -26,7 +26,6 @@ export default function RootLayout({
           <div className="flex h-screen">
             <Navigation />
 
-            {/* Main Content Area */}
             <main className="mb-16 flex-1 overflow-auto lg:mr-0 lg:mb-0 lg:ml-64">
               <div className="h-full">{children}</div>
             </main>

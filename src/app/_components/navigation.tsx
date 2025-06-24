@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { SystemTime } from "./systemTime";
 
 // Placeholder icon component
 const PlaceholderIcon = ({ className = "" }: { className?: string }) => (
@@ -24,26 +25,35 @@ export function Navigation() {
     <>
       {/* Desktop Navigation - Left Sidebar */}
       <nav className="lg:bg-dark-grey hidden lg:fixed lg:top-0 lg:left-0 lg:z-40 lg:flex lg:h-full lg:w-64 lg:flex-col lg:p-4 lg:text-white">
-        <div className="flex flex-col space-y-4">
+        <div className="flex h-full flex-col">
           <div className="mb-8 text-center text-xl font-bold">Gascon IHM</div>
-          {navigationItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center space-x-3 rounded-lg p-3 transition-colors ${
-                  isActive
-                    ? "bg-blue-600 text-white"
-                    : "text-gray-300 hover:bg-gray-700 hover:text-white"
-                }`}
-              >
-                <Icon />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
+
+          {/* Navigation Items */}
+          <div className="flex flex-1 flex-col space-y-4">
+            {navigationItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center space-x-3 rounded-lg p-3 transition-colors ${
+                    isActive
+                      ? "bg-blue-600 text-white"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                  }`}
+                >
+                  <Icon />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* System Time at Bottom */}
+          <div className="mt-auto border-t border-gray-600 pt-4">
+            <SystemTime />
+          </div>
         </div>
       </nav>
 
