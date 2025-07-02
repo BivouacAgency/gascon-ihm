@@ -21,11 +21,11 @@ const HomePageComponent: FC = () => {
         <div className="flex w-80 min-w-0 flex-grow basis-0 flex-col gap-4">
           <div className="bg-dark-grey border-grey relative flex-grow overflow-hidden rounded-lg border shadow-lg">
             <Image
-              src="/cuve_tmp.png"
+              src="/image_cuve_gascon_tmp.jpg"
               alt="Cuve"
-              width={750}
-              height={566}
-              className="object-cover"
+              width={2432}
+              height={1664}
+              className="h-full w-full object-cover"
             />
           </div>
 
