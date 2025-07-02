@@ -4,9 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans:
-    var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
 
   --color-grey: #545454;
   --color-dark-grey: #3f3e3e;
