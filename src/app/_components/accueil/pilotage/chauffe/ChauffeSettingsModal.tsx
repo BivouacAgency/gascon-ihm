@@ -25,6 +25,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import type { ChauffeData } from "./PilotageChauffeSection";
+import { SENSOR_NAMES } from "@/config/sensors";
 import { FaScrewdriverWrench, FaChevronDown } from "react-icons/fa6";
 
 interface ChauffeSettingsModalProps {
@@ -36,6 +37,7 @@ const formSchema = z.object({
   temperatureSet: z.number().min(60).max(100),
   durationSet: z.number().min(5).max(60),
   isR1PlusR2: z.boolean(),
+  capteur: z.enum(SENSOR_NAMES),
 });
 
 const temperatureOptions = [60, 65, 70, 75, 80, 85, 90, 95, 100];
@@ -57,11 +59,17 @@ export const ChauffeSettingsModal: FC<ChauffeSettingsModalProps> = ({
       temperatureSet: data.temperatureSet,
       durationSet: data.durationSet,
       isR1PlusR2: data.isR1PlusR2,
+      capteur: data.capteur,
     },
   });
 
   const onSubmit = (formData: z.infer<typeof formSchema>) => {
-    onSave(formData as ChauffeData);
+    // Merge form data with other properties from original data
+    const completeData: ChauffeData = {
+      ...data,
+      ...formData,
+    };
+    onSave(completeData);
     setIsOpen(false);
   };
 
@@ -82,6 +90,40 @@ export const ChauffeSettingsModal: FC<ChauffeSettingsModalProps> = ({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="capteur"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white">Capteur</FormLabel>
+                  <FormControl>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-between bg-white"
+                        >
+                          {field.value}
+                          <FaChevronDown className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="bg-white">
+                        {SENSOR_NAMES.map((sensor) => (
+                          <DropdownMenuItem
+                            key={sensor}
+                            onClick={() => field.onChange(sensor)}
+                            className="bg-white"
+                          >
+                            {sensor}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="temperatureSet"

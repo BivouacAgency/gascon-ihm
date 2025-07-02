@@ -1,10 +1,9 @@
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { type FC } from "react";
-import type { ChauffeData } from "./PilotageChauffeSection";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { formatElapsedTime } from "@/utils/time";
+import type { ChauffeData } from "./PilotageChauffeSection";
 
 interface PilotageChauffeInfoProps {
-  className?: string;
   data: ChauffeData;
 }
 
@@ -14,7 +13,7 @@ const PilotageChauffeInfo: FC<PilotageChauffeInfoProps> = ({ data }) => {
       <TableBody>
         <TableRow>
           <TableCell className="font-bold">Cible </TableCell>
-          <TableCell>TT-R1</TableCell>
+          <TableCell>{data.capteur}</TableCell>
           <TableCell>{data.temperatureSet}°C</TableCell>
         </TableRow>
         <TableRow>
