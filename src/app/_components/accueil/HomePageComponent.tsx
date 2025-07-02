@@ -23,7 +23,8 @@ const HomePageComponent: FC = () => {
             <Image
               src="/cuve_tmp.png"
               alt="Cuve"
-              fill
+              width={750}
+              height={566}
               className="object-cover"
             />
           </div>
