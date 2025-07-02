@@ -1,15 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
+import { useState, useEffect, type FC } from "react";
 
 interface SystemTimeProps {
   className?: string;
 }
 
-export function SystemTime({ className = "" }: SystemTimeProps) {
+export const SystemTime: FC<SystemTimeProps> = ({ className }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
+
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
@@ -34,10 +38,19 @@ export function SystemTime({ className = "" }: SystemTimeProps) {
     });
   };
 
+  if (!isClient) {
+    return (
+      <div className={cn("text-center font-mono text-sm", className)}>
+        <div className="text-white">--:--:--</div>
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
   return (
-    <div className={`text-center font-mono text-sm ${className}`}>
-      <div className="text-gray-300">{formatTime(currentTime)}</div>
-      <div className="text-gray-400">{formatDate(currentTime)}</div>
+    <div className={cn("text-center font-mono text-sm", className)}>
+      <div className="text-white opacity-60">{formatTime(currentTime)}</div>
+      <div className="text-white opacity-60">{formatDate(currentTime)}</div>
     </div>
   );
-}
+};

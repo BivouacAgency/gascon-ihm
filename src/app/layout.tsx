@@ -3,7 +3,7 @@ import "@/styles/globals.css";
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 import { TRPCReactProvider } from "@/trpc/react";
-import { Navigation } from "@/app/_components/navigation";
+import { Navigation } from "./_components/Navigation";
 
 export const metadata: Metadata = {
   title: "Gascon IHM",
@@ -24,11 +24,21 @@ export default function RootLayout({
       <body className="bg-grey min-h-screen">
         <TRPCReactProvider>
           <div className="flex h-screen">
-            <Navigation />
+            {/* Desktop Layout */}
+            <div className="hidden lg:flex lg:h-full lg:w-full">
+              <Navigation />
+              <main className="flex-1 overflow-auto">
+                <div className="h-full">{children}</div>
+              </main>
+            </div>
 
-            <main className="mb-16 flex-1 overflow-auto lg:mr-0 lg:mb-0 lg:ml-64">
-              <div className="h-full">{children}</div>
-            </main>
+            {/* Mobile Layout */}
+            <div className="flex h-full w-full lg:hidden">
+              <main className="mb-16 flex-1 overflow-auto">
+                <div className="h-full">{children}</div>
+              </main>
+              <Navigation />
+            </div>
           </div>
         </TRPCReactProvider>
       </body>
