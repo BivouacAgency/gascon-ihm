@@ -3,6 +3,7 @@ import type { FC } from "react";
 import PilotageMoteurSection from "./pilotage/moteur/PilotageMoteurSection";
 import PilotageChauffeSection from "./pilotage/chauffe/PilotageChauffeSection";
 import PilotageAgitationSection from "./pilotage/agitation/PilotageAgitationSection";
+import CapteursSection from "./capteurs/CapteursSection";
 
 const HomePageComponent: FC = () => {
   return (
@@ -17,8 +18,8 @@ const HomePageComponent: FC = () => {
             </div>
           </div>
 
-          <div className="bg-dark-grey border-grey rounded-lg border p-4 shadow-lg">
-            <h3 className="mb-4 text-lg font-semibold text-white">Capteurs</h3>
+          <div className="bg-dark-grey border-grey grow rounded-lg border p-4 shadow-lg">
+            <CapteursSection />
           </div>
         </div>
 
