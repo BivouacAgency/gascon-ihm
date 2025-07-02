@@ -30,7 +30,7 @@ const CapteursInfo: FC<CapteursInfoProps> = ({
     <div className={className}>
       <div className="mb-2 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-white">Capteurs</h3>
-        <StateLED isPlaying={isRecording} type="blueGrey" />
+        <StateLED isPlaying={isRecording} colorType="blueGrey" />
       </div>
       <Table className="text-white">
         <TableHeader>

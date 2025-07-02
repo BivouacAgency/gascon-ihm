@@ -24,8 +24,8 @@ const PilotageSectionWrapper: FC<PilotageSectionWrapperProps> = ({
 }) => {
   return (
     <div className={className}>
-      <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-white">{title}</h3>
+      <div className="mb-2 flex items-center justify-between text-white">
+        <h3 className="text-lg font-semibold">{title}</h3>
         <div className="flex items-center gap-2">
           {settingsModal}
           {playControl && (

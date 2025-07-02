@@ -3,17 +3,17 @@ import { cn } from "@/lib/utils";
 
 interface StateLEDProps {
   isPlaying: boolean;
-  type?: "blueGrey" | "redGreen";
+  colorType?: "blueGrey" | "redGreen";
   className?: string;
 }
 
 const StateLED: FC<StateLEDProps> = ({
   isPlaying,
-  type = "redGreen",
+  colorType = "redGreen",
   className,
 }) => {
-  const activeColor = type === "blueGrey" ? "bg-blue-400" : "bg-green-700";
-  const inactiveColor = type === "blueGrey" ? "bg-grey" : "bg-red-700";
+  const activeColor = colorType === "blueGrey" ? "bg-blue" : "bg-green";
+  const inactiveColor = colorType === "blueGrey" ? "bg-grey" : "bg-red";
 
   return (
     <div
