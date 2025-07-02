@@ -35,10 +35,9 @@ const HomePageComponent: FC = () => {
           </div>
 
           <div className="bg-dark-grey border-grey rounded-lg border p-4 shadow-lg">
-            <h3 className="mb-4 text-lg font-semibold text-white">
-              Information
-            </h3>
-            <p className="leading-relaxed text-white">Lorem ipsum dolor.</p>
+            <p className="text-center leading-relaxed text-white">
+              Lorem ipsum dolor: sit amet consecteur
+            </p>
           </div>
         </div>
       </div>
