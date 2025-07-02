@@ -1,22 +1,22 @@
 import { useState, type FC } from "react";
-import AgitateurSettingsModal from "./AgitateurSettingsModal";
-import PilotageAgitateurInfo from "./PilotageAgitateurInfo";
 import PilotageSectionWrapper from "../PilotageSectionWrapper";
+import { AgitationSettingsModal } from "./AgitationSettingsModal";
+import PilotageAgitationInfo from "./PilotageAgitationInfo";
 
-export interface AgitateurData {
+export interface AgitationData {
   speedSet: number;
   durationSet: number;
   elapsedTime: number;
 }
 
-interface PilotageAgitateurSectionProps {
+interface PilotageAgitationSectionProps {
   className?: string;
 }
 
-const PilotageAgitateurSection: FC<PilotageAgitateurSectionProps> = ({
+const PilotageAgitateurSection: FC<PilotageAgitationSectionProps> = ({
   className,
 }) => {
-  const [agitateurData, setAgitateurData] = useState<AgitateurData>({
+  const [agitateurData, setAgitateurData] = useState<AgitationData>({
     speedSet: 100,
     durationSet: 15,
     elapsedTime: 0,
@@ -24,7 +24,7 @@ const PilotageAgitateurSection: FC<PilotageAgitateurSectionProps> = ({
 
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const onDataChange = (newData: AgitateurData) => {
+  const onDataChange = (newData: AgitationData) => {
     setAgitateurData(newData);
   };
 
@@ -32,9 +32,9 @@ const PilotageAgitateurSection: FC<PilotageAgitateurSectionProps> = ({
     <PilotageSectionWrapper
       title="Agitation"
       settingsModal={
-        <AgitateurSettingsModal data={agitateurData} onSave={onDataChange} />
+        <AgitationSettingsModal data={agitateurData} onSave={onDataChange} />
       }
-      infoComponent={<PilotageAgitateurInfo data={agitateurData} />}
+      infoComponent={<PilotageAgitationInfo data={agitateurData} />}
       isPlaying={isPlaying}
       onPlayToggle={() => setIsPlaying(!isPlaying)}
       className={className}

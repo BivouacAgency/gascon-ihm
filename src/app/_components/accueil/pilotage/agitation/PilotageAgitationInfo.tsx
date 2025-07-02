@@ -1,20 +1,20 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { type FC } from "react";
-import type { AgitateurData } from "./PilotageAgitateurSection";
+import type { AgitationData } from "./PilotageAgitationSection";
 import { formatElapsedTime } from "@/utils/time";
 
-interface PilotageAgitateurInfoProps {
+interface PilotageAgitationInfoProps {
   className?: string;
-  data: AgitateurData;
+  data: AgitationData;
 }
 
-const PilotageAgitateurInfo: FC<PilotageAgitateurInfoProps> = ({ data }) => {
+const PilotageAgitationInfo: FC<PilotageAgitationInfoProps> = ({ data }) => {
   return (
     <Table className="mb-2 text-white">
       <TableBody>
         <TableRow>
           <TableCell className="font-bold">AG1 </TableCell>
-          <TableCell>{data.speedSet}°C</TableCell>
+          <TableCell>{data.speedSet}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell className="font-bold">Temps </TableCell>
@@ -26,4 +26,4 @@ const PilotageAgitateurInfo: FC<PilotageAgitateurInfoProps> = ({ data }) => {
   );
 };
 
-export default PilotageAgitateurInfo;
+export default PilotageAgitationInfo;

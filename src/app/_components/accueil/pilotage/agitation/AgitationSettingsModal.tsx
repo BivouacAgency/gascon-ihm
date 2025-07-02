@@ -8,19 +8,19 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState, type ChangeEvent, type FC } from "react";
-import type { AgitateurData } from "./PilotageAgitateurSection";
+import type { AgitationData } from "./PilotageAgitationSection";
 import { FaScrewdriverWrench } from "react-icons/fa6";
 
-interface AgitateurSettingsModalProps {
-  data: AgitateurData;
-  onSave: (newData: AgitateurData) => void;
+interface AgitationSettingsModalProps {
+  data: AgitationData;
+  onSave: (newData: AgitationData) => void;
 }
 
-export const AgitateurSettingsModal: FC<AgitateurSettingsModalProps> = ({
+export const AgitationSettingsModal: FC<AgitationSettingsModalProps> = ({
   data,
   onSave,
 }) => {
-  const [formData, setFormData] = useState<AgitateurData>(data);
+  const [formData, setFormData] = useState<AgitationData>(data);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSave = () => {
@@ -90,4 +90,4 @@ export const AgitateurSettingsModal: FC<AgitateurSettingsModalProps> = ({
   );
 };
 
-export default AgitateurSettingsModal;
+export default AgitationSettingsModal;
