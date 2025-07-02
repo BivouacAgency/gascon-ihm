@@ -1,6 +1,8 @@
 import Image from "next/image";
 import type { FC } from "react";
-import PilotageSection from "./pilotage/PilotageSection";
+import PilotageMoteurSection from "./pilotage/moteur/PilotageMoteurSection";
+import PilotageChauffeSection from "./pilotage/chauffe/PilotageChauffeSection";
+import PilotageAgitationSection from "./pilotage/agitation/PilotageAgitationSection";
 
 const HomePageComponent: FC = () => {
   return (
@@ -8,14 +10,16 @@ const HomePageComponent: FC = () => {
       <div className="flex h-full gap-4">
         <div className="flex min-w-96 flex-col gap-4">
           <div className="bg-dark-grey border-grey rounded-lg border p-4 shadow-lg">
-            <PilotageSection />
+            <div className="flex flex-col gap-4">
+              <PilotageChauffeSection />
+              <PilotageAgitationSection />
+              <PilotageMoteurSection />
+            </div>
           </div>
 
           <div className="bg-dark-grey border-grey rounded-lg border p-4 shadow-lg">
             <h3 className="mb-4 text-lg font-semibold text-white">Capteurs</h3>
           </div>
-
-          <div className="border-grey flex-grow rounded-lg border bg-white p-4 shadow-lg"></div>
         </div>
 
         <div className="flex w-80 min-w-0 flex-grow basis-0 flex-col gap-4">
