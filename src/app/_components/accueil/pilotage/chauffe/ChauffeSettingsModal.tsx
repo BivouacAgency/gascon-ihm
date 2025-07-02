@@ -101,18 +101,17 @@ export const ChauffeSettingsModal: FC<ChauffeSettingsModalProps> = ({
                       <DropdownMenuTrigger asChild>
                         <Button
                           variant="outline"
-                          className="w-full justify-between bg-white"
+                          className="w-full justify-between bg-white/90"
                         >
                           {field.value}
                           <FaChevronDown className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="bg-white">
+                      <DropdownMenuContent>
                         {SENSOR_NAMES.map((sensor) => (
                           <DropdownMenuItem
                             key={sensor}
                             onClick={() => field.onChange(sensor)}
-                            className="bg-white"
                           >
                             {sensor}
                           </DropdownMenuItem>
@@ -135,18 +134,17 @@ export const ChauffeSettingsModal: FC<ChauffeSettingsModalProps> = ({
                       <DropdownMenuTrigger asChild>
                         <Button
                           variant="outline"
-                          className="w-full justify-between bg-white"
+                          className="w-full justify-between bg-white/90"
                         >
                           {field.value}°C
                           <FaChevronDown className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="bg-white">
+                      <DropdownMenuContent>
                         {temperatureOptions.map((temp) => (
                           <DropdownMenuItem
                             key={temp}
                             onClick={() => field.onChange(temp)}
-                            className="bg-white"
                           >
                             {temp}°C
                           </DropdownMenuItem>
@@ -169,13 +167,13 @@ export const ChauffeSettingsModal: FC<ChauffeSettingsModalProps> = ({
                       <DropdownMenuTrigger asChild>
                         <Button
                           variant="outline"
-                          className="w-full justify-between bg-white"
+                          className="w-full justify-between bg-white/90"
                         >
                           {field.value} min
                           <FaChevronDown className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="bg-white">
+                      <DropdownMenuContent>
                         {durationOptions.map((duration) => (
                           <DropdownMenuItem
                             key={duration}
@@ -202,13 +200,13 @@ export const ChauffeSettingsModal: FC<ChauffeSettingsModalProps> = ({
                       <DropdownMenuTrigger asChild>
                         <Button
                           variant="outline"
-                          className="w-full justify-between bg-white"
+                          className="w-full justify-between bg-white/90"
                         >
                           {field.value ? "Oui" : "Non"}
                           <FaChevronDown className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="bg-white">
+                      <DropdownMenuContent>
                         {r1PlusR2Options.map((option) => (
                           <DropdownMenuItem
                             key={option.label}
@@ -229,11 +227,11 @@ export const ChauffeSettingsModal: FC<ChauffeSettingsModalProps> = ({
                 type="button"
                 variant="outline"
                 onClick={() => setIsOpen(false)}
-                className="bg-white text-black"
+                className="bg-white/90 text-black"
               >
                 Annuler
               </Button>
-              <Button type="submit" className="bg-white text-black">
+              <Button type="submit" className="bg-white/90 text-black">
                 Sauvegarder
               </Button>
             </div>

@@ -87,18 +87,17 @@ export const AgitationSettingsModal: FC<AgitationSettingsModalProps> = ({
                       <DropdownMenuTrigger asChild>
                         <Button
                           variant="outline"
-                          className="w-full justify-between bg-white"
+                          className="w-full justify-between bg-white/90"
                         >
                           {field.value} tr/min
                           <FaChevronDown className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="bg-white">
+                      <DropdownMenuContent>
                         {speedOptions.map((speed) => (
                           <DropdownMenuItem
                             key={speed}
                             onClick={() => field.onChange(speed)}
-                            className="bg-white"
                           >
                             {speed} tr/min
                           </DropdownMenuItem>
@@ -121,13 +120,13 @@ export const AgitationSettingsModal: FC<AgitationSettingsModalProps> = ({
                       <DropdownMenuTrigger asChild>
                         <Button
                           variant="outline"
-                          className="w-full justify-between bg-white"
+                          className="w-full justify-between bg-white/90"
                         >
                           {field.value} min
                           <FaChevronDown className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="bg-white">
+                      <DropdownMenuContent>
                         {durationOptions.map((duration) => (
                           <DropdownMenuItem
                             key={duration}
@@ -148,11 +147,11 @@ export const AgitationSettingsModal: FC<AgitationSettingsModalProps> = ({
                 type="button"
                 variant="outline"
                 onClick={() => setIsOpen(false)}
-                className="bg-white text-black"
+                className="bg-white/90 text-black"
               >
                 Annuler
               </Button>
-              <Button type="submit" className="bg-white text-black">
+              <Button type="submit" className="bg-white/90 text-black">
                 Sauvegarder
               </Button>
             </div>
