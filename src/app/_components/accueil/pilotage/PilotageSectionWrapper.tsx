@@ -2,12 +2,16 @@ import { type FC, type ReactNode } from "react";
 import StartStopButton from "../../StartStopButton";
 import StateLED from "../../StateLED";
 
-interface PilotageSectionWrapperProps {
-  title: string;
-  settingsModal: ReactNode;
-  infoComponent: ReactNode;
+interface PlayControl {
   isPlaying: boolean;
   onPlayToggle: () => void;
+}
+
+interface PilotageSectionWrapperProps {
+  title: string;
+  infoComponent: ReactNode;
+  settingsModal?: ReactNode;
+  playControl?: PlayControl;
   className?: string;
 }
 
@@ -15,8 +19,7 @@ const PilotageSectionWrapper: FC<PilotageSectionWrapperProps> = ({
   title,
   settingsModal,
   infoComponent,
-  isPlaying,
-  onPlayToggle,
+  playControl,
   className,
 }) => {
   return (
@@ -25,8 +28,15 @@ const PilotageSectionWrapper: FC<PilotageSectionWrapperProps> = ({
         <h3 className="text-lg font-semibold text-white">{title}</h3>
         <div className="flex items-center gap-2">
           {settingsModal}
-          <StartStopButton isPlaying={isPlaying} onClick={onPlayToggle} />
-          <StateLED isPlaying={isPlaying} />
+          {playControl && (
+            <>
+              <StartStopButton
+                isPlaying={playControl.isPlaying}
+                onClick={playControl.onPlayToggle}
+              />
+              <StateLED isPlaying={playControl.isPlaying} />
+            </>
+          )}
         </div>
       </div>
       {infoComponent}

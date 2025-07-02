@@ -37,8 +37,10 @@ const PilotageChauffeSection: FC<PilotageChauffeSectionProps> = ({
         <ChauffeSettingsModal data={chauffeData} onSave={onDataChange} />
       }
       infoComponent={<PilotageChauffeInfo data={chauffeData} />}
-      isPlaying={isPlaying}
-      onPlayToggle={() => setIsPlaying(!isPlaying)}
+      playControl={{
+        isPlaying,
+        onPlayToggle: () => setIsPlaying(!isPlaying),
+      }}
       className={className}
     />
   );

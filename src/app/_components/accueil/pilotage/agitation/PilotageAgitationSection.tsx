@@ -13,10 +13,10 @@ interface PilotageAgitationSectionProps {
   className?: string;
 }
 
-const PilotageAgitateurSection: FC<PilotageAgitationSectionProps> = ({
+const PilotageAgitationSection: FC<PilotageAgitationSectionProps> = ({
   className,
 }) => {
-  const [agitateurData, setAgitateurData] = useState<AgitationData>({
+  const [agitationData, setAgitationData] = useState<AgitationData>({
     speedSet: 100,
     durationSet: 15,
     elapsedTime: 0,
@@ -25,21 +25,23 @@ const PilotageAgitateurSection: FC<PilotageAgitationSectionProps> = ({
   const [isPlaying, setIsPlaying] = useState(false);
 
   const onDataChange = (newData: AgitationData) => {
-    setAgitateurData(newData);
+    setAgitationData(newData);
   };
 
   return (
     <PilotageSectionWrapper
       title="Agitation"
       settingsModal={
-        <AgitationSettingsModal data={agitateurData} onSave={onDataChange} />
+        <AgitationSettingsModal data={agitationData} onSave={onDataChange} />
       }
-      infoComponent={<PilotageAgitationInfo data={agitateurData} />}
-      isPlaying={isPlaying}
-      onPlayToggle={() => setIsPlaying(!isPlaying)}
+      infoComponent={<PilotageAgitationInfo data={agitationData} />}
+      playControl={{
+        isPlaying,
+        onPlayToggle: () => setIsPlaying(!isPlaying),
+      }}
       className={className}
     />
   );
 };
 
-export default PilotageAgitateurSection;
+export default PilotageAgitationSection;
