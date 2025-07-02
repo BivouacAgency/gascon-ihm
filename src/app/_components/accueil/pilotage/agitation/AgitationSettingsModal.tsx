@@ -7,33 +7,56 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState, type ChangeEvent, type FC } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import { useState, type FC } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import type { AgitationData } from "./PilotageAgitationSection";
-import { FaScrewdriverWrench } from "react-icons/fa6";
+import { FaScrewdriverWrench, FaChevronDown } from "react-icons/fa6";
 
 interface AgitationSettingsModalProps {
   data: AgitationData;
   onSave: (newData: AgitationData) => void;
 }
 
+const formSchema = z.object({
+  speedSet: z.number().min(10).max(100),
+  durationSet: z.number().min(5).max(60),
+});
+
+const speedOptions = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+const durationOptions = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
+
 export const AgitationSettingsModal: FC<AgitationSettingsModalProps> = ({
   data,
   onSave,
 }) => {
-  const [formData, setFormData] = useState<AgitationData>(data);
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleSave = () => {
-    onSave(formData);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      speedSet: data.speedSet,
+      durationSet: data.durationSet,
+    },
+  });
+
+  const onSubmit = (formData: z.infer<typeof formSchema>) => {
+    onSave(formData as AgitationData);
     setIsOpen(false);
-  };
-
-  const handleSpeedChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, speedSet: Number(e.target.value) });
-  };
-
-  const handleDurationChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, durationSet: Number(e.target.value) });
   };
 
   return (
@@ -43,48 +66,98 @@ export const AgitationSettingsModal: FC<AgitationSettingsModalProps> = ({
           <FaScrewdriverWrench />
         </Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
+      <DialogContent className="bg-dark-grey">
+        <DialogHeader className="text-white">
           <DialogTitle>Paramètres d&apos;Agitation</DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-gray-300">
             Modifiez les paramètres du programme d&apos;agitation.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <label htmlFor="speed" className="text-right text-sm font-medium">
-              Vitesse (tr/min)
-            </label>
-            <input
-              id="speed"
-              type="number"
-              value={formData.speedSet}
-              onChange={handleSpeedChange}
-              className="col-span-3 rounded-md border border-gray-300 px-3 py-2"
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="speedSet"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white">Vitesse (tr/min)</FormLabel>
+                  <FormControl>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-between bg-white"
+                        >
+                          {field.value} tr/min
+                          <FaChevronDown className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="bg-white">
+                        {speedOptions.map((speed) => (
+                          <DropdownMenuItem
+                            key={speed}
+                            onClick={() => field.onChange(speed)}
+                            className="bg-white"
+                          >
+                            {speed} tr/min
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </FormControl>
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <label
-              htmlFor="duration"
-              className="text-right text-sm font-medium"
-            >
-              Durée (min)
-            </label>
-            <input
-              id="duration"
-              type="number"
-              value={formData.durationSet}
-              onChange={handleDurationChange}
-              className="col-span-3 rounded-md border border-gray-300 px-3 py-2"
+
+            <FormField
+              control={form.control}
+              name="durationSet"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white">Durée (min)</FormLabel>
+                  <FormControl>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-between bg-white"
+                        >
+                          {field.value} min
+                          <FaChevronDown className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="bg-white">
+                        {durationOptions.map((duration) => (
+                          <DropdownMenuItem
+                            key={duration}
+                            onClick={() => field.onChange(duration)}
+                          >
+                            {duration} min
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </FormControl>
+                </FormItem>
+              )}
             />
-          </div>
-        </div>
-        <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={() => setIsOpen(false)}>
-            Annuler
-          </Button>
-          <Button onClick={handleSave}>Sauvegarder</Button>
-        </div>
+
+            <div className="flex justify-end gap-2 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsOpen(false)}
+                className="bg-white text-black"
+              >
+                Annuler
+              </Button>
+              <Button type="submit" className="bg-white text-black">
+                Sauvegarder
+              </Button>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
