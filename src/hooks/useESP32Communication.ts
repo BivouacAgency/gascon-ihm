@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { io, type Socket } from "socket.io-client";
 
-// Types for ESP32 communication
 interface ESP32Message {
   type: "sensor" | "status" | "error";
   data: unknown;
@@ -27,7 +26,6 @@ export function useESP32Communication(): UseESP32CommunicationReturn {
   const [connectionError, setConnectionError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Connect to the UART bridge Socket.io server
     const newSocket = io("http://localhost:8081");
 
     newSocket.on("connect", () => {
@@ -58,7 +56,6 @@ export function useESP32Communication(): UseESP32CommunicationReturn {
 
     setSocket(newSocket);
 
-    // Cleanup on unmount
     return () => {
       newSocket.close();
     };
