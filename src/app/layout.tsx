@@ -3,7 +3,7 @@ import "@/styles/globals.css";
 import { type Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import { TRPCReactProvider } from "@/trpc/react";
-import { Navigation } from "./_components/Navigation";
+import { Navbar } from "./_components/Navbar";
 
 export const metadata: Metadata = {
   title: "Gascon IHM",
@@ -26,7 +26,7 @@ export default function RootLayout({
           <div className="flex h-screen">
             {/* Desktop Layout */}
             <div className="hidden lg:flex lg:h-full lg:w-full">
-              <Navigation />
+              <Navbar />
               <main className="flex-1 overflow-auto">
                 <div className="h-full">{children}</div>
               </main>
@@ -37,7 +37,7 @@ export default function RootLayout({
               <main className="mb-16 flex-1 overflow-auto">
                 <div className="h-full">{children}</div>
               </main>
-              <Navigation />
+              <Navbar />
             </div>
           </div>
         </TRPCReactProvider>
