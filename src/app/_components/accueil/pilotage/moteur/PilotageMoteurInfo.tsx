@@ -12,7 +12,7 @@ interface PilotageMoteurInfoProps {
 const PilotageMoteurInfo: FC<PilotageMoteurInfoProps> = ({ data }) => {
   // Placeholder function for buttons (functionality to be implemented later)
   const handleButtonClick = ({ motorId }: { motorId: number }) => {
-    // TODO: Implement motor/valve control logic
+    // BACKEND: Implement motor/valve control logic
     console.log("Motor ID:", motorId);
   };
 

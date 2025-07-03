@@ -27,11 +27,12 @@ const PilotageChauffeSection: FC<PilotageChauffesSectionProps> = ({
     elapsedTime: 8 * 60 + 30, // 8:30 in seconds (8 minutes 30 seconds)
     isR1PlusR2: true,
     temperatureActual: 78,
-    isPlaying: true,
+    isPlaying: false,
     capteur: "TT-R1",
   });
 
   const handlePlayToggle = () => {
+    // BACKEND: send request to start/stop the program
     setChauffeData({ ...chauffeData, isPlaying: !chauffeData.isPlaying });
   };
 

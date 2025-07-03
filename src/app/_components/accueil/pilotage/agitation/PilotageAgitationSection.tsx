@@ -28,6 +28,11 @@ const PilotageAgitationSection: FC<PilotageAgitationSectionProps> = ({
     setAgitationData(newData);
   };
 
+  const handlePlayToggle = () => {
+    // BACKEND: send request to start/stop the program
+    setIsPlaying(!isPlaying);
+  };
+
   return (
     <PilotageSectionWrapper
       title="Agitation"
@@ -37,7 +42,7 @@ const PilotageAgitationSection: FC<PilotageAgitationSectionProps> = ({
       infoComponent={<PilotageAgitationInfo data={agitationData} />}
       playControl={{
         isPlaying,
-        onPlayToggle: () => setIsPlaying(!isPlaying),
+        onPlayToggle: handlePlayToggle,
       }}
       className={className}
     />
