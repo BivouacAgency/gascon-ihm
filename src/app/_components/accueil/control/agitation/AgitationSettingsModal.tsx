@@ -26,7 +26,7 @@ import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import type { AgitationData } from "./AgitationControlSection";
+import type { AgitationData } from "@/types/AgitationData";
 import { FaScrewdriverWrench, FaChevronDown } from "react-icons/fa6";
 
 interface AgitationSettingsModalProps {

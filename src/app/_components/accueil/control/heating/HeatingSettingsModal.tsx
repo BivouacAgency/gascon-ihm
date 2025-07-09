@@ -28,7 +28,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { SENSOR_NAMES } from "@/config/sensors";
 import { FaScrewdriverWrench, FaChevronDown } from "react-icons/fa6";
-import type { HeatingData } from "./HeatingControlSection";
+import type { HeatingData } from "@/types/HeatingData";
 
 interface HeatingSettingsModalProps {
   data: HeatingData;

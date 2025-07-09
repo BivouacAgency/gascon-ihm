@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { type FC } from "react";
-import type { EngineData } from "./EngineControlSection";
+import type { EngineData } from "@/types/EngineData";
 import { StartStopButton } from "@/app/_components/StartStopButton";
 import { StateLED } from "@/app/_components/StateLED";
 
@@ -10,10 +10,9 @@ interface EngineControlInfoProps {
 }
 
 export const EngineControlInfo: FC<EngineControlInfoProps> = ({ data }) => {
-  // Placeholder function for buttons (functionality to be implemented later)
-  const handleButtonClick = ({ motorId }: { motorId: number }) => {
-    // BACKEND: Implement motor/valve control logic
-    console.log("Motor ID:", motorId);
+  const handleButtonClick = ({ engineId }: { engineId: number }) => {
+    // BACKEND: Implement engine/valve control logic
+    console.log("Engine ID:", engineId);
   };
 
   return (
@@ -23,7 +22,7 @@ export const EngineControlInfo: FC<EngineControlInfoProps> = ({ data }) => {
           <TableCell className="flex items-center gap-2 font-bold">
             <StartStopButton
               isPlaying={data.m1Status}
-              onClick={() => handleButtonClick({ motorId: 1 })}
+              onClick={() => handleButtonClick({ engineId: 1 })}
             />
             M1{" "}
           </TableCell>
@@ -37,7 +36,7 @@ export const EngineControlInfo: FC<EngineControlInfoProps> = ({ data }) => {
           <TableCell className="flex items-center gap-2 font-bold">
             <StartStopButton
               isPlaying={data.ev1Status}
-              onClick={() => handleButtonClick({ motorId: 2 })}
+              onClick={() => handleButtonClick({ engineId: 2 })}
             />
             EV1{" "}
           </TableCell>
@@ -51,7 +50,7 @@ export const EngineControlInfo: FC<EngineControlInfoProps> = ({ data }) => {
           <TableCell className="flex items-center gap-2 font-bold">
             <StartStopButton
               isPlaying={data.ev2Status}
-              onClick={() => handleButtonClick({ motorId: 3 })}
+              onClick={() => handleButtonClick({ engineId: 3 })}
             />
             EV2{" "}
           </TableCell>
@@ -65,7 +64,7 @@ export const EngineControlInfo: FC<EngineControlInfoProps> = ({ data }) => {
           <TableCell className="flex items-center gap-2 font-bold">
             <StartStopButton
               isPlaying={data.ev3Status}
-              onClick={() => handleButtonClick({ motorId: 4 })}
+              onClick={() => handleButtonClick({ engineId: 4 })}
             />
             EV3{" "}
           </TableCell>

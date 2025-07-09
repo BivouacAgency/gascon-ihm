@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { formatElapsedTime } from "@/utils/time";
-import type { HeatingData } from "./HeatingControlSection";
+import type { HeatingData } from "@/types/HeatingData";
 
 interface HeatingControlInfoProps {
   data: HeatingData;

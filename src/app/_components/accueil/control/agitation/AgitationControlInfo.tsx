@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { type FC } from "react";
-import type { AgitationData } from "./AgitationControlSection";
+import type { AgitationData } from "@/types/AgitationData";
 import { formatElapsedTime } from "@/utils/time";
 
 interface AgitationControlInfoProps {

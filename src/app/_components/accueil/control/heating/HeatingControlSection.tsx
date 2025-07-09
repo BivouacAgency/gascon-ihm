@@ -4,17 +4,7 @@ import { useState, type FC } from "react";
 import { HeatingSettingsModal } from "./HeatingSettingsModal";
 import { HeatingControlInfo } from "./HeatingControlInfo";
 import { ControlSectionWrapper } from "../ControlSectionWrapper";
-import type { SensorName } from "@/config/sensors";
-
-export interface HeatingData {
-  temperatureSet: number;
-  durationSet: number; // in minutes
-  elapsedTime: number; // in seconds (elapsed time since program start)
-  isR1PlusR2: boolean;
-  temperatureActual: number;
-  isPlaying: boolean;
-  capteur: SensorName;
-}
+import type { HeatingData } from "@/types/HeatingData";
 
 interface HeatingControlSectionProps {
   className?: string;
@@ -23,7 +13,7 @@ interface HeatingControlSectionProps {
 export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
   className,
 }) => {
-  const [chauffeData, setChauffeData] = useState<HeatingData>({
+  const [heatingData, setHeatingData] = useState<HeatingData>({
     temperatureSet: 80,
     durationSet: 45,
     elapsedTime: 8 * 60 + 30, // 8:30 in seconds (8 minutes 30 seconds)
@@ -35,24 +25,24 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
 
   const handlePlayToggle = () => {
     // BACKEND: send request to start/stop the program
-    setChauffeData({ ...chauffeData, isPlaying: !chauffeData.isPlaying });
+    setHeatingData({ ...heatingData, isPlaying: !heatingData.isPlaying });
   };
 
   const handleSaveSettings = (newData: HeatingData) => {
-    setChauffeData(newData);
+    setHeatingData(newData);
   };
 
   return (
     <ControlSectionWrapper
       title="Chauffe"
       settingsModal={
-        <HeatingSettingsModal data={chauffeData} onSave={handleSaveSettings} />
+        <HeatingSettingsModal data={heatingData} onSave={handleSaveSettings} />
       }
       playControl={{
-        isPlaying: chauffeData.isPlaying,
+        isPlaying: heatingData.isPlaying,
         onPlayToggle: handlePlayToggle,
       }}
-      infoComponent={<HeatingControlInfo data={chauffeData} />}
+      infoComponent={<HeatingControlInfo data={heatingData} />}
       className={className}
     />
   );

@@ -4,12 +4,7 @@ import { useState, type FC } from "react";
 import { ControlSectionWrapper } from "../ControlSectionWrapper";
 import { AgitationSettingsModal } from "./AgitationSettingsModal";
 import { AgitationControlInfo } from "./AgitationControlInfo";
-
-export interface AgitationData {
-  speedSet: number;
-  durationSet: number;
-  elapsedTime: number;
-}
+import type { AgitationData } from "@/types/AgitationData";
 
 interface AgitationControlSectionProps {
   className?: string;

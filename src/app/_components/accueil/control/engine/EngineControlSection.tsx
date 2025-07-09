@@ -3,13 +3,7 @@
 import { useState, type FC } from "react";
 import { EngineControlInfo } from "./EngineControlInfo";
 import { ControlSectionWrapper } from "../ControlSectionWrapper";
-
-export interface EngineData {
-  m1Status: boolean;
-  ev1Status: boolean;
-  ev2Status: boolean;
-  ev3Status: boolean;
-}
+import type { EngineData } from "@/types/EngineData";
 
 interface EngineControlSectionProps {
   className?: string;
@@ -18,7 +12,7 @@ interface EngineControlSectionProps {
 export const EngineControlSection: FC<EngineControlSectionProps> = ({
   className,
 }) => {
-  const [moteurData] = useState<EngineData>({
+  const [engineData] = useState<EngineData>({
     m1Status: false,
     ev1Status: false,
     ev2Status: false,
@@ -28,7 +22,7 @@ export const EngineControlSection: FC<EngineControlSectionProps> = ({
   return (
     <ControlSectionWrapper
       title="Moteur"
-      infoComponent={<EngineControlInfo data={moteurData} />}
+      infoComponent={<EngineControlInfo data={engineData} />}
       className={className}
     />
   );
