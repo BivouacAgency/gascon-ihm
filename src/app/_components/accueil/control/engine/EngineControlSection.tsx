@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, type FC } from "react";
 import EngineControlInfo from "./EngineControlInfo";
 import ControlSectionWrapper from "../PilotageSectionWrapper";
