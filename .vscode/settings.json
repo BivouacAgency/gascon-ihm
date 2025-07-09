@@ -1,0 +1,15 @@
+{
+  "tailwindCSS.includeLanguages": {
+    "css": "css"
+  },
+  "tailwindCSS.files.exclude": [
+    "**/.git/**",
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/dist/**"
+  ],
+  "tailwindCSS.validate": true,
+  "files.associations": {
+    "globals.css": "tailwindcss"
+  }
+}
