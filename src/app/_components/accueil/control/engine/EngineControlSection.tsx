@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, type FC } from "react";
-import EngineControlInfo from "./EngineControlInfo";
-import ControlSectionWrapper from "../PilotageSectionWrapper";
+import { EngineControlInfo } from "./EngineControlInfo";
+import { ControlSectionWrapper } from "../PilotageSectionWrapper";
 
 export interface EngineData {
   m1Status: boolean;
@@ -15,7 +15,9 @@ interface EngineControlSectionProps {
   className?: string;
 }
 
-const EngineControlSection: FC<EngineControlSectionProps> = ({ className }) => {
+export const EngineControlSection: FC<EngineControlSectionProps> = ({
+  className,
+}) => {
   const [moteurData] = useState<EngineData>({
     m1Status: false,
     ev1Status: false,
@@ -31,5 +33,3 @@ const EngineControlSection: FC<EngineControlSectionProps> = ({ className }) => {
     />
   );
 };
-
-export default EngineControlSection;

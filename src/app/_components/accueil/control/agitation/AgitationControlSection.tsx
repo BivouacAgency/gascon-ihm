@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, type FC } from "react";
-import ControlSectionWrapper from "../PilotageSectionWrapper";
+import { ControlSectionWrapper } from "../PilotageSectionWrapper";
 import { AgitationSettingsModal } from "./AgitationSettingsModal";
-import AgitationControlInfo from "./AgitationControlInfo";
+import { AgitationControlInfo } from "./AgitationControlInfo";
 
 export interface AgitationData {
   speedSet: number;
@@ -15,7 +15,7 @@ interface AgitationControlSectionProps {
   className?: string;
 }
 
-const AgitationControlSection: FC<AgitationControlSectionProps> = ({
+export const AgitationControlSection: FC<AgitationControlSectionProps> = ({
   className,
 }) => {
   const [agitationData, setAgitationData] = useState<AgitationData>({
@@ -50,5 +50,3 @@ const AgitationControlSection: FC<AgitationControlSectionProps> = ({
     />
   );
 };
-
-export default AgitationControlSection;

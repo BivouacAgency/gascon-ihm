@@ -163,5 +163,3 @@ export const AgitationSettingsModal: FC<AgitationSettingsModalProps> = ({
     </Dialog>
   );
 };
-
-export default AgitationSettingsModal;

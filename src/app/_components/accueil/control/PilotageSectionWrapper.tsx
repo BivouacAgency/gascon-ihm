@@ -1,6 +1,6 @@
 import { type FC, type ReactNode } from "react";
-import StartStopButton from "../../StartStopButton";
-import StateLED from "../../StateLED";
+import { StartStopButton } from "../../StartStopButton";
+import { StateLED } from "../../StateLED";
 
 interface PlayControl {
   isPlaying: boolean;
@@ -15,7 +15,7 @@ interface ControlSectionWrapperProps {
   className?: string;
 }
 
-const ControlSectionWrapper: FC<ControlSectionWrapperProps> = ({
+export const ControlSectionWrapper: FC<ControlSectionWrapperProps> = ({
   title,
   settingsModal,
   infoComponent,
@@ -43,5 +43,3 @@ const ControlSectionWrapper: FC<ControlSectionWrapperProps> = ({
     </div>
   );
 };
-
-export default ControlSectionWrapper;

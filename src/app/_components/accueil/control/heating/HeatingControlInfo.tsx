@@ -7,7 +7,7 @@ interface HeatingControlInfoProps {
   data: HeatingData;
 }
 
-const HeatingControlInfo: FC<HeatingControlInfoProps> = ({ data }) => {
+export const HeatingControlInfo: FC<HeatingControlInfoProps> = ({ data }) => {
   return (
     <Table className="mb-2 text-white">
       <TableBody>
@@ -29,5 +29,3 @@ const HeatingControlInfo: FC<HeatingControlInfoProps> = ({ data }) => {
     </Table>
   );
 };
-
-export default HeatingControlInfo;

@@ -243,5 +243,3 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
     </Dialog>
   );
 };
-
-export default HeatingSettingsModal;

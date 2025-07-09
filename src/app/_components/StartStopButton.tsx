@@ -1,6 +1,7 @@
 import { type FC } from "react";
 import { FaPlay, FaStop } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface StartStopButtonProps {
   isPlaying: boolean;
@@ -8,16 +9,14 @@ interface StartStopButtonProps {
   className?: string;
 }
 
-const StartStopButton: FC<StartStopButtonProps> = ({
+export const StartStopButton: FC<StartStopButtonProps> = ({
   isPlaying,
   onClick,
   className,
 }) => {
   return (
-    <Button className={`bg-grey ${className ?? ""}`} onClick={onClick}>
+    <Button className={cn("bg-grey", className)} onClick={onClick}>
       {isPlaying ? <FaStop /> : <FaPlay />}
     </Button>
   );
 };
-
-export default StartStopButton;

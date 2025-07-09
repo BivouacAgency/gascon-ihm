@@ -1,15 +1,15 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { type FC } from "react";
 import type { EngineData } from "./EngineControlSection";
-import StartStopButton from "@/app/_components/StartStopButton";
-import StateLED from "@/app/_components/StateLED";
+import { StartStopButton } from "@/app/_components/StartStopButton";
+import { StateLED } from "@/app/_components/StateLED";
 
 interface EngineControlInfoProps {
   className?: string;
   data: EngineData;
 }
 
-const EngineControlInfo: FC<EngineControlInfoProps> = ({ data }) => {
+export const EngineControlInfo: FC<EngineControlInfoProps> = ({ data }) => {
   // Placeholder function for buttons (functionality to be implemented later)
   const handleButtonClick = ({ motorId }: { motorId: number }) => {
     // BACKEND: Implement motor/valve control logic
@@ -79,5 +79,3 @@ const EngineControlInfo: FC<EngineControlInfoProps> = ({ data }) => {
     </Table>
   );
 };
-
-export default EngineControlInfo;

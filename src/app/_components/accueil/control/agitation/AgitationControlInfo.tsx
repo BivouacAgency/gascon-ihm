@@ -8,7 +8,9 @@ interface AgitationControlInfoProps {
   data: AgitationData;
 }
 
-const AgitationControlInfo: FC<AgitationControlInfoProps> = ({ data }) => {
+export const AgitationControlInfo: FC<AgitationControlInfoProps> = ({
+  data,
+}) => {
   return (
     <Table className="mb-2 text-white">
       <TableBody>
@@ -25,5 +27,3 @@ const AgitationControlInfo: FC<AgitationControlInfoProps> = ({ data }) => {
     </Table>
   );
 };
-
-export default AgitationControlInfo;

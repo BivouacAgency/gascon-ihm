@@ -2,8 +2,8 @@
 
 import { useState, type FC } from "react";
 import { HeatingSettingsModal } from "./HeatingSettingsModal";
-import HeatingControlInfo from "./HeatingControlInfo";
-import ControlSectionWrapper from "../PilotageSectionWrapper";
+import { HeatingControlInfo } from "./HeatingControlInfo";
+import { ControlSectionWrapper } from "../PilotageSectionWrapper";
 import type { SensorName } from "@/config/sensors";
 
 export interface HeatingData {
@@ -20,7 +20,7 @@ interface HeatingControlSectionProps {
   className?: string;
 }
 
-const HeatingControlSection: FC<HeatingControlSectionProps> = ({
+export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
   className,
 }) => {
   const [chauffeData, setChauffeData] = useState<HeatingData>({
@@ -57,5 +57,3 @@ const HeatingControlSection: FC<HeatingControlSectionProps> = ({
     />
   );
 };
-
-export default HeatingControlSection;

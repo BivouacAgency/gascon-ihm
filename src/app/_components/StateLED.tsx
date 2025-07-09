@@ -7,7 +7,7 @@ interface StateLEDProps {
   className?: string;
 }
 
-const StateLED: FC<StateLEDProps> = ({
+export const StateLED: FC<StateLEDProps> = ({
   isPlaying,
   colorType = "redGreen",
   className,
@@ -25,5 +25,3 @@ const StateLED: FC<StateLEDProps> = ({
     />
   );
 };
-
-export default StateLED;
