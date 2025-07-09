@@ -2,13 +2,13 @@
 
 import { useEffect, useState, type FC } from "react";
 import { SENSOR_NAMES } from "@/config/sensors";
-import SensorsInfo, { type SensorData } from "./SensorsInfo";
+import { SensorsInfo, type SensorData } from "./SensorsInfo";
 
 interface SensorsSectionProps {
   className?: string;
 }
 
-const SensorsSection: FC<SensorsSectionProps> = ({ className }) => {
+export const SensorsSection: FC<SensorsSectionProps> = ({ className }) => {
   // Sensors mock data state - using centralized sensor names
   const [sensorsData] = useState<SensorData[]>([
     { sensorName: SENSOR_NAMES[0], value: "85.2", unit: "°C" }, // TT-R1
@@ -33,5 +33,3 @@ const SensorsSection: FC<SensorsSectionProps> = ({ className }) => {
     />
   );
 };
-
-export default SensorsSection;

@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { type FC } from "react";
-import StateLED from "@/app/_components/StateLED";
+import { StateLED } from "@/app/_components/StateLED";
 
 export interface SensorData {
   sensorName: string;
@@ -21,7 +21,7 @@ interface SensorsInfoProps {
   isRecording: boolean;
 }
 
-const SensorsInfo: FC<SensorsInfoProps> = ({
+export const SensorsInfo: FC<SensorsInfoProps> = ({
   data,
   isRecording,
   className,
@@ -58,5 +58,3 @@ const SensorsInfo: FC<SensorsInfoProps> = ({
     </div>
   );
 };
-
-export default SensorsInfo;

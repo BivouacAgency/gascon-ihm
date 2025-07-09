@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
-import AgitationControlSection from "./_components/accueil/control/agitation/AgitationControlSection";
-import EngineControlSection from "./_components/accueil/control/engine/EngineControlSection";
-import HeatingControlSection from "./_components/accueil/control/heating/HeatingControlSection";
-import SensorsSection from "./_components/accueil/sensors/SensorsSection";
+import { AgitationControlSection } from "./_components/accueil/control/agitation/AgitationControlSection";
+import { EngineControlSection } from "./_components/accueil/control/engine/EngineControlSection";
+import { HeatingControlSection } from "./_components/accueil/control/heating/HeatingControlSection";
+import { SensorsSection } from "./_components/accueil/sensors/SensorsSection";
 
 export default function Home() {
   return (
