@@ -8,7 +8,7 @@ import SensorsSection from "./_components/accueil/sensors/SensorsSection";
 export default function Home() {
   return (
     <div className="bg-grey h-full p-4">
-      <div className="flex h-full gap-4">
+      <div className="flex h-full flex-col gap-4 md:flex-row">
         <div className="flex min-w-96 flex-col gap-4">
           <Card className="flex flex-col gap-4">
             <HeatingControlSection />
@@ -21,7 +21,7 @@ export default function Home() {
           </Card>
         </div>
 
-        <div className="flex w-80 min-w-0 flex-grow basis-0 flex-col gap-4">
+        <div className="flex min-w-0 flex-grow basis-0 flex-col gap-4">
           <Card className="relative flex-grow overflow-hidden">
             <Image
               src="/image_cuve_gascon_tmp.jpg"
