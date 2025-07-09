@@ -9,29 +9,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import type { AgitationData } from "@/types/AgitationData";
-import { FaScrewdriverWrench, FaChevronDown } from "react-icons/fa6";
+import { FaScrewdriverWrench } from "react-icons/fa6";
 import {
   AGITATOR_DURATION_OPTIONS,
   AGITATOR_SPEED_OPTIONS,
 } from "@/config/agitator/config";
+import { AppFormSelectField } from "@/app/_components/AppFormSelectField";
 
 interface AgitationSettingsModalProps {
   data: AgitationData;
@@ -42,9 +31,6 @@ const formSchema = z.object({
   speedSet: z.number().min(10).max(100),
   durationSet: z.number().min(5).max(60),
 });
-
-const speedOptions = AGITATOR_SPEED_OPTIONS;
-const durationOptions = AGITATOR_DURATION_OPTIONS;
 
 export const AgitationSettingsModal: FC<AgitationSettingsModalProps> = ({
   data,
@@ -75,89 +61,38 @@ export const AgitationSettingsModal: FC<AgitationSettingsModalProps> = ({
       <DialogContent className="bg-dark-grey">
         <DialogHeader className="text-white">
           <DialogTitle>Paramètres d&apos;Agitation</DialogTitle>
-          <DialogDescription className="text-gray-300">
+          <DialogDescription className="text-white">
             Modifiez les paramètres du programme d&apos;agitation.
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
+            <AppFormSelectField
               control={form.control}
               name="speedSet"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white">Vitesse (tr/min)</FormLabel>
-                  <FormControl>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="w-full justify-between bg-white/90"
-                        >
-                          {field.value} tr/min
-                          <FaChevronDown className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        {speedOptions.map((speed) => (
-                          <DropdownMenuItem
-                            key={speed}
-                            onClick={() => field.onChange(speed)}
-                          >
-                            {speed} tr/min
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </FormControl>
-                </FormItem>
-              )}
+              label="Vitesse (tr/min)"
+              options={AGITATOR_SPEED_OPTIONS}
+              unit=" tr/min"
             />
 
-            <FormField
+            <AppFormSelectField
               control={form.control}
               name="durationSet"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white">Durée (min)</FormLabel>
-                  <FormControl>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="w-full justify-between bg-white/90"
-                        >
-                          {field.value} min
-                          <FaChevronDown className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        {durationOptions.map((duration) => (
-                          <DropdownMenuItem
-                            key={duration}
-                            onClick={() => field.onChange(duration)}
-                          >
-                            {duration} min
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </FormControl>
-                </FormItem>
-              )}
+              label="Durée (min)"
+              options={AGITATOR_DURATION_OPTIONS}
+              unit=" min"
             />
 
             <div className="flex justify-end gap-2 pt-4">
               <Button
                 type="button"
-                variant="outline"
+                variant="default"
                 onClick={() => setIsOpen(false)}
-                className="bg-white/90 text-black"
               >
                 Annuler
               </Button>
-              <Button type="submit" className="bg-white/90 text-black">
+              <Button type="submit" variant="default">
                 Sauvegarder
               </Button>
             </div>

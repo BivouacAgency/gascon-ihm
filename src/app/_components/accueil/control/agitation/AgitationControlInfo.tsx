@@ -16,7 +16,7 @@ export const AgitationControlInfo: FC<AgitationControlInfoProps> = ({
       <TableBody>
         <TableRow>
           <TableCell className="font-bold">AG1 </TableCell>
-          <TableCell>{data.speedSet}</TableCell>
+          <TableCell>{data.speedSet} tr/min</TableCell>
         </TableRow>
         <TableRow>
           <TableCell className="font-bold">Temps </TableCell>

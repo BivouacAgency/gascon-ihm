@@ -1,5 +1,6 @@
 "use client";
 
+import { AppFormSelectField } from "@/app/_components/AppFormSelectField";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,30 +10,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { useState, type FC } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { SENSOR_NAMES } from "@/config/sensors/config";
-import { FaScrewdriverWrench, FaChevronDown } from "react-icons/fa6";
-import type { HeatingData } from "@/types/HeatingData";
+import { Form } from "@/components/ui/form";
 import {
   ENGINE_DURATION_OPTIONS,
   ENGINE_TEMPERATURE_OPTIONS,
 } from "@/config/engine/config";
+import { SENSOR_NAMES } from "@/config/sensors/config";
+import type { HeatingData } from "@/types/HeatingData";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, type FC } from "react";
+import { useForm } from "react-hook-form";
+import { FaScrewdriverWrench } from "react-icons/fa6";
+import { z } from "zod";
 
 interface HeatingSettingsModalProps {
   data: HeatingData;
@@ -46,13 +35,8 @@ const formSchema = z.object({
   capteur: z.enum(SENSOR_NAMES),
 });
 
-const temperatureOptions = ENGINE_TEMPERATURE_OPTIONS;
-const durationOptions = ENGINE_DURATION_OPTIONS;
-
-const r1PlusR2Options = [
-  { label: "Oui", value: true },
-  { label: "Non", value: false },
-];
+// Boolean options as booleans for the simplified component
+const r1PlusR2Options = [true, false];
 
 export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
   data,
@@ -90,155 +74,58 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
       <DialogContent className="bg-dark-grey">
         <DialogHeader className="text-white">
           <DialogTitle>Paramètres de Chauffe</DialogTitle>
-          <DialogDescription className="text-gray-300">
+          <DialogDescription className="text-white">
             Modifiez les paramètres du programme de chauffe.
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="capteur"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white">Capteur</FormLabel>
-                  <FormControl>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="w-full justify-between bg-white/90"
-                        >
-                          {field.value}
-                          <FaChevronDown className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        {SENSOR_NAMES.map((sensor) => (
-                          <DropdownMenuItem
-                            key={sensor}
-                            onClick={() => field.onChange(sensor)}
-                          >
-                            {sensor}
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+            {/* First row - Capteur and Température */}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <AppFormSelectField
+                control={form.control}
+                name="capteur"
+                label="Capteur"
+                options={[...SENSOR_NAMES]}
+              />
 
-            <FormField
-              control={form.control}
-              name="temperatureSet"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white">Température (°C)</FormLabel>
-                  <FormControl>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="w-full justify-between bg-white/90"
-                        >
-                          {field.value}°C
-                          <FaChevronDown className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        {temperatureOptions.map((temp) => (
-                          <DropdownMenuItem
-                            key={temp}
-                            onClick={() => field.onChange(temp)}
-                          >
-                            {temp}°C
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+              <AppFormSelectField
+                control={form.control}
+                name="temperatureSet"
+                label="Température (°C)"
+                options={ENGINE_TEMPERATURE_OPTIONS}
+                unit="°C"
+              />
+            </div>
 
-            <FormField
-              control={form.control}
-              name="durationSet"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white">Durée (min)</FormLabel>
-                  <FormControl>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="w-full justify-between bg-white/90"
-                        >
-                          {field.value} min
-                          <FaChevronDown className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        {durationOptions.map((duration) => (
-                          <DropdownMenuItem
-                            key={duration}
-                            onClick={() => field.onChange(duration)}
-                          >
-                            {duration} min
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+            {/* Second row - Durée and R1+R2 */}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <AppFormSelectField
+                control={form.control}
+                name="durationSet"
+                label="Durée (min)"
+                options={ENGINE_DURATION_OPTIONS}
+                unit=" min"
+              />
 
-            <FormField
-              control={form.control}
-              name="isR1PlusR2"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white">R1+R2</FormLabel>
-                  <FormControl>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="w-full justify-between bg-white/90"
-                        >
-                          {field.value ? "Oui" : "Non"}
-                          <FaChevronDown className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        {r1PlusR2Options.map((option) => (
-                          <DropdownMenuItem
-                            key={option.label}
-                            onClick={() => field.onChange(option.value)}
-                          >
-                            {option.label}
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+              <AppFormSelectField
+                control={form.control}
+                name="isR1PlusR2"
+                label="R1+R2"
+                options={r1PlusR2Options}
+              />
+            </div>
 
             <div className="flex justify-end gap-2 pt-4">
               <Button
                 type="button"
-                variant="outline"
+                variant="default"
                 onClick={() => setIsOpen(false)}
-                className="bg-white/90 text-black"
               >
                 Annuler
               </Button>
-              <Button type="submit" className="bg-white/90 text-black">
+              <Button type="submit" variant="default">
                 Sauvegarder
               </Button>
             </div>
