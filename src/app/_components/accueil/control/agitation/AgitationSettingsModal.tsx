@@ -28,6 +28,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import type { AgitationData } from "@/types/AgitationData";
 import { FaScrewdriverWrench, FaChevronDown } from "react-icons/fa6";
+import {
+  AGITATOR_DURATION_OPTIONS,
+  AGITATOR_SPEED_OPTIONS,
+} from "@/config/agitator/config";
 
 interface AgitationSettingsModalProps {
   data: AgitationData;
@@ -39,8 +43,8 @@ const formSchema = z.object({
   durationSet: z.number().min(5).max(60),
 });
 
-const speedOptions = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
-const durationOptions = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
+const speedOptions = AGITATOR_SPEED_OPTIONS;
+const durationOptions = AGITATOR_DURATION_OPTIONS;
 
 export const AgitationSettingsModal: FC<AgitationSettingsModalProps> = ({
   data,

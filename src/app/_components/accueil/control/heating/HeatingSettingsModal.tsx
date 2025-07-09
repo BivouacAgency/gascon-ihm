@@ -26,9 +26,13 @@ import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { SENSOR_NAMES } from "@/config/sensors";
+import { SENSOR_NAMES } from "@/config/sensors/config";
 import { FaScrewdriverWrench, FaChevronDown } from "react-icons/fa6";
 import type { HeatingData } from "@/types/HeatingData";
+import {
+  ENGINE_DURATION_OPTIONS,
+  ENGINE_TEMPERATURE_OPTIONS,
+} from "@/config/engine/config";
 
 interface HeatingSettingsModalProps {
   data: HeatingData;
@@ -42,8 +46,9 @@ const formSchema = z.object({
   capteur: z.enum(SENSOR_NAMES),
 });
 
-const temperatureOptions = [60, 65, 70, 75, 80, 85, 90, 95, 100];
-const durationOptions = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
+const temperatureOptions = ENGINE_TEMPERATURE_OPTIONS;
+const durationOptions = ENGINE_DURATION_OPTIONS;
+
 const r1PlusR2Options = [
   { label: "Oui", value: true },
   { label: "Non", value: false },

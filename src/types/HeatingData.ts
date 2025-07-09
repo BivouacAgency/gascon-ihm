@@ -1,4 +1,4 @@
-import type { SensorName } from "@/config/sensors";
+import type { SensorName } from "@/config/sensors/config";
 
 export interface HeatingData {
   temperatureSet: number;

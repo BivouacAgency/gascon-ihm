@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FC } from "react";
-import { SENSOR_NAMES } from "@/config/sensors";
+import { SENSOR_NAMES } from "@/config/sensors/config";
 import { SensorsInfo, type SensorData } from "./SensorsInfo";
 
 interface SensorsSectionProps {
