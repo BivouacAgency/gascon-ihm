@@ -1,5 +1,6 @@
 "use client";
 
+import { Card } from "@/components/ui/card";
 import { useESP32Communication } from "@/hooks/useESP32Communication";
 
 export default function Test() {
@@ -31,7 +32,7 @@ export default function Test() {
     <div className="bg-grey h-full p-6">
       <div className="flex h-full gap-6">
         <div className="min-w-0 flex-shrink-0 flex-grow basis-0">
-          <div className="bg-dark-grey border-grey mb-6 rounded-lg border p-6 shadow-lg">
+          <Card className="mb-6">
             <h2 className="mb-4 text-xl font-semibold text-white">
               ESP32 Connection
             </h2>
@@ -48,9 +49,9 @@ export default function Test() {
             {connectionError && (
               <p className="mt-2 text-red-400">Error: {connectionError}</p>
             )}
-          </div>
+          </Card>
 
-          <div className="bg-dark-grey border-grey mb-6 rounded-lg border p-6 shadow-lg">
+          <Card className="mb-6">
             <h2 className="mb-4 text-xl font-semibold text-white">Controls</h2>
             <div className="flex flex-wrap gap-4">
               <button
@@ -75,11 +76,16 @@ export default function Test() {
                 Get Status
               </button>
             </div>
-          </div>
+          </Card>
+          <Card>
+            <p className="text-center leading-relaxed text-white">
+              Lorem ipsum dolor: sit amet consecteur
+            </p>
+          </Card>
         </div>
 
         <div className="w-80 min-w-0 flex-shrink">
-          <div className="bg-dark-grey border-grey h-fit rounded-lg border p-6 shadow-lg">
+          <Card className="h-fit">
             <h2 className="mb-4 text-xl font-semibold text-white">
               Latest ESP32 Data
             </h2>
@@ -105,7 +111,7 @@ export default function Test() {
             ) : (
               <p className="text-white">No data received yet</p>
             )}
-          </div>
+          </Card>
         </div>
       </div>
     </div>
