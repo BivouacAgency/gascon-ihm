@@ -2,7 +2,7 @@
 
 import { useState, type FC } from "react";
 import { EngineControlInfo } from "./EngineControlInfo";
-import { ControlSectionWrapper } from "../PilotageSectionWrapper";
+import { ControlSectionWrapper } from "../ControlSectionWrapper";
 
 export interface EngineData {
   m1Status: boolean;

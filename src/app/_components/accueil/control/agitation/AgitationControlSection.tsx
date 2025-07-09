@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FC } from "react";
-import { ControlSectionWrapper } from "../PilotageSectionWrapper";
+import { ControlSectionWrapper } from "../ControlSectionWrapper";
 import { AgitationSettingsModal } from "./AgitationSettingsModal";
 import { AgitationControlInfo } from "./AgitationControlInfo";
 

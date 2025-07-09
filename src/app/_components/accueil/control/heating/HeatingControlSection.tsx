@@ -3,7 +3,7 @@
 import { useState, type FC } from "react";
 import { HeatingSettingsModal } from "./HeatingSettingsModal";
 import { HeatingControlInfo } from "./HeatingControlInfo";
-import { ControlSectionWrapper } from "../PilotageSectionWrapper";
+import { ControlSectionWrapper } from "../ControlSectionWrapper";
 import type { SensorName } from "@/config/sensors";
 
 export interface HeatingData {
