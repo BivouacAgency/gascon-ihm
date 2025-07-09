@@ -5,6 +5,7 @@ import { HeatingSettingsModal } from "./HeatingSettingsModal";
 import { HeatingControlInfo } from "./HeatingControlInfo";
 import { ControlSectionWrapper } from "../ControlSectionWrapper";
 import type { HeatingData } from "@/types/HeatingData";
+import { useESP32Communication } from "@/hooks/useESP32Communication";
 
 interface HeatingControlSectionProps {
   className?: string;
@@ -13,6 +14,8 @@ interface HeatingControlSectionProps {
 export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
   className,
 }) => {
+  const { sendCommand } = useESP32Communication();
+
   const [heatingData, setHeatingData] = useState<HeatingData>({
     temperatureSet: 80,
     durationSet: 45,
@@ -24,8 +27,27 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
   });
 
   const handlePlayToggle = () => {
-    // BACKEND: send request to start/stop the program
-    setHeatingData({ ...heatingData, isPlaying: !heatingData.isPlaying });
+    const newIsPlaying = !heatingData.isPlaying;
+
+    // If toggling to play, send heating data to backend
+    if (newIsPlaying) {
+      sendCommand({
+        type: "command",
+        payload: {
+          action: "start_heating",
+          data: heatingData,
+        },
+      });
+    } else {
+      sendCommand({
+        type: "command",
+        payload: {
+          action: "stop_heating",
+        },
+      });
+    }
+
+    setHeatingData({ ...heatingData, isPlaying: newIsPlaying });
   };
 
   const handleSaveSettings = (newData: HeatingData) => {
