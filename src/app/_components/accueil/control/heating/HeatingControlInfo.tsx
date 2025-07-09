@@ -18,8 +18,12 @@ export const HeatingControlInfo: FC<HeatingControlInfoProps> = ({ data }) => {
         </TableRow>
         <TableRow>
           <TableCell className="font-bold">Temps </TableCell>
-          <TableCell>{formatElapsedTime(data.elapsedTime)}</TableCell>
-          <TableCell>{data.durationSet} min</TableCell>
+          <TableCell>{formatElapsedTime(data.elapsedTime.second)}</TableCell>
+          <TableCell>
+            {formatElapsedTime(
+              data.durationSet.minute * 60 + data.durationSet.second,
+            )}
+          </TableCell>
         </TableRow>
         <TableRow>
           <TableCell className="font-bold">R1+R2 </TableCell>

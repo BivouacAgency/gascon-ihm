@@ -1,6 +1,7 @@
 "use client";
 
 import { AppFormSelectField } from "@/app/_components/AppFormSelectField";
+import { AppDurationField } from "@/app/_components/AppDurationField";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,10 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import {
-  ENGINE_DURATION_OPTIONS,
-  ENGINE_TEMPERATURE_OPTIONS,
-} from "@/config/engine/config";
+import { ENGINE_TEMPERATURE_OPTIONS } from "@/config/engine/config";
 import { SENSOR_NAMES } from "@/config/sensors/config";
 import type { HeatingData } from "@/types/HeatingData";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,6 +20,7 @@ import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import { FaScrewdriverWrench } from "react-icons/fa6";
 import { z } from "zod";
+import { Time } from "@internationalized/date";
 
 interface HeatingSettingsModalProps {
   data: HeatingData;
@@ -30,7 +29,7 @@ interface HeatingSettingsModalProps {
 
 const formSchema = z.object({
   temperatureSet: z.number().min(60).max(100),
-  durationSet: z.number().min(5).max(60),
+  durationSet: z.custom<Time>((value) => value instanceof Time),
   isR1PlusR2: z.boolean(),
   capteur: z.enum(SENSOR_NAMES),
 });
@@ -101,12 +100,10 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
 
             {/* Second row - Durée and R1+R2 */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <AppFormSelectField
+              <AppDurationField
                 control={form.control}
                 name="durationSet"
-                label="Durée (min)"
-                options={ENGINE_DURATION_OPTIONS}
-                unit=" min"
+                label="Durée"
               />
 
               <AppFormSelectField

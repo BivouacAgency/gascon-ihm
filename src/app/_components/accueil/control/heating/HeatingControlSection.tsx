@@ -6,6 +6,7 @@ import { HeatingControlInfo } from "./HeatingControlInfo";
 import { ControlSectionWrapper } from "../ControlSectionWrapper";
 import type { HeatingData } from "@/types/HeatingData";
 import { useESP32Communication } from "@/hooks/useESP32Communication";
+import { Time } from "@internationalized/date";
 
 interface HeatingControlSectionProps {
   className?: string;
@@ -18,8 +19,8 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
 
   const [heatingData, setHeatingData] = useState<HeatingData>({
     temperatureSet: 80,
-    durationSet: 45,
-    elapsedTime: 8 * 60 + 30, // 8:30 in seconds (8 minutes 30 seconds)
+    durationSet: new Time(0, 45, 0), // 45 minutes, 0 seconds
+    elapsedTime: new Time(0, 8, 30),
     isR1PlusR2: true,
     temperatureActual: 78,
     isPlaying: false,
@@ -31,11 +32,21 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
 
     // If toggling to play, send heating data to backend
     if (newIsPlaying) {
+      // Convert Time objects to total miliseconds for the backend
+      const durationInMiliseconds =
+        heatingData.durationSet.minute * 60 * 1000 +
+        heatingData.durationSet.second * 1000;
+
       sendCommand({
         type: "command",
         payload: {
           action: "start_heating",
-          data: heatingData,
+          data: {
+            durationSet: durationInMiliseconds,
+            temperatureSet: heatingData.temperatureSet,
+            capteur: heatingData.capteur,
+            isR1PlusR2: heatingData.isR1PlusR2,
+          },
         },
       });
     } else {
