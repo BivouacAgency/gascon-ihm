@@ -7,7 +7,7 @@ interface PlayControl {
   onPlayToggle: () => void;
 }
 
-interface PilotageSectionWrapperProps {
+interface ControlSectionWrapperProps {
   title: string;
   infoComponent: ReactNode;
   settingsModal?: ReactNode;
@@ -15,7 +15,7 @@ interface PilotageSectionWrapperProps {
   className?: string;
 }
 
-const PilotageSectionWrapper: FC<PilotageSectionWrapperProps> = ({
+const ControlSectionWrapper: FC<ControlSectionWrapperProps> = ({
   title,
   settingsModal,
   infoComponent,
@@ -44,4 +44,4 @@ const PilotageSectionWrapper: FC<PilotageSectionWrapperProps> = ({
   );
 };
 
-export default PilotageSectionWrapper;
+export default ControlSectionWrapper;

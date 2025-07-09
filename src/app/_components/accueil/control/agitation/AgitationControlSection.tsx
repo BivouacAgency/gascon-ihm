@@ -1,7 +1,7 @@
 import { useState, type FC } from "react";
-import PilotageSectionWrapper from "../PilotageSectionWrapper";
+import ControlSectionWrapper from "../PilotageSectionWrapper";
 import { AgitationSettingsModal } from "./AgitationSettingsModal";
-import PilotageAgitationInfo from "./PilotageAgitationInfo";
+import AgitationControlInfo from "./AgitationControlInfo";
 
 export interface AgitationData {
   speedSet: number;
@@ -9,11 +9,11 @@ export interface AgitationData {
   elapsedTime: number;
 }
 
-interface PilotageAgitationSectionProps {
+interface AgitationControlSectionProps {
   className?: string;
 }
 
-const PilotageAgitationSection: FC<PilotageAgitationSectionProps> = ({
+const AgitationControlSection: FC<AgitationControlSectionProps> = ({
   className,
 }) => {
   const [agitationData, setAgitationData] = useState<AgitationData>({
@@ -34,12 +34,12 @@ const PilotageAgitationSection: FC<PilotageAgitationSectionProps> = ({
   };
 
   return (
-    <PilotageSectionWrapper
+    <ControlSectionWrapper
       title="Agitation"
       settingsModal={
         <AgitationSettingsModal data={agitationData} onSave={onDataChange} />
       }
-      infoComponent={<PilotageAgitationInfo data={agitationData} />}
+      infoComponent={<AgitationControlInfo data={agitationData} />}
       playControl={{
         isPlaying,
         onPlayToggle: handlePlayToggle,
@@ -49,4 +49,4 @@ const PilotageAgitationSection: FC<PilotageAgitationSectionProps> = ({
   );
 };
 
-export default PilotageAgitationSection;
+export default AgitationControlSection;

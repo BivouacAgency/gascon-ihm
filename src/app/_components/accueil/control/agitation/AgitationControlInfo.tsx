@@ -1,14 +1,14 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { type FC } from "react";
-import type { AgitationData } from "./PilotageAgitationSection";
+import type { AgitationData } from "./AgitationControlSection";
 import { formatElapsedTime } from "@/utils/time";
 
-interface PilotageAgitationInfoProps {
+interface AgitationControlInfoProps {
   className?: string;
   data: AgitationData;
 }
 
-const PilotageAgitationInfo: FC<PilotageAgitationInfoProps> = ({ data }) => {
+const AgitationControlInfo: FC<AgitationControlInfoProps> = ({ data }) => {
   return (
     <Table className="mb-2 text-white">
       <TableBody>
@@ -26,4 +26,4 @@ const PilotageAgitationInfo: FC<PilotageAgitationInfoProps> = ({ data }) => {
   );
 };
 
-export default PilotageAgitationInfo;
+export default AgitationControlInfo;

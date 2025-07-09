@@ -1,13 +1,13 @@
 import { type FC } from "react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { formatElapsedTime } from "@/utils/time";
-import type { ChauffeData } from "./PilotageChauffeSection";
+import type { HeatingData } from "./HeatingControlSection";
 
-interface PilotageChauffeInfoProps {
-  data: ChauffeData;
+interface HeatingControlInfoProps {
+  data: HeatingData;
 }
 
-const PilotageChauffeInfo: FC<PilotageChauffeInfoProps> = ({ data }) => {
+const HeatingControlInfo: FC<HeatingControlInfoProps> = ({ data }) => {
   return (
     <Table className="mb-2 text-white">
       <TableBody>
@@ -30,4 +30,4 @@ const PilotageChauffeInfo: FC<PilotageChauffeInfoProps> = ({ data }) => {
   );
 };
 
-export default PilotageChauffeInfo;
+export default HeatingControlInfo;

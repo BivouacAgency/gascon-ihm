@@ -1,9 +1,9 @@
 import Image from "next/image";
 import type { FC } from "react";
-import PilotageMoteurSection from "./pilotage/moteur/PilotageMoteurSection";
-import PilotageChauffeSection from "./pilotage/chauffe/PilotageChauffeSection";
-import PilotageAgitationSection from "./pilotage/agitation/PilotageAgitationSection";
-import CapteursSection from "./capteurs/CapteursSection";
+import AgitationControlSection from "./control/agitation/AgitationControlSection";
+import EngineControlSection from "./control/engine/EngineControlSection";
+import SensorsSection from "./sensors/SensorsSection";
+import HeatingControlSection from "./control/heating/HeatingControlSection";
 
 const HomePageComponent: FC = () => {
   return (
@@ -12,14 +12,14 @@ const HomePageComponent: FC = () => {
         <div className="flex min-w-96 flex-col gap-4">
           <div className="bg-dark-grey border-grey rounded-lg border p-4 shadow-lg">
             <div className="flex flex-col gap-4">
-              <PilotageChauffeSection />
-              <PilotageAgitationSection />
-              <PilotageMoteurSection />
+              <HeatingControlSection />
+              <AgitationControlSection />
+              <EngineControlSection />
             </div>
           </div>
 
           <div className="bg-dark-grey border-grey grow rounded-lg border p-4 shadow-lg">
-            <CapteursSection />
+            <SensorsSection />
           </div>
         </div>
 

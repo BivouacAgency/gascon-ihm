@@ -1,10 +1,10 @@
 import { useState, type FC } from "react";
-import { ChauffeSettingsModal } from "./ChauffeSettingsModal";
-import PilotageChauffeInfo from "./PilotageChauffeInfo";
-import PilotageSectionWrapper from "../PilotageSectionWrapper";
+import { HeatingSettingsModal } from "./HeatingSettingsModal";
+import HeatingControlInfo from "./HeatingControlInfo";
+import ControlSectionWrapper from "../PilotageSectionWrapper";
 import type { SensorName } from "@/config/sensors";
 
-export interface ChauffeData {
+export interface HeatingData {
   temperatureSet: number;
   durationSet: number; // in minutes
   elapsedTime: number; // in seconds (elapsed time since program start)
@@ -14,14 +14,14 @@ export interface ChauffeData {
   capteur: SensorName;
 }
 
-interface PilotageChauffesSectionProps {
+interface HeatingControlSectionProps {
   className?: string;
 }
 
-const PilotageChauffeSection: FC<PilotageChauffesSectionProps> = ({
+const HeatingControlSection: FC<HeatingControlSectionProps> = ({
   className,
 }) => {
-  const [chauffeData, setChauffeData] = useState<ChauffeData>({
+  const [chauffeData, setChauffeData] = useState<HeatingData>({
     temperatureSet: 80,
     durationSet: 45,
     elapsedTime: 8 * 60 + 30, // 8:30 in seconds (8 minutes 30 seconds)
@@ -36,24 +36,24 @@ const PilotageChauffeSection: FC<PilotageChauffesSectionProps> = ({
     setChauffeData({ ...chauffeData, isPlaying: !chauffeData.isPlaying });
   };
 
-  const handleSaveSettings = (newData: ChauffeData) => {
+  const handleSaveSettings = (newData: HeatingData) => {
     setChauffeData(newData);
   };
 
   return (
-    <PilotageSectionWrapper
+    <ControlSectionWrapper
       title="Chauffe"
       settingsModal={
-        <ChauffeSettingsModal data={chauffeData} onSave={handleSaveSettings} />
+        <HeatingSettingsModal data={chauffeData} onSave={handleSaveSettings} />
       }
       playControl={{
         isPlaying: chauffeData.isPlaying,
         onPlayToggle: handlePlayToggle,
       }}
-      infoComponent={<PilotageChauffeInfo data={chauffeData} />}
+      infoComponent={<HeatingControlInfo data={chauffeData} />}
       className={className}
     />
   );
 };
 
-export default PilotageChauffeSection;
+export default HeatingControlSection;

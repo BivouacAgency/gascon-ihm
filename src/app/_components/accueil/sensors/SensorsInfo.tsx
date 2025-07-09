@@ -9,19 +9,19 @@ import {
 import { type FC } from "react";
 import StateLED from "@/app/_components/StateLED";
 
-export interface CapteurData {
+export interface SensorData {
   sensorName: string;
   value: string;
   unit: string;
 }
 
-interface CapteursInfoProps {
+interface SensorsInfoProps {
   className?: string;
-  data: CapteurData[];
+  data: SensorData[];
   isRecording: boolean;
 }
 
-const CapteursInfo: FC<CapteursInfoProps> = ({
+const SensorsInfo: FC<SensorsInfoProps> = ({
   data,
   isRecording,
   className,
@@ -59,4 +59,4 @@ const CapteursInfo: FC<CapteursInfoProps> = ({
   );
 };
 
-export default CapteursInfo;
+export default SensorsInfo;

@@ -24,13 +24,13 @@ import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import type { ChauffeData } from "./PilotageChauffeSection";
 import { SENSOR_NAMES } from "@/config/sensors";
 import { FaScrewdriverWrench, FaChevronDown } from "react-icons/fa6";
+import type { HeatingData } from "./HeatingControlSection";
 
-interface ChauffeSettingsModalProps {
-  data: ChauffeData;
-  onSave: (newData: ChauffeData) => void;
+interface HeatingSettingsModalProps {
+  data: HeatingData;
+  onSave: (newData: HeatingData) => void;
 }
 
 const formSchema = z.object({
@@ -47,7 +47,7 @@ const r1PlusR2Options = [
   { label: "Non", value: false },
 ];
 
-export const ChauffeSettingsModal: FC<ChauffeSettingsModalProps> = ({
+export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
   data,
   onSave,
 }) => {
@@ -65,7 +65,7 @@ export const ChauffeSettingsModal: FC<ChauffeSettingsModalProps> = ({
 
   const onSubmit = (formData: z.infer<typeof formSchema>) => {
     // Merge form data with other properties from original data
-    const completeData: ChauffeData = {
+    const completeData: HeatingData = {
       ...data,
       ...formData,
     };
@@ -242,4 +242,4 @@ export const ChauffeSettingsModal: FC<ChauffeSettingsModalProps> = ({
   );
 };
 
-export default ChauffeSettingsModal;
+export default HeatingSettingsModal;
