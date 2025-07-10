@@ -1,7 +1,7 @@
 "use client";
 
-import { AppFormSelectField } from "@/app/_components/AppFormSelectField";
-import { AppDurationField } from "@/app/_components/AppDurationField";
+import { AppFormSelectField } from "@/app/_components/form-components/AppFormSelectField";
+import { AppDurationField } from "@/app/_components/form-components/AppDurationField";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import { FaScrewdriverWrench } from "react-icons/fa6";
 import { z } from "zod";
 import { Time } from "@internationalized/date";
+import { AppInputUnitField } from "@/app/_components/form-components/AppInputUnitField";
 
 interface HeatingSettingsModalProps {
   data: HeatingData;
@@ -89,11 +90,10 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
                 options={[...SENSOR_NAMES]}
               />
 
-              <AppFormSelectField
+              <AppInputUnitField
                 control={form.control}
                 name="temperatureSet"
-                label="Température (°C)"
-                options={ENGINE_TEMPERATURE_OPTIONS}
+                label="Température"
                 unit="°C"
               />
             </div>
