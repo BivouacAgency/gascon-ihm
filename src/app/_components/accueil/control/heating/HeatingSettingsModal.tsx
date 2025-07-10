@@ -1,7 +1,8 @@
 "use client";
 
-import { AppFormSelectField } from "@/app/_components/form-components/AppFormSelectField";
 import { AppDurationField } from "@/app/_components/form-components/AppDurationField";
+import { AppFormSelectField } from "@/app/_components/form-components/AppFormSelectField";
+import { AppInputUnitField } from "@/app/_components/form-components/AppInputUnitField";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,16 +13,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { ENGINE_TEMPERATURE_OPTIONS } from "@/config/engine/config";
 import { SENSOR_NAMES } from "@/config/sensors/config";
 import type { HeatingData } from "@/types/HeatingData";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Time } from "@internationalized/date";
 import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import { FaScrewdriverWrench } from "react-icons/fa6";
 import { z } from "zod";
-import { Time } from "@internationalized/date";
-import { AppInputUnitField } from "@/app/_components/form-components/AppInputUnitField";
 
 interface HeatingSettingsModalProps {
   data: HeatingData;
