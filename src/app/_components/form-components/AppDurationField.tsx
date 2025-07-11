@@ -40,6 +40,7 @@ export const AppDurationField = <
             <FormControl>
               <TimeField
                 className="*:not-first:mt-2"
+                {...field}
                 value={field.value}
                 onChange={field.onChange}
                 granularity="second"

@@ -44,6 +44,7 @@ export const AppInputUnitField = <
                     id={id}
                     className="-me-px rounded-e-none border-none shadow-none"
                     type="number"
+                    {...field}
                     value={field.value}
                     onChange={(e) => {
                       const value = e.target.value;
