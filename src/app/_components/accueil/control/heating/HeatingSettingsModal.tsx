@@ -28,13 +28,12 @@ interface HeatingSettingsModalProps {
 }
 
 const formSchema = z.object({
-  temperatureSet: z.number().min(60).max(100),
+  temperatureSet: z.number(),
   durationSet: z.custom<Time>((value) => value instanceof Time),
   isR1PlusR2: z.boolean(),
   capteur: z.enum(SENSOR_NAMES),
 });
 
-// Boolean options as booleans for the simplified component
 const r1PlusR2Options = [true, false];
 
 export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
@@ -54,13 +53,16 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
   });
 
   const onSubmit = (formData: z.infer<typeof formSchema>) => {
-    // Merge form data with other properties from original data
     const completeData: HeatingData = {
       ...data,
       ...formData,
     };
     onSave(completeData);
     setIsOpen(false);
+  };
+
+  const onError = (errors: unknown) => {
+    console.log("Form validation errors:", errors);
   };
 
   return (
@@ -79,7 +81,10 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit, onError)}
+            className="space-y-4"
+          >
             {/* First row - Capteur and Température */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <AppFormSelectField

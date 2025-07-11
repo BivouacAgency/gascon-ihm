@@ -43,9 +43,13 @@ export const AppInputUnitField = <
                   <Input
                     id={id}
                     className="-me-px rounded-e-none border-none shadow-none"
-                    type="text"
+                    type="number"
                     value={field.value}
-                    onChange={field.onChange}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const numValue = value === "" ? undefined : Number(value);
+                      field.onChange(numValue);
+                    }}
                   />
                   <span className="bg-grey z-10 inline-flex items-center rounded-e-md border border-none px-3 text-sm text-white">
                     {unit}
