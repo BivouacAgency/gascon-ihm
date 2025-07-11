@@ -14,27 +14,27 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { SENSOR_NAMES } from "@/config/sensors/config";
-import type { HeatingData } from "@/types/HeatingData";
+import {
+  HeatingDataSchema,
+  R1R2Options,
+  type HeatingData,
+} from "@/types/HeatingData";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Time } from "@internationalized/date";
 import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import { FaScrewdriverWrench } from "react-icons/fa6";
-import { z } from "zod";
+import type { z } from "zod";
 
 interface HeatingSettingsModalProps {
   data: HeatingData;
   onSave: (newData: HeatingData) => void;
 }
 
-const formSchema = z.object({
-  temperatureSet: z.number(),
-  durationSet: z.custom<Time>((value) => value instanceof Time),
-  isR1PlusR2: z.boolean(),
-  capteur: z.enum(SENSOR_NAMES),
+const formSchema = HeatingDataSchema.omit({
+  elapsedTime: true,
+  currentTemperature: true,
+  isPlaying: true,
 });
-
-const r1PlusR2Options = [true, false];
 
 export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
   data,
@@ -47,7 +47,7 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
     defaultValues: {
       temperatureSet: data.temperatureSet,
       durationSet: data.durationSet,
-      isR1PlusR2: data.isR1PlusR2,
+      R1R2: R1R2Options[0],
       capteur: data.capteur,
     },
   });
@@ -112,9 +112,9 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
 
               <AppFormSelectField
                 control={form.control}
-                name="isR1PlusR2"
-                label="R1+R2"
-                options={r1PlusR2Options}
+                name="R1R2"
+                label="R1/R2"
+                options={[...R1R2Options]}
               />
             </div>
 

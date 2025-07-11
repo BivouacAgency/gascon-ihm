@@ -3,6 +3,19 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Custom text selection colors */
+input::selection,
+textarea::selection {
+  background-color: rgba(255, 255, 255, 0.3); /* White with 70% opacity */
+  color: white; /* Text color when selected */
+}
+
+input::-moz-selection,
+textarea::-moz-selection {
+  background-color: rgba(255, 255, 255, 0.3); /* White with 70% opacity */
+  color: white; /* Text color when selected */
+}
+
 @theme {
   --font-sans: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
 

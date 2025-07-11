@@ -26,8 +26,8 @@ export const HeatingControlInfo: FC<HeatingControlInfoProps> = ({ data }) => {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell className="font-bold">R1+R2 </TableCell>
-          <TableCell>{data.isR1PlusR2 ? "oui" : "non"}</TableCell>
+          <TableCell className="font-bold">R1/R2 </TableCell>
+          <TableCell>{data.R1R2}</TableCell>
         </TableRow>
       </TableBody>
     </Table>

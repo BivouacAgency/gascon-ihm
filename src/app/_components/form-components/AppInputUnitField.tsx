@@ -46,10 +46,16 @@ export const AppInputUnitField = <
                     type="number"
                     {...field}
                     value={field.value}
-                    onChange={(e) => {
+                    onBlur={(e) => {
                       const value = e.target.value;
-                      const numValue = value === "" ? undefined : Number(value);
-                      field.onChange(numValue);
+                      if (value === "") {
+                        field.onChange("");
+                      } else {
+                        field.onChange(Number(value));
+                      }
+                    }}
+                    onFocus={(e) => {
+                      e.target.select();
                     }}
                   />
                   <span className="bg-grey z-10 inline-flex items-center rounded-e-md border border-none px-3 text-sm text-white">

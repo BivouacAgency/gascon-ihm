@@ -9,7 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { ClockIcon } from "lucide-react";
-import { DateInput as DateInputRac } from "react-aria-components";
+import { DateInput } from "react-aria-components";
 import type { Control, FieldPath, FieldValues } from "react-hook-form";
 
 export interface AppDurationFieldProps<
@@ -49,9 +49,14 @@ export const AppDurationField = <
                 hourCycle={undefined}
               >
                 <div className="relative">
-                  <DateInputRac className="bg-grey border-input bg-background relative inline-flex h-9 w-full items-center overflow-hidden rounded-md border border-none px-3 py-2 text-sm whitespace-nowrap text-white shadow-xs transition-[color,box-shadow] outline-none [&>:first-child]:hidden [&>:nth-child(2)]:hidden [&>:nth-child(3)]:hidden">
-                    {(segment) => <DateSegment segment={segment} />}
-                  </DateInputRac>
+                  <DateInput className="bg-grey border-input bg-background relative inline-flex h-9 w-full items-center overflow-hidden rounded-md border border-none px-3 py-2 text-sm whitespace-nowrap text-white shadow-xs transition-[color,box-shadow] outline-none [&>:first-child]:hidden [&>:nth-child(2)]:hidden [&>:nth-child(3)]:hidden">
+                    {(segment) => (
+                      <DateSegment
+                        className="rounded-none focus:bg-white/30"
+                        segment={segment}
+                      />
+                    )}
+                  </DateInput>
                   <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 end-0 z-10 flex items-center justify-center pe-3 text-white">
                     <ClockIcon size={16} aria-hidden="true" />
                   </div>

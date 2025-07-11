@@ -1,12 +1,17 @@
-import type { SensorName } from "@/config/sensors/config";
-import type { Time } from "@internationalized/date";
+import { SENSOR_NAMES } from "@/config/sensors/config";
+import { Time } from "@internationalized/date";
+import { z } from "zod";
 
-export interface HeatingData {
-  temperatureSet: number;
-  durationSet: Time; // in minutes
-  elapsedTime: Time; // in seconds (elapsed time since program start)
-  isR1PlusR2: boolean;
-  temperatureActual: number;
-  isPlaying: boolean;
-  capteur: SensorName;
-}
+export const R1R2Options = ["R1", "R1+R2"] as const;
+
+export const HeatingDataSchema = z.object({
+  capteur: z.enum(SENSOR_NAMES),
+  temperatureSet: z.number(),
+  durationSet: z.custom<Time>((value) => value instanceof Time),
+  elapsedTime: z.custom<Time>((value) => value instanceof Time),
+  R1R2: z.enum(R1R2Options),
+  currentTemperature: z.number(),
+  isPlaying: z.boolean(),
+});
+
+export type HeatingData = z.infer<typeof HeatingDataSchema>;

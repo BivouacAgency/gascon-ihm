@@ -13,8 +13,8 @@ import { Form } from "@/components/ui/form";
 import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import type { AgitationData } from "@/types/AgitationData";
+import type { z } from "zod";
+import { AgitationDataSchema, type AgitationData } from "@/types/AgitationData";
 import { FaScrewdriverWrench } from "react-icons/fa6";
 import {
   AGITATOR_DURATION_OPTIONS,
@@ -27,9 +27,8 @@ interface AgitationSettingsModalProps {
   onSave: (newData: AgitationData) => void;
 }
 
-const formSchema = z.object({
-  speedSet: z.number().min(10).max(100),
-  durationSet: z.number().min(5).max(60),
+const formSchema = AgitationDataSchema.omit({
+  elapsedTime: true,
 });
 
 export const AgitationSettingsModal: FC<AgitationSettingsModalProps> = ({
