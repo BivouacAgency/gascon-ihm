@@ -70,6 +70,7 @@ export const AppFormSelectField = <
                 {options.map((option) => (
                   <DropdownMenuItem
                     key={option.toString()}
+                    {...field}
                     onClick={() => field.onChange(option)}
                   >
                     {getLabel(option)}

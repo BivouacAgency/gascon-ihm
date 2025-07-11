@@ -20,7 +20,7 @@ import {
   AGITATOR_DURATION_OPTIONS,
   AGITATOR_SPEED_OPTIONS,
 } from "@/config/agitator/config";
-import { AppFormSelectField } from "@/app/_components/AppFormSelectField";
+import { AppFormSelectField } from "@/app/_components/form-components/AppFormSelectField";
 
 interface AgitationSettingsModalProps {
   data: AgitationData;

@@ -1,7 +1,8 @@
 "use client";
 
-import { AppFormSelectField } from "@/app/_components/AppFormSelectField";
-import { AppDurationField } from "@/app/_components/AppDurationField";
+import { AppDurationField } from "@/app/_components/form-components/AppDurationField";
+import { AppFormSelectField } from "@/app/_components/form-components/AppFormSelectField";
+import { AppInputUnitField } from "@/app/_components/form-components/AppInputUnitField";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,15 +13,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { ENGINE_TEMPERATURE_OPTIONS } from "@/config/engine/config";
 import { SENSOR_NAMES } from "@/config/sensors/config";
 import type { HeatingData } from "@/types/HeatingData";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Time } from "@internationalized/date";
 import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import { FaScrewdriverWrench } from "react-icons/fa6";
 import { z } from "zod";
-import { Time } from "@internationalized/date";
 
 interface HeatingSettingsModalProps {
   data: HeatingData;
@@ -28,13 +28,12 @@ interface HeatingSettingsModalProps {
 }
 
 const formSchema = z.object({
-  temperatureSet: z.number().min(60).max(100),
+  temperatureSet: z.number(),
   durationSet: z.custom<Time>((value) => value instanceof Time),
   isR1PlusR2: z.boolean(),
   capteur: z.enum(SENSOR_NAMES),
 });
 
-// Boolean options as booleans for the simplified component
 const r1PlusR2Options = [true, false];
 
 export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
@@ -54,13 +53,16 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
   });
 
   const onSubmit = (formData: z.infer<typeof formSchema>) => {
-    // Merge form data with other properties from original data
     const completeData: HeatingData = {
       ...data,
       ...formData,
     };
     onSave(completeData);
     setIsOpen(false);
+  };
+
+  const onError = (errors: unknown) => {
+    console.log("Form validation errors:", errors);
   };
 
   return (
@@ -79,7 +81,10 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit, onError)}
+            className="space-y-4"
+          >
             {/* First row - Capteur and Température */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <AppFormSelectField
@@ -89,11 +94,10 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
                 options={[...SENSOR_NAMES]}
               />
 
-              <AppFormSelectField
+              <AppInputUnitField
                 control={form.control}
                 name="temperatureSet"
-                label="Température (°C)"
-                options={ENGINE_TEMPERATURE_OPTIONS}
+                label="Température"
                 unit="°C"
               />
             </div>
