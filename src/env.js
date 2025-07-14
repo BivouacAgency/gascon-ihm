@@ -12,6 +12,8 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
     UART_MODE: z.enum(["mock", "real"]).default("real"),
+    UART_DEVICE_PATH: z.string().default("/dev/ttyUSB0"),
+    UART_VERBOSE: z.enum(["true", "false"]).default("false").transform(val => val === "true"),
   },
 
   /**
@@ -31,6 +33,8 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     UART_MODE: process.env.UART_MODE,
+    UART_DEVICE_PATH: process.env.UART_DEVICE_PATH,
+    UART_VERBOSE: process.env.UART_VERBOSE,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

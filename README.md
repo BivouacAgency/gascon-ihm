@@ -114,6 +114,8 @@ gascon-ihm/
 ### Environment Variables
 
 - `UART_MODE`: Set to `"mock"` for development or `"real"` for actual ESP32
+- `UART_DEVICE_PATH`: Linux device path for ESP32 (default: `/dev/ttyUSB0`)
+- `UART_VERBOSE`: Enable detailed UART parsing logs (default: `false`)
 - `DATABASE_URL`: Your database connection string
 - `NODE_ENV`: Development environment
 

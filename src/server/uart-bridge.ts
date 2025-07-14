@@ -1,14 +1,10 @@
 import "dotenv/config";
-import { SerialPort, SerialPortMock, ReadlineParser } from "serialport";
+import { SerialPort, SerialPortMock } from "serialport";
 import { Server as SocketServer } from "socket.io";
 import { createServer } from "http";
 import { env } from "../env.js";
-
-interface ESP32Message {
-  type: "sensor" | "status" | "error";
-  data: unknown;
-  timestamp: number;
-}
+import { UARTParser, CommandEncoder, type ESP32Message } from "./esp32-serial-protocol/index.js";
+import { ESP32Mock } from "./mocks/index.js";
 
 interface UICommand {
   type: "command" | "config";
@@ -18,20 +14,25 @@ interface UICommand {
 class UARTBridge {
   private io: SocketServer;
   private port!: SerialPort | SerialPortMock;
-  private parser!: ReadlineParser;
+  private uartParser: UARTParser;
+  private esp32Mock?: ESP32Mock;
   private isUsingMock: boolean;
 
   constructor() {
     this.isUsingMock = env.UART_MODE === "mock";
+    this.uartParser = new UARTParser();
 
     const httpServer = createServer();
     this.io = new SocketServer(httpServer, {
       cors: {
-        origin: "http://localhost:3000",
+        //origin: http://localhost:3000
+        origin: true, // Allow any origin for development
         methods: ["GET", "POST"],
+        credentials: false,
       },
     });
 
+    this.setupUARTParserEvents();
     this.initializeSerial();
 
     httpServer.listen(8081, () => {
@@ -56,25 +57,31 @@ class UARTBridge {
         });
 
         this.port.on("open", () => {
-          console.log("🔌 [Mock] ESP32 port opened, simulating data...");
-          setTimeout(() => {
+          console.log("🔌 [Mock] ESP32 port opened");
+          
+          // Initialize and start the ESP32 mock
+          this.esp32Mock = new ESP32Mock({
+            statusUpdateInterval: 5000,
+            initialDelay: 3000,
+            randomizeStates: true,
+          });
+          
+          this.esp32Mock.start((mockData: Buffer) => {
             if (this.port instanceof SerialPortMock) {
-              this.port.write("TEMP:23.5\n");
-              this.port.write("STATUS:READY\n");
+              this.port.write(mockData);
             }
-          }, 2000);
+          });
         });
       } else {
         console.log("🔧 [UART] Using REAL mode");
-        const realPath = process.platform === "win32" ? "COM3" : "/dev/ttyUSB0";
+          console.log(`🔌 [UART] Device path: ${env.UART_DEVICE_PATH}`);
 
         this.port = new SerialPort({
-          path: realPath,
+            path: env.UART_DEVICE_PATH,
           baudRate: 115200,
         });
       }
 
-      this.parser = this.port.pipe(new ReadlineParser({ delimiter: "\n" }));
       this.setupEventHandlers();
     } catch (error) {
       console.error("❌ [UART] Failed to initialize serial port:", error);
@@ -84,29 +91,51 @@ class UARTBridge {
     }
   }
 
-  private setupEventHandlers() {
-    if (!this.port || !this.parser) return;
-
-    this.parser.on("data", (line: string) => {
-      try {
-        const command = line.trim();
-        console.log("📡 [ESP32 → Backend]", command);
-
-        const message: ESP32Message = {
-          type: "sensor",
-          data: this.parseESP32Message(command),
-          timestamp: Date.now(),
-        };
-
+  private setupUARTParserEvents() {
+    // Handle parsed ESP32 messages
+    this.uartParser.on("message", (message: ESP32Message) => {
+      console.log("📡 [ESP32 → Backend]", message.type, message);
         this.io.emit("esp32-data", message);
-      } catch (error) {
-        console.error("❌ [UART] Error parsing ESP32 data:", error);
+    });
+
+    // Handle parser errors
+    this.uartParser.on("error", (error: Error) => {
+      console.error("❌ [UART Parser] Error:", error.message);
+      this.io.emit("uart-error", { error: error.message });
+    });
+
+    // Handle raw frames (for debugging)
+    this.uartParser.on("frame", (frame) => {
+      if (env.UART_VERBOSE) {
+        console.log("🔍 [UART Parser] Raw frame:", {
+          commandId: `0x${frame.commandId.toString(16).padStart(2, '0')}`,
+          payloadLength: frame.payload.length,
+        });
       }
+    });
+  }
+
+
+
+  private setupEventHandlers() {
+    if (!this.port) return;
+
+    // Handle raw UART data
+    this.port.on("data", (data: Buffer) => {
+      this.uartParser.processData(data);
     });
 
     this.port.on("error", (error: Error) => {
       console.error("❌ [UART] Serial port error:", error);
       this.io.emit("uart-error", { error: error.message });
+    });
+
+    this.port.on("close", () => {
+      console.log("🔌 [UART] Serial port closed");
+      // Stop mock if it's running
+      if (this.esp32Mock) {
+        this.esp32Mock.stop();
+      }
     });
 
     this.io.on("connection", (socket) => {
@@ -116,8 +145,13 @@ class UARTBridge {
         try {
           console.log("📤 [Frontend → ESP32]", data);
           const command = this.formatCommandForESP32(data);
-          if (this.port) {
-            this.port.write(command + "\n");
+          if (this.port && command) {
+            this.port.write(command);
+            
+            // In mock mode, simulate ESP32 responses
+            if (this.isUsingMock && this.esp32Mock) {
+              this.simulateResponseForCommand(data);
+            }
           }
         } catch (error) {
           console.error("❌ [UART] Error sending to ESP32:", error);
@@ -131,29 +165,62 @@ class UARTBridge {
     });
   }
 
-  private parseESP32Message(rawMessage: string): unknown {
-    if (rawMessage.includes(":")) {
-      const [key, value] = rawMessage.split(":");
-      return {
-        sensor: key,
-        value: isNaN(Number(value)) ? value : Number(value),
-      };
-    }
 
-    return {
-      command: rawMessage,
-    };
-  }
 
-  private formatCommandForESP32(uiCommand: UICommand): string {
+  private formatCommandForESP32(uiCommand: UICommand): Buffer | null {
     if (uiCommand.type === "command" && typeof uiCommand.payload === "object") {
       const payload = uiCommand.payload as Record<string, unknown>;
-      if (payload.action && typeof payload.action === "string") {
-        return payload.action.toUpperCase();
+      
+      if (payload.action === "ping") {
+        return CommandEncoder.encodePing();
+      }
+      
+      if (payload.action === "manualHeatStart" && payload.params) {
+        const params = payload.params as number[];
+        if (params.length >= 3 && params[0] !== undefined && params[1] !== undefined && params[2] !== undefined) {
+          return CommandEncoder.encodeManualHeatStart(params[0], params[1], params[2]);
+        }
       }
     }
 
-    return JSON.stringify(uiCommand);
+    console.warn("⚠️ [UART] Unknown command format:", uiCommand);
+    return null;
+  }
+
+  /**
+   * Simulate ESP32 responses to commands in mock mode
+   */
+  private simulateResponseForCommand(uiCommand: UICommand): void {
+    if (!this.esp32Mock) return;
+
+    if (uiCommand.type === "command" && typeof uiCommand.payload === "object") {
+      const payload = uiCommand.payload as Record<string, unknown>;
+      
+      // Simulate responses with a slight delay to mimic real ESP32
+      setTimeout(() => {
+        if (!this.esp32Mock) return;
+
+        switch (payload.action) {
+          case "ping":
+            this.esp32Mock.sendPong();
+            break;
+            
+          case "manualHeatStart":
+            // Send ACK first
+            this.esp32Mock.sendAck(0x11); // MAN_HEAT_START command ID
+            
+            // Then send multiple MANUAL_HEAT_STATUS messages (like real ESP32)
+            setTimeout(() => this.esp32Mock?.sendManualHeatStatus(true, 0x11, 0x22, 0x33), 500);
+            setTimeout(() => this.esp32Mock?.sendManualHeatStatus(true, 0x11, 0x22, 0x33), 1500);
+            setTimeout(() => this.esp32Mock?.sendManualHeatStatus(false, 0x11, 0x22, 0x33), 2500);
+            break;
+            
+          default:
+            console.log(`🤖 [ESP32 Mock] No response defined for action: ${payload.action}`);
+            break;
+        }
+      }, 100); // Small delay to simulate processing time
+    }
   }
 }
 

@@ -60,29 +60,48 @@ Create a `.env` file in your project root with:
 # Database (required for T3 Stack)
 DATABASE_URL="your-database-url"
 
-# ESP32 UART Mode
-UART_MODE=mock    # Use "mock" for development, "real" for actual ESP32
-# UART_MODE=real  # Uncomment when using real ESP32
+# ESP32 UART Configuration
+UART_MODE=mock                    # Use "mock" for development, "real" for actual ESP32
+UART_DEVICE_PATH=/dev/ttyUSB0     # Linux device path for ESP32 (when UART_MODE=real)
+UART_VERBOSE=false                # Enable detailed UART parsing logs (true/false)
 ```
 
-**UART_MODE Options:**
+**Environment Variable Options:**
 
+- **UART_MODE**:
 - `mock` - Simulates ESP32 data for development (no physical device needed)
 - `real` - Connects to actual ESP32 via serial port
 
-### ESP32 Serial Port
+- **UART_DEVICE_PATH**: 
+  - `/dev/ttyUSB0` - Default USB serial device (most common)
+  - `/dev/ttyACM0` - Alternative USB serial device
+  - `/dev/ttyS0` - Hardware serial port
+  - Any valid Linux serial device path
 
-Update the serial port path in `src/server/uart-bridge.ts`:
+- **UART_VERBOSE**:
+  - `false` - Normal operation with minimal logs (default)
+  - `true` - Enable detailed UART parsing and frame analysis logs
 
-```typescript
-// For Windows (ESP32 connected via USB)
-path: "COM3"; // or COM4, COM5, etc.
+### ESP32 Serial Port Detection
 
-// For Linux/Raspberry Pi
-path: "/dev/ttyUSB0"; // or /dev/ttyACM0
+```bash
+# List all serial devices
+ls /dev/tty*
 
-// For macOS
-path: "/dev/cu.usbserial-*";
+# Monitor device connections (run this, then plug in your ESP32)
+dmesg | grep tty
+
+# Check USB devices
+lsusb
+
+# Most common ESP32 device paths:
+# /dev/ttyUSB0  - USB-to-Serial adapter (most common)
+# /dev/ttyACM0  - ESP32 with built-in USB
+```
+
+Update your `.env` file with the correct device path:
+```bash
+UART_DEVICE_PATH=/dev/ttyUSB0  # Replace with your actual device path
 ```
 
 ### Baud Rate

@@ -2,9 +2,9 @@ import { useEffect, useState, useCallback } from "react";
 import { io, type Socket } from "socket.io-client";
 
 interface ESP32Message {
-  type: "sensor" | "status" | "error";
-  data: unknown;
+  type: "PONG" | "STATUS_UPDATE" | "MANUAL_HEAT_STATUS" | "ACK";
   timestamp: number;
+  [key: string]: unknown; // Allow additional properties like relaysBitmap, etc.
 }
 
 interface UICommand {
@@ -26,7 +26,14 @@ export function useESP32Communication(): UseESP32CommunicationReturn {
   const [connectionError, setConnectionError] = useState<string | null>(null);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:8081");
+    // Dynamically determine the WebSocket server URL based on current host
+    // This allows the app to be used through the Rpi's IP address
+    const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
+    const host = window.location.hostname;
+    const socketUrl = `${protocol}//${host}:8081`;
+    
+    console.log(`🔌 Connecting to WebSocket server at: ${socketUrl}`);
+    const newSocket = io(socketUrl);
 
     newSocket.on("connect", () => {
       console.log("🟢 Connected to ESP32 bridge");

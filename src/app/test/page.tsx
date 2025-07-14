@@ -1,30 +1,17 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useESP32Communication } from "@/hooks/useESP32Communication";
 
 export default function Test() {
   const { isConnected, lastMessage, sendCommand, connectionError } =
     useESP32Communication();
 
-  const handleStartPump = () => {
+  const handlePing = () => {
     sendCommand({
       type: "command",
-      payload: { action: "start_pump" },
-    });
-  };
-
-  const handleStopPump = () => {
-    sendCommand({
-      type: "command",
-      payload: { action: "stop_pump" },
-    });
-  };
-
-  const handleGetStatus = () => {
-    sendCommand({
-      type: "command",
-      payload: { action: "get_status" },
+      payload: { action: "ping" },
     });
   };
 
@@ -54,27 +41,14 @@ export default function Test() {
           <Card className="mb-6">
             <h2 className="mb-4 text-xl font-semibold text-white">Controls</h2>
             <div className="flex flex-wrap gap-4">
-              <button
-                onClick={handleStartPump}
-                disabled={!isConnected}
-                className="disabled:bg-grey rounded-lg bg-green-600 px-6 py-3 font-medium text-white"
+              <Button
+                onClick={handlePing}
+                // disabled={!isConnected}
+                size="lg"
+                className="bg-blue-600 hover:bg-blue-700 text-white"
               >
-                Start Pump
-              </button>
-              <button
-                onClick={handleStopPump}
-                disabled={!isConnected}
-                className="disabled:bg-grey rounded-lg bg-red-700 px-6 py-3 font-medium text-white"
-              >
-                Stop Pump
-              </button>
-              <button
-                onClick={handleGetStatus}
-                disabled={!isConnected}
-                className="disabled:bg-grey rounded-lg bg-blue-600 px-6 py-3 font-medium text-white"
-              >
-                Get Status
-              </button>
+                🏓 Send PING
+              </Button>
             </div>
           </Card>
           <Card>
