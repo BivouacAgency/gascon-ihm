@@ -23,10 +23,18 @@ class UARTBridge {
     this.uartParser = new UARTParser();
 
     const httpServer = createServer();
+    
+    // Determine the host to bind to based on environment variable
+    const bindHost = env.NEXT_PUBLIC_WEBSOCKET_HOST || 'localhost';
+    
+    // Configure CORS based on environment variable
+    const allowedOrigins = bindHost === 'localhost' 
+      ? ['http://localhost:3000', 'http://127.0.0.1:3000']
+      : [`http://${bindHost}:3000`, `http://localhost:3000`, 'http://127.0.0.1:3000'];
+
     this.io = new SocketServer(httpServer, {
       cors: {
-        //origin: http://localhost:3000
-        origin: true, // Allow any origin for development
+        origin: allowedOrigins,
         methods: ["GET", "POST"],
         credentials: false,
       },
@@ -35,8 +43,8 @@ class UARTBridge {
     this.setupUARTParserEvents();
     this.initializeSerial();
 
-    httpServer.listen(8081, () => {
-      console.log("🔌 [UART Bridge] Socket.io server running on port 8081");
+    httpServer.listen(8081, bindHost, () => {
+      console.log(`🔌 [UART Bridge] Socket.io server running on port 8081 (${bindHost})`);
     });
   }
 

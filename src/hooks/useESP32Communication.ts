@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { io, type Socket } from "socket.io-client";
+import { env } from "@/env.js";
 
 interface ESP32Message {
   type: "PONG" | "STATUS_UPDATE" | "MANUAL_HEAT_STATUS" | "ACK";
@@ -26,10 +27,11 @@ export function useESP32Communication(): UseESP32CommunicationReturn {
   const [connectionError, setConnectionError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Dynamically determine the WebSocket server URL based on current host
-    // This allows the app to be used through the Rpi's IP address
+    // Determine the WebSocket server URL
     const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
-    const host = window.location.hostname;
+    
+    // Use environment variable if set, otherwise use current hostname
+    const host = env.NEXT_PUBLIC_WEBSOCKET_HOST || window.location.hostname;
     const socketUrl = `${protocol}//${host}:8081`;
     
     console.log(`🔌 Connecting to WebSocket server at: ${socketUrl}`);
