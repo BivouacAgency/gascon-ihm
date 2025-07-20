@@ -110,14 +110,16 @@ export class UARTParser extends EventEmitter {
         return;
       }
 
-      if (decodedFrame.length !== length) {
-        this.emit("error", new Error(`Frame length mismatch: expected ${length}, got ${decodedFrame.length}`));
+      // The LEN field represents the size of the CMD|Payload|CRC block (excluding LEN byte)
+      // So the decoded frame should be LEN + 1 bytes long (including LEN byte)
+      if (decodedFrame.length !== length + 1) {
+        this.emit("error", new Error(`Frame length mismatch: expected ${length + 1}, got ${decodedFrame.length}`));
         return;
       }
 
-      const payload = decodedFrame.subarray(2, length - 2);
-      const crcLo = decodedFrame[length - 2];
-      const crcHi = decodedFrame[length - 1];
+      const payload = decodedFrame.subarray(2, length - 1);
+      const crcLo = decodedFrame[length - 1];
+      const crcHi = decodedFrame[length];
       
       this.verboseLog("🔍 [Parser] Frame breakdown:");
       this.verboseLog(`  - Length: ${length}`);

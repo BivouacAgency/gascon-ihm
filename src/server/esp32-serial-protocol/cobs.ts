@@ -32,9 +32,16 @@ export function cobsDecode(encoded: Buffer): Buffer {
     }
 
     // Add a zero byte if code is not 0xFF and we're not at the end
+    // For 0x01 codes, this inserts a single zero
     if (code !== 0xFF && i < encoded.length) {
       decoded.push(0);
     }
+  }
+
+  // Remove the sentinel zero from the end if present
+  // According to the protocol, the sentinel zero is "pushed out" and appears as SEP 0x00 after EOF
+  if (decoded.length > 0 && decoded[decoded.length - 1] === 0) {
+    decoded.pop();
   }
 
   return Buffer.from(decoded);
