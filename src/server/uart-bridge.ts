@@ -3,13 +3,13 @@ import { SerialPort, SerialPortMock } from "serialport";
 import { Server as SocketServer } from "socket.io";
 import { createServer } from "http";
 import { env } from "../env.js";
-import { UARTParser, CommandEncoder, type ESP32Message } from "./esp32-serial-protocol/index.js";
+import { UARTParser } from "./esp32-serial-protocol/uart-parser.js";
+import { CommandEncoder } from "./esp32-serial-protocol/command-encoder.js";
+import { type ESP32Message } from "./esp32-serial-protocol/types.js";
 import { ESP32Mock } from "./mocks/index.js";
-
-interface UICommand {
-  type: "command" | "config";
-  payload: unknown;
-}
+import { UICommandSchema, type UICommand } from "./esp32-serial-protocol/schemas/ui-command.js";
+import { SENSOR_ID_MAP } from "./esp32-serial-protocol/mappings/sensors.js";
+import { HEATER_MASK_MAP } from "./esp32-serial-protocol/mappings/heaters.js";
 
 class UARTBridge {
   private io: SocketServer;
@@ -175,19 +175,40 @@ class UARTBridge {
 
 
 
-  private formatCommandForESP32(uiCommand: UICommand): Buffer | null {
-    if (uiCommand.type === "command" && typeof uiCommand.payload === "object") {
-      const payload = uiCommand.payload as Record<string, unknown>;
-      
-      if (payload.action === "ping") {
-        return CommandEncoder.encodePing();
-      }
-      
-      if (payload.action === "manualHeatStart" && payload.params) {
-        const params = payload.params as number[];
-        if (params.length >= 3 && params[0] !== undefined && params[1] !== undefined && params[2] !== undefined) {
-          return CommandEncoder.encodeManualHeatStart(params[0], params[1], params[2]);
-        }
+  private formatCommandForESP32(uiCommandRaw: unknown): Buffer | null {
+    // Validate the entire UICommand structure
+    const uiCommandResult = UICommandSchema.safeParse(uiCommandRaw);
+    if (!uiCommandResult.success) {
+      console.warn(`⚠️ [UART] Invalid UICommand format:`, uiCommandResult.error.format());
+      return null;
+    }
+    
+    const uiCommand = uiCommandResult.data;
+    
+    if (uiCommand.type === "command") {
+      switch (uiCommand.payload.action) {
+        case "ping":
+          return CommandEncoder.encodePing();
+          
+        case "man_heat_start":
+          const data = uiCommand.payload.data;
+          
+          // Convert capteur to sensor ID using the mapping
+          const sensorId = SENSOR_ID_MAP[data.capteur];
+          
+          // Convert R1R2 to heater mask using the mapping
+          const heaterMask = HEATER_MASK_MAP[data.R1R2];
+          
+          // Convert temperature to scaled value (×10)
+          const targetTemp = Math.round(data.temperatureSet * 10);
+          
+          console.log(`🔥 [UART] Starting heating: Sensor=${sensorId}, Target=${targetTemp} (${data.temperatureSet}°C), Duration=${data.durationSet}ms, Mask=${heaterMask}`);
+          
+          return CommandEncoder.encodeManualHeatStart(sensorId, targetTemp, data.durationSet, heaterMask);
+          
+        case "man_heat_stop":
+          console.log("🛑 [UART] Stop heating command received");
+          return CommandEncoder.encodeManualHeatStop();
       }
     }
 
@@ -201,8 +222,8 @@ class UARTBridge {
   private simulateResponseForCommand(uiCommand: UICommand): void {
     if (!this.esp32Mock) return;
 
-    if (uiCommand.type === "command" && typeof uiCommand.payload === "object") {
-      const payload = uiCommand.payload as Record<string, unknown>;
+    if (uiCommand.type === "command") {
+      const payload = uiCommand.payload;
       
       // Simulate responses with a slight delay to mimic real ESP32
       setTimeout(() => {
@@ -213,7 +234,7 @@ class UARTBridge {
             this.esp32Mock.sendPong();
             break;
             
-          case "manualHeatStart":
+          case "man_heat_start":
             // Send ACK first
             this.esp32Mock.sendAck(0x11); // MAN_HEAT_START command ID
             
@@ -223,8 +244,13 @@ class UARTBridge {
             setTimeout(() => this.esp32Mock?.sendManualHeatStatus(false, 0x11, 0x22, 0x33), 2500);
             break;
             
+          case "man_heat_stop":
+            // Send ACK for stop command
+            this.esp32Mock.sendAck(0x14); // MAN_HEAT_STOP command ID
+            break;
+            
           default:
-            console.log(`🤖 [ESP32 Mock] No response defined for action: ${payload.action}`);
+            console.log(`🤖 [ESP32 Mock] No response defined for action in payload: ${payload}`);
             break;
         }
       }, 100); // Small delay to simulate processing time

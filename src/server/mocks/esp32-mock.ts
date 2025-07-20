@@ -1,4 +1,6 @@
-import { cobsEncode, appendCrc16, CMD_IDS } from "../esp32-serial-protocol/index.js";
+import { cobsEncode } from "../esp32-serial-protocol/cobs";
+import { appendCrc16 } from "../esp32-serial-protocol/crc16";
+import { CMD_IDS } from "../esp32-serial-protocol/types";
 
 export interface MockConfig {
   /** Interval between STATUS_UPDATE messages in milliseconds */

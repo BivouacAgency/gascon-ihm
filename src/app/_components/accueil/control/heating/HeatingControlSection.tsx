@@ -38,7 +38,7 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
       sendCommand({
         type: "command",
         payload: {
-          action: "start_heating",
+          action: "man_heat_start",
           data: {
             durationSet: durationInMiliseconds,
             temperatureSet: heatingData.temperatureSet,
@@ -51,7 +51,7 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
       sendCommand({
         type: "command",
         payload: {
-          action: "stop_heating",
+          action: "man_heat_stop",
         },
       });
     }

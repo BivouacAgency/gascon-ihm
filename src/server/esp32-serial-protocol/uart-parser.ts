@@ -242,41 +242,32 @@ export class UARTParser extends EventEmitter {
   }
 
   private parseManualHeatStatus(payload: Buffer, timestamp: number): ESP32Message | null {
-    this.verboseLog(`🔍 MANUAL_HEAT_STATUS payload ${payload.length} bytes: ${this.formatHex(payload)}`);
+    this.verboseLog(`🔍 MAN_HEAT_STATUS payload ${payload.length} bytes: ${this.formatHex(payload)}`);
     
-    if (payload.length !== 11) {
-      this.emit("error", new Error(`Expected 11 bytes, got ${payload.length}`));
+    const EXPECTED_LENGTH = 11;
+    if (payload.length !== EXPECTED_LENGTH) {
+      this.emit("error", new Error(`MAN_HEAT_STATUS: Expected ${EXPECTED_LENGTH} bytes, got ${payload.length}`));
       return null;
     }
 
-    // Structure: [is_active:uint8][command:uint8][param1:uint8][param2:uint8][temperature:uint8][status:uint8][data1:uint8][data2:uint8][data3:uint8][data4:uint8][original_command:uint8]
-    const isActive = payload[0] !== 0;
-    const command = payload[1]!;
-    const param1 = payload[2]!;
-    const param2 = payload[3]!;
-    const temperature = payload[4]!;
-    const status = payload[5]!;
-    const data1 = payload[6]!;
-    const data2 = payload[7]!;
-    const data3 = payload[8]!;
-    const data4 = payload[9]!;
-    const originalCommand = payload[10]!;
+    // Structure: [active:uint8][sensor_id:uint8][target:uint16][current:uint16][remain_ms:uint32][heater_mask:uint8]
+    const active = payload.readUInt8(0);
+    const sensorId = payload.readUInt8(1);
+    const target = payload.readUInt16LE(2);
+    const current = payload.readUInt16LE(4);
+    const remainMs = payload.readUInt32LE(6);
+    const heaterMask = payload.readUInt8(10);
 
-    this.verboseLog(`Active: ${isActive}, Cmd: 0x${command.toString(16)}, Temp: ${temperature}, Status: ${status}`);
+    this.verboseLog(`Active: ${active}, Sensor ID: ${sensorId}, Target: ${target}, Current: ${current}, Remain Ms: ${remainMs}, Heater Mask: ${heaterMask}`);
 
     return {
       type: "MANUAL_HEAT_STATUS",
-      isActive,
-      command,
-      param1,
-      param2,
-      temperature,
-      status,
-      data1,
-      data2,
-      data3,
-      data4,
-      originalCommand,
+      active,
+      sensorId,
+      target,
+      current,
+      remainMs,
+      heaterMask,
       timestamp,
     };
   }

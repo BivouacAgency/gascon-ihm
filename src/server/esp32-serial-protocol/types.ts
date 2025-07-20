@@ -6,15 +6,25 @@ export const PROTOCOL_CONSTANTS = {
   BAUD_RATE: 115200,
 } as const;
 
-// Command IDs
-export const CMD_IDS = {
+// Outgoing command IDs (commands we send to ESP32) - starting with "1"
+export const OUTGOING_CMD_IDS = {
   PING: 0x01,
+  MAN_HEAT_START: 0x11,
+  MAN_HEAT_STOP: 0x14,
+} as const;
+
+// Incoming command IDs (commands we receive from ESP32) - starting with "8"
+export const INCOMING_CMD_IDS = {
   PONG: 0x81,
   STATUS_UPDATE: 0x82,
   SENSOR_DATA: 0x83,
-  MAN_HEAT_START: 0x11,
+  MAN_HEAT_STATUS: 0x88,
   ACK: 0x8A,
-  MAN_HEAT_STATUS: 0x89,
+} as const;
+
+export const CMD_IDS = {
+  ...OUTGOING_CMD_IDS,
+  ...INCOMING_CMD_IDS,
 } as const;
 
 // Operating modes
@@ -36,17 +46,12 @@ export interface StatusUpdateMessage {
 
 export interface ManualHeatStatusMessage {
   type: "MANUAL_HEAT_STATUS";
-  isActive: boolean;
-  command: number;
-  param1: number;
-  param2: number;
-  temperature: number;
-  status: number;
-  data1: number;
-  data2: number;
-  data3: number;
-  data4: number;
-  originalCommand: number;
+  active: number;      // uint8
+  sensorId: number;    // uint8
+  target: number;      // uint16
+  current: number;     // uint16
+  remainMs: number;    // uint32
+  heaterMask: number;  // uint8
   timestamp: number;
 }
 

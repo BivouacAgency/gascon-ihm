@@ -16,13 +16,27 @@ export class CommandEncoder {
 
   /**
    * Encodes a manual heat start command
-   * @param param1 - First parameter
-   * @param param2 - Second parameter
-   * @param param3 - Third parameter
+   * @param sensorId - Sensor ID (uint8)
+   * @param target - Target temperature (uint16, scaled by 10)
+   * @param holdMs - Hold time in milliseconds (uint32)
+   * @param mask - Heater mask (uint8)
    */
-  public static encodeManualHeatStart(param1: number, param2: number, param3: number): Buffer {
-    const payload = Buffer.from([param1, param2, param3]);
+  public static encodeManualHeatStart(sensorId: number, target: number, holdMs: number, mask: number): Buffer {
+    const payload = Buffer.alloc(8);
+    
+    payload.writeUInt8(sensorId, 0);      // sensor_id: uint8
+    payload.writeUInt16LE(target, 1);     // target: uint16 (little-endian)
+    payload.writeUInt32LE(holdMs, 3);     // hold_ms: uint32 (little-endian)
+    payload.writeUInt8(mask, 7);          // mask: uint8
+    
     return CommandEncoder.encodeCommand(CMD_IDS.MAN_HEAT_START, payload);
+  }
+
+  /**
+   * Encodes a manual heat stop command
+   */
+  public static encodeManualHeatStop(): Buffer {
+    return CommandEncoder.encodeCommand(CMD_IDS.MAN_HEAT_STOP, Buffer.alloc(0));
   }
 
   /**
