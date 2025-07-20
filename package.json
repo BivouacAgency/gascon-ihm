@@ -12,7 +12,7 @@
     "db:studio": "prisma studio",
     "dev": "next dev --turbo",
     "dev:bridge": "tsx src/server/uart-bridge.ts",
-    "dev:full": "concurrently \"npm run dev\" \"npm run dev:bridge\"",
+    "dev:full": "concurrently \"pnpm run dev\" \"pnpm run dev:bridge\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "postinstall": "prisma generate",
