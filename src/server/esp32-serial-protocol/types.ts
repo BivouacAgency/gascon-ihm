@@ -11,6 +11,7 @@ export const CMD_IDS = {
   PING: 0x01,
   PONG: 0x81,
   STATUS_UPDATE: 0x82,
+  SENSOR_DATA: 0x83,
   MAN_HEAT_START: 0x11,
   ACK: 0x8A,
   MAN_HEAT_STATUS: 0x89,
@@ -55,11 +56,22 @@ export interface AckMessage {
   timestamp: number;
 }
 
+export interface SensorDataMessage {
+  type: "SENSOR_DATA";
+  t_R1: number;  // Temperature R1 (°C × 10)
+  t_R2: number;  // Temperature R2 (°C × 10)
+  t_TT1: number; // Temperature TT1 (°C × 10)
+  p_PT1: number; // Pressure PT1 (bar × 10)
+  timestamp: number;
+  error: boolean;
+}
+
 export type ESP32Message = 
   | PongMessage 
   | StatusUpdateMessage 
   | ManualHeatStatusMessage 
-  | AckMessage;
+  | AckMessage
+  | SensorDataMessage;
 
 // Raw frame structure
 export interface RawFrame {

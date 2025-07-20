@@ -168,21 +168,27 @@ export class UARTParser extends EventEmitter {
         return this.parseStatusUpdate(payload, timestamp);
 
       case CMD_IDS.ACK:
-        if (payload.length >= 1) {
-          const acknowledgedCommand = payload[0];
-          if (acknowledgedCommand !== undefined) {
-            return {
-              type: "ACK",
-              acknowledgedCommand,
-              timestamp,
-            };
-          }
+        this.verboseLog(`🔍 ACK payload ${payload.length} bytes: ${this.formatHex(payload)}`);
+        
+        if (payload.length !== 1) {
+          this.emit("error", new Error(`Expected 1 byte, got ${payload.length}`));
+          return null;
         }
-        this.emit("error", new Error("Invalid ACK payload"));
-        return null;
+
+        const acknowledgedCommand = payload[0]!;
+        this.verboseLog(`Acknowledged command: 0x${acknowledgedCommand.toString(16)}`);
+
+        return {
+          type: "ACK",
+          acknowledgedCommand,
+          timestamp,
+        };
 
       case CMD_IDS.MAN_HEAT_STATUS:
         return this.parseManualHeatStatus(payload, timestamp);
+
+      case CMD_IDS.SENSOR_DATA:
+        return this.parseSensorData(payload, timestamp);
 
       default:
         this.emit("error", new Error(`Unknown command ID: 0x${commandId.toString(16)}`));
@@ -197,13 +203,13 @@ export class UARTParser extends EventEmitter {
     this.verboseLog(`  - Individual bytes: [${Array.from(payload).map(b => `0x${b.toString(16).padStart(2, '0')}`).join(', ')}]`);
     
     if (payload.length !== 5) {
-      this.emit("error", new Error(`STATUS_UPDATE payload incorrect length: expected 5 bytes, got ${payload.length} bytes`));
+      this.emit("error", new Error(`Expected 5 bytes, got ${payload.length}`));
       return null;
     }
 
     // Structure: [relays_bitmap:uint16][inputs_bitmap:uint16][mode:uint8]
-    const relaysBitmap = (payload[1]! << 8) | payload[0]!;  // Little endian
-    const inputsBitmap = (payload[3]! << 8) | payload[2]!;  // Little endian
+    const relaysBitmap = payload.readUInt16LE(0);
+    const inputsBitmap = payload.readUInt16LE(2);
     const modeValue = payload[4]!;
     
     this.verboseLog(`  - Parsed relays: 0x${relaysBitmap.toString(16).padStart(4, '0')} (from bytes 0x${payload[0]?.toString(16)}, 0x${payload[1]?.toString(16)})`);
@@ -236,28 +242,79 @@ export class UARTParser extends EventEmitter {
   }
 
   private parseManualHeatStatus(payload: Buffer, timestamp: number): ESP32Message | null {
-    if (payload.length < 11) {
-      this.emit("error", new Error("MANUAL_HEAT_STATUS payload too short"));
+    this.verboseLog(`🔍 MANUAL_HEAT_STATUS payload ${payload.length} bytes: ${this.formatHex(payload)}`);
+    
+    if (payload.length !== 11) {
+      this.emit("error", new Error(`Expected 11 bytes, got ${payload.length}`));
       return null;
     }
 
-    // Structure based on ESP32 code: [is_active, command, param1, param2, temperature, status, data1, data2, data3, data4, original_command]
+    // Structure: [is_active:uint8][command:uint8][param1:uint8][param2:uint8][temperature:uint8][status:uint8][data1:uint8][data2:uint8][data3:uint8][data4:uint8][original_command:uint8]
+    const isActive = payload[0] !== 0;
+    const command = payload[1]!;
+    const param1 = payload[2]!;
+    const param2 = payload[3]!;
+    const temperature = payload[4]!;
+    const status = payload[5]!;
+    const data1 = payload[6]!;
+    const data2 = payload[7]!;
+    const data3 = payload[8]!;
+    const data4 = payload[9]!;
+    const originalCommand = payload[10]!;
+
+    this.verboseLog(`Active: ${isActive}, Cmd: 0x${command.toString(16)}, Temp: ${temperature}, Status: ${status}`);
+
     return {
       type: "MANUAL_HEAT_STATUS",
-      isActive: payload[0] !== 0,
-      command: payload[1]!,
-      param1: payload[2]!,
-      param2: payload[3]!,
-      temperature: payload[4]!,
-      status: payload[5]!,
-      data1: payload[6]!,
-      data2: payload[7]!,
-      data3: payload[8]!,
-      data4: payload[9]!,
-      originalCommand: payload[10]!,
+      isActive,
+      command,
+      param1,
+      param2,
+      temperature,
+      status,
+      data1,
+      data2,
+      data3,
+      data4,
+      originalCommand,
       timestamp,
     };
   }
+
+  private parseSensorData(payload: Buffer, timestamp: number): ESP32Message | null {
+    this.verboseLog(`🔍 SENSOR payload ${payload.length} bytes: ${this.formatHex(payload)}`);
+    if (payload.length !== 8) {
+      this.emit("error", new Error(`Expected 8 bytes, got ${payload.length}`));
+      return null;
+    }
+  
+    const t_R1 = payload.readInt16LE(0);
+    const t_R2 = payload.readInt16LE(2);
+    const t_TT1 = payload.readInt16LE(4);
+    const p_PT1 = payload.readInt16LE(6);
+  
+    const tempR1 = t_R1 / 10;
+    const tempR2 = t_R2 / 10;
+    const tempTT1 = t_TT1 / 10;
+    const pressPT1 = p_PT1 / 10;
+  
+    this.verboseLog(`Raw: ${t_R1},${t_R2},${t_TT1},${p_PT1}; Scaled: ${tempR1}°C, ${tempR2}°C, ${tempTT1}°C, ${pressPT1}bar`);
+  
+    const SENSOR_ERROR = 0x7FFF;
+    const hasError = [t_R1, t_R2, t_TT1, p_PT1].includes(SENSOR_ERROR);
+    if (hasError) this.verboseLog("⚠️ Sensor error (0x7FFF)");
+  
+    return {
+      type: "SENSOR_DATA",
+      t_R1: tempR1,
+      t_R2: tempR2,
+      t_TT1: tempTT1,
+      p_PT1: pressPT1,
+      timestamp,
+      error: hasError,
+    };
+  }
+  
 
   /**
    * Reset the parser state
