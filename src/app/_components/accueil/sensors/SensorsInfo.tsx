@@ -42,21 +42,21 @@ export const SensorsInfo: FC<SensorsInfoProps> = ({
       <Table className="text-white">
         <TableHeader>
           <TableRow>
-            {data.map((capteur, index) => (
+            {data.map((sensor, index) => (
               <TableHead
                 key={index}
                 className="text-center font-bold text-white"
               >
-                {capteur.sensorName}
+                {sensor.sensorName}
               </TableHead>
             ))}
           </TableRow>
         </TableHeader>
         <TableBody>
           <TableRow>
-            {data.map((capteur, index) => (
+            {data.map((sensor, index) => (
               <TableCell key={index} className="text-center">
-                {capteur.value} {capteur.unit}
+                {sensor.value} {sensor.unit}
               </TableCell>
             ))}
           </TableRow>

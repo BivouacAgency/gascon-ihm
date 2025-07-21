@@ -16,7 +16,7 @@ const defaultHeatingDataSettings: HeatingDataSettings = {
   temperatureSet: 80,
   durationSet: new Time(0, 45, 0),
   R1R2: R1R2Options[0],
-  capteur: "TT-R1",
+  sensor: "TT-R1",
 };
 
 interface HeatingControlSectionProps {
@@ -75,7 +75,7 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
           data: {
             durationSet: durationInMiliseconds,
             temperatureSet: heatingDataSettings.temperatureSet,
-            capteur: heatingDataSettings.capteur,
+            sensor: heatingDataSettings.sensor,
             R1R2: heatingDataSettings.R1R2,
           },
         },

@@ -13,7 +13,7 @@ export const HeatingControlInfo: FC<HeatingControlInfoProps> = ({ data }) => {
       <TableBody>
         <TableRow>
           <TableCell className="font-bold">Cible </TableCell>
-          <TableCell>{data?.capteur ?? "-"}</TableCell>
+          <TableCell>{data?.sensor ?? "-"}</TableCell>
           <TableCell>{data?.temperatureSet ? `${data.temperatureSet}°C` : "-"}</TableCell>
         </TableRow>
         <TableRow>

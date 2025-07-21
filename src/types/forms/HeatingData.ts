@@ -5,7 +5,7 @@ import { z } from "zod";
 export const R1R2Options = ["R1", "R1+R2"] as const;
 
 export const HeatingDataSchema = z.object({
-  capteur: z.enum(SENSORS),
+  sensor: z.enum(SENSORS),
   temperatureSet: z.number(),
   durationSet: z.custom<Time>((value) => value instanceof Time),
   elapsedTime: z.custom<Time>((value) => value instanceof Time),

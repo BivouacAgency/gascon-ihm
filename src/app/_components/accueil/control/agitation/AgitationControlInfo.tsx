@@ -13,15 +13,15 @@ export const AgitationControlInfo: FC<AgitationControlInfoProps> = ({
 }) => {
   return (
     <Table className="mb-2 text-white">
-      <TableBody>
+      <TableBody> 
         <TableRow>
           <TableCell className="font-bold">AG1 </TableCell>
           <TableCell>{data.speedSet} tr/min</TableCell>
         </TableRow>
         <TableRow>
           <TableCell className="font-bold">Temps </TableCell>
-          <TableCell>{formatElapsedTime(data.elapsedTime)}</TableCell>
-          <TableCell>{data.durationSet} min</TableCell>
+          <TableCell>{data.elapsedTime ? formatElapsedTime(data.elapsedTime) : "--:--"}</TableCell>
+          <TableCell>{data.durationSet ? data.durationSet.minute : "--:--"} min</TableCell>
         </TableRow>
       </TableBody>
     </Table>

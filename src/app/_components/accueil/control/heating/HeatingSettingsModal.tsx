@@ -47,7 +47,7 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
       temperatureSet: data.temperatureSet,
       durationSet: data.durationSet,
       R1R2: R1R2Options[0],
-      capteur: data.capteur,
+      sensor: data.sensor,
     },
   });
 
@@ -87,7 +87,7 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <AppFormSelectField
                 control={form.control}
-                name="capteur"
+                name="sensor"
                 label="Capteur"
                 options={[...SENSORS]}
               />

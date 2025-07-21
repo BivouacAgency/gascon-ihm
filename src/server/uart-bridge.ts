@@ -196,8 +196,8 @@ class UARTBridge {
         case ESP32Command.MAN_HEAT_START:
           const data = uiCommand.payload.data;
           
-          // Convert capteur to sensor ID using the mapping
-          const sensorId = SENSOR_ID_MAP[data.capteur];
+          // Convert sensor to sensor ID using the mapping
+          const sensorId = SENSOR_ID_MAP[data.sensor];
           
           // Convert R1R2 to heater mask using the mapping
           const heaterMask = HEATER_MASK_MAP[data.R1R2];

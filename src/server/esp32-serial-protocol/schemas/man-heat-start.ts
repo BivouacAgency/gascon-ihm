@@ -12,7 +12,7 @@ export const SensorNameSchema = z.enum(SENSORS);
 export const ManHeatStartDataSchema = z.object({
   temperatureSet: TemperatureSchema,
   durationSet: DurationSchema,
-  capteur: SensorNameSchema,
+  sensor: SensorNameSchema,
   R1R2: R1R2Schema,
 });
 
