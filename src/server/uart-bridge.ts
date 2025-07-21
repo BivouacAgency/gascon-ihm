@@ -102,8 +102,10 @@ class UARTBridge {
   private setupUARTParserEvents() {
     // Handle parsed ESP32 messages
     this.uartParser.on("message", (message: ESP32Message) => {
-      console.log("📡 [ESP32 → Backend]", message.type, message);
-        this.io.emit("esp32-data", message);
+      if (env.ESP32_MESSAGES_LOG) {
+        console.log("📡 [ESP32 → Backend]", message.type, message);
+      }
+      this.io.emit("esp32-data", message);
     });
 
     // Handle parser errors
