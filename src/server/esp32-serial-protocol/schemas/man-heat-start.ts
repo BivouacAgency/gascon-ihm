@@ -5,7 +5,7 @@ import { z } from "zod";
 // Frontend -> ESP32
 
 export const TemperatureSchema = z.number().min(30).max(120);
-export const DurationSchema = z.number().positive().max(59 * 3600 + 59 * 1000); // 59 min & 59 seconds
+export const DurationSchema = z.number().positive().max(59 * 3600000 + 59 * 1000); // 59 min & 59 seconds
 export const R1R2Schema = z.enum(R1R2_OPTIONS);
 export const SensorNameSchema = z.enum(SENSORS);
 

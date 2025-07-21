@@ -11,7 +11,7 @@ export const HeatingDataSchema = z.object({
   elapsedTime: z.custom<Time>((value) => value instanceof Time),
   R1R2: z.enum(R1R2Options),
   currentTemperature: z.number(),
-  isPlaying: z.boolean(),
 });
 
 export type HeatingData = z.infer<typeof HeatingDataSchema>;
+export type HeatingDataSettings = Omit<HeatingData, 'currentTemperature' | 'elapsedTime'>;

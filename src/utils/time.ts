@@ -1,9 +1,9 @@
-export const formatElapsedTime = (seconds: number): string => {
-  if (isNaN(seconds) || !isFinite(seconds) || seconds < 0) {
+import { Time } from "@internationalized/date";
+
+export const formatElapsedTime = (time: Time): string => {
+  if (isNaN(time.second) || !isFinite(time.second) || time.second < 0) {
     return "--:--";
   }
 
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-  return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+  return `${time.minute.toString().padStart(2, "0")}:${time.second.toString().padStart(2, "0")}`;
 };

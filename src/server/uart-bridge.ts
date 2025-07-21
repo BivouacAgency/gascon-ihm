@@ -5,7 +5,7 @@ import { createServer } from "http";
 import { env } from "../env.js";
 import { UARTParser } from "./esp32-serial-protocol/uart-parser.js";
 import { CommandEncoder } from "./esp32-serial-protocol/command-encoder.js";
-import { type ESP32Message } from "./esp32-serial-protocol/types.js";
+import { ESP32Command, type ESP32Message } from "./esp32-serial-protocol/types.js";
 import { ESP32Mock } from "./mocks/index.js";
 import { UICommandSchema, type UICommand } from "./esp32-serial-protocol/schemas/ui-command.js";
 import { SENSOR_ID_MAP } from "./esp32-serial-protocol/mappings/sensors.js";
@@ -190,10 +190,10 @@ class UARTBridge {
     
     if (uiCommand.type === "command") {
       switch (uiCommand.payload.action) {
-        case "ping":
+        case ESP32Command.PING:
           return CommandEncoder.encodePing();
           
-        case "man_heat_start":
+        case ESP32Command.MAN_HEAT_START:
           const data = uiCommand.payload.data;
           
           // Convert capteur to sensor ID using the mapping
@@ -209,7 +209,7 @@ class UARTBridge {
           
           return CommandEncoder.encodeManualHeatStart(sensorId, targetTemp, data.durationSet, heaterMask);
           
-        case "man_heat_stop":
+        case ESP32Command.MAN_HEAT_STOP:
           console.log("🛑 [UART] Stop heating command received");
           return CommandEncoder.encodeManualHeatStop();
       }
@@ -233,11 +233,11 @@ class UARTBridge {
         if (!this.esp32Mock) return;
 
         switch (payload.action) {
-          case "ping":
+          case ESP32Command.PING:
             this.esp32Mock.sendPong();
             break;
             
-          case "man_heat_start":
+          case ESP32Command.MAN_HEAT_START:
             // Send ACK first
             this.esp32Mock.sendAck(0x11); // MAN_HEAT_START command ID
             
@@ -247,7 +247,7 @@ class UARTBridge {
             setTimeout(() => this.esp32Mock?.sendManualHeatStatus(false, 0x11, 0x22, 0x33), 2500);
             break;
             
-          case "man_heat_stop":
+          case ESP32Command.MAN_HEAT_STOP:
             // Send ACK for stop command
             this.esp32Mock.sendAck(0x14); // MAN_HEAT_STOP command ID
             break;

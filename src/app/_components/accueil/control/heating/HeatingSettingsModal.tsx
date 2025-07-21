@@ -1,6 +1,5 @@
 "use client";
 
-import { SENSORS } from "@/config/form-settings/sensors/config";
 import { AppDurationField } from "@/app/_components/form-components/AppDurationField";
 import { AppFormSelectField } from "@/app/_components/form-components/AppFormSelectField";
 import { AppInputUnitField } from "@/app/_components/form-components/AppInputUnitField";
@@ -14,10 +13,11 @@ import {
   DialogTrigger,
 } from "@/app/_components/ui/dialog";
 import { Form } from "@/app/_components/ui/form";
+import { SENSORS } from "@/config/form-settings/sensors/config";
 import {
   HeatingDataSchema,
   R1R2Options,
-  type HeatingData,
+  type HeatingDataSettings
 } from "@/types/forms/HeatingData";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, type FC } from "react";
@@ -26,14 +26,13 @@ import { FaScrewdriverWrench } from "react-icons/fa6";
 import type { z } from "zod";
 
 interface HeatingSettingsModalProps {
-  data: HeatingData;
-  onSave: (newData: HeatingData) => void;
+  data: HeatingDataSettings;
+  onSave: (newData: HeatingDataSettings) => void;
 }
 
 const formSchema = HeatingDataSchema.omit({
   elapsedTime: true,
   currentTemperature: true,
-  isPlaying: true,
 });
 
 export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
@@ -53,8 +52,7 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
   });
 
   const onSubmit = (formData: z.infer<typeof formSchema>) => {
-    const completeData: HeatingData = {
-      ...data,
+    const completeData: HeatingDataSettings = {
       ...formData,
     };
     onSave(completeData);
