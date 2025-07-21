@@ -1,6 +1,6 @@
 import { cobsEncode } from "./cobs.ts";
 import { appendCrc16 } from "./crc16.ts";
-import { PROTOCOL_CONSTANTS, CMD_IDS } from "./types.ts";
+import { PROTOCOL_CONSTANTS, CMD_IDS, ESP32Command } from "./types.ts";
 
 /**
  * Command encoder for sending commands to ESP32
@@ -11,7 +11,7 @@ export class CommandEncoder {
    * Encodes a PING command
    */
   public static encodePing(): Buffer {
-    return CommandEncoder.encodeCommand(CMD_IDS.PING, Buffer.alloc(0));
+    return CommandEncoder.encodeCommand(CMD_IDS[ESP32Command.PING], Buffer.alloc(0));
   }
 
   /**

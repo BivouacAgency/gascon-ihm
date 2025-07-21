@@ -1,4 +1,4 @@
-import { SENSORS } from "@/config/sensors/config";
+import { SENSORS } from "@/config/form-settings/sensors/config";
 import { Time } from "@internationalized/date";
 import { z } from "zod";
 

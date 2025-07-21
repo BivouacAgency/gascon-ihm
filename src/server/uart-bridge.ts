@@ -10,6 +10,7 @@ import { ESP32Mock } from "./mocks/index.js";
 import { UICommandSchema, type UICommand } from "./esp32-serial-protocol/schemas/ui-command.js";
 import { SENSOR_ID_MAP } from "./esp32-serial-protocol/mappings/sensors.js";
 import { HEATER_MASK_MAP } from "./esp32-serial-protocol/mappings/heaters.js";
+import { esp32MessagesLogFilter } from "@/config/logging/esp32MessagesLogFilter.jsx";
 
 class UARTBridge {
   private io: SocketServer;
@@ -102,7 +103,7 @@ class UARTBridge {
   private setupUARTParserEvents() {
     // Handle parsed ESP32 messages
     this.uartParser.on("message", (message: ESP32Message) => {
-      if (env.ESP32_MESSAGES_LOG) {
+      if (esp32MessagesLogFilter[message.type]) {
         console.log("📡 [ESP32 → Backend]", message.type, message);
       }
       this.io.emit("esp32-data", message);

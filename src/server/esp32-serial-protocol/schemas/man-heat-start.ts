@@ -1,5 +1,5 @@
-import { R1R2_OPTIONS } from "@/config/heaters/config";
-import { SENSORS } from "@/config/sensors/config";
+import { R1R2_OPTIONS } from "@/config/form-settings/heaters/config";
+import { SENSORS } from "@/config/form-settings/sensors/config";
 import { z } from "zod";
 
 // Frontend -> ESP32

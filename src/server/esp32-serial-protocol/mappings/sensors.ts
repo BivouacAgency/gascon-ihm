@@ -1,4 +1,4 @@
-import type { SENSORS } from "@/config/sensors/config";
+import type { SENSORS } from "@/config/form-settings/sensors/config";
 
 // Frontend -> ESP32
 

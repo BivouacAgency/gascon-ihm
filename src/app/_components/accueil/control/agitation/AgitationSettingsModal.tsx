@@ -19,7 +19,7 @@ import { FaScrewdriverWrench } from "react-icons/fa6";
 import {
   AGITATOR_DURATION_OPTIONS,
   AGITATOR_SPEED_OPTIONS,
-} from "@/config/agitator/config";
+} from "@/config/form-settings/agitator/config";
 import { AppFormSelectField } from "@/app/_components/form-components/AppFormSelectField";
 
 interface AgitationSettingsModalProps {

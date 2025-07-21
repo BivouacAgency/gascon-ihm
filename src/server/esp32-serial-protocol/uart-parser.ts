@@ -2,11 +2,12 @@ import { EventEmitter } from "events";
 import { cobsDecode } from "./cobs.js";
 import { validateCrc16 } from "./crc16.js";
 import {
+  OperatingMode,
   PROTOCOL_CONSTANTS,
   CMD_IDS,
   type ESP32Message,
   type RawFrame,
-  type OperatingMode,
+  ESP32Command,
 } from "./types.js";
 import { env } from "../../env.js";
 
@@ -160,7 +161,7 @@ export class UARTParser extends EventEmitter {
     switch (commandId) {
       case CMD_IDS.PONG:
         return {
-          type: "PONG",
+          type: ESP32Command.PONG,
           timestamp,
         };
 
@@ -179,7 +180,7 @@ export class UARTParser extends EventEmitter {
         this.verboseLog(`Acknowledged command: 0x${acknowledgedCommand.toString(16)}`);
 
         return {
-          type: "ACK",
+          type: ESP32Command.ACK,
           acknowledgedCommand,
           timestamp,
         };
@@ -219,21 +220,21 @@ export class UARTParser extends EventEmitter {
     let mode: OperatingMode;
     switch (modeValue) {
       case 0:
-        mode = "MANUAL";
+        mode = OperatingMode.MANUAL;
         break;
       case 1:
-        mode = "AUTO";
+        mode = OperatingMode.AUTO;
         break;
       case 2:
-        mode = "PAUSE";
+        mode = OperatingMode.PAUSE;
         break;
       default:
-        mode = "MANUAL";
+        mode = OperatingMode.MANUAL;
         break;
     }
 
     return {
-      type: "STATUS_UPDATE",
+      type: ESP32Command.STATUS_UPDATE,
       relaysBitmap,
       inputsBitmap,
       mode,
@@ -261,7 +262,7 @@ export class UARTParser extends EventEmitter {
     this.verboseLog(`Active: ${active}, Sensor ID: ${sensorId}, Target: ${target}, Current: ${current}, Remain Ms: ${remainMs}, Heater Mask: ${heaterMask}`);
 
     return {
-      type: "MANUAL_HEAT_STATUS",
+      type: ESP32Command.MAN_HEAT_STATUS,
       active,
       sensorId,
       target,
@@ -296,7 +297,7 @@ export class UARTParser extends EventEmitter {
     if (hasError) this.verboseLog("⚠️ Sensor error (0x7FFF)");
   
     return {
-      type: "SENSOR_DATA",
+      type: ESP32Command.SENSOR_DATA,
       timestamp,
       sensors: [
         { sensorName: "TT-R1", readingValue: tempR1, unit: "°C", error: t_R1 === SENSOR_ERROR },

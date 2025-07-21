@@ -1,6 +1,6 @@
 "use client";
 
-import { SENSORS } from "@/config/sensors/config";
+import { SENSORS } from "@/config/form-settings/sensors/config";
 import { AppDurationField } from "@/app/_components/form-components/AppDurationField";
 import { AppFormSelectField } from "@/app/_components/form-components/AppFormSelectField";
 import { AppInputUnitField } from "@/app/_components/form-components/AppInputUnitField";

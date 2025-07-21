@@ -73,7 +73,7 @@ export default function Test() {
                   <strong className="text-white">Data:</strong>
                 </p>
                 <pre className="bg-grey border-grey overflow-x-auto rounded p-3 text-sm text-white">
-                  {JSON.stringify(lastMessage.data, null, 2)}
+                  {JSON.stringify(lastMessage, null, 2)}
                 </pre>
                 <p className="mt-2">
                   <strong className="text-white">Timestamp:</strong>{" "}

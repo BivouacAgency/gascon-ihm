@@ -14,7 +14,6 @@ export const env = createEnv({
     UART_MODE: z.enum(["mock", "real"]).default("real"),
     UART_DEVICE_PATH: z.string().default("/dev/ttyUSB0"),
     UART_VERBOSE: z.enum(["true", "false"]).default("false").transform(val => val === "true"),
-    ESP32_MESSAGES_LOG: z.enum(["true", "false"]).default("false").transform(val => val === "true"),
   },
 
   /**
@@ -38,7 +37,6 @@ export const env = createEnv({
     UART_DEVICE_PATH: process.env.UART_DEVICE_PATH,
     UART_VERBOSE: process.env.UART_VERBOSE,
     NEXT_PUBLIC_WEBSOCKET_HOST: process.env.NEXT_PUBLIC_WEBSOCKET_HOST,
-    ESP32_MESSAGES_LOG: process.env.ESP32_MESSAGES_LOG,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

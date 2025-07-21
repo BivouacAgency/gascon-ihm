@@ -1,4 +1,4 @@
-import { R1R2_OPTIONS } from "../../../config/heaters/config";
+import { R1R2_OPTIONS } from "../../../config/form-settings/heaters/config";
 
 // Frontend -> ESP32
 

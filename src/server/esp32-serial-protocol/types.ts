@@ -6,38 +6,45 @@ export const PROTOCOL_CONSTANTS = {
   BAUD_RATE: 115200,
 } as const;
 
-// Outgoing command IDs (commands we send to ESP32) - starting with "1"
-export const OUTGOING_CMD_IDS = {
-  PING: 0x01,
-  MAN_HEAT_START: 0x11,
-  MAN_HEAT_STOP: 0x12,
-} as const;
-
-// Incoming command IDs (commands we receive from ESP32) - starting with "8"
-export const INCOMING_CMD_IDS = {
-  PONG: 0x81,
-  STATUS_UPDATE: 0x82,
-  SENSOR_DATA: 0x83,
-  MAN_HEAT_STATUS: 0x88,
-  ACK: 0x8A,
-} as const;
-
-export const CMD_IDS = {
-  ...OUTGOING_CMD_IDS,
-  ...INCOMING_CMD_IDS,
-} as const;
+export enum ESP32Command {
+  PING = "PING",
+  MAN_HEAT_START = "MAN_HEAT_START",
+  MAN_HEAT_STOP = "MAN_HEAT_STOP",
+  MAN_HEAT_STATUS = "MAN_HEAT_STATUS",
+  STATUS_UPDATE = "STATUS_UPDATE",
+  SENSOR_DATA = "SENSOR_DATA",
+  ACK = "ACK",    
+  PONG = "PONG",
+}
 
 // Operating modes
-export type OperatingMode = "MANUAL" | "AUTO" | "PAUSE";
+export enum OperatingMode {
+  MANUAL = "MANUAL",
+  AUTO = "AUTO",
+  PAUSE = "PAUSE",
+}
+
+export const CMD_IDS: Record<ESP32Command, number> = {
+  // Outgoing commands
+  [ESP32Command.PING]: 0x01,
+  [ESP32Command.MAN_HEAT_START]: 0x11,
+  [ESP32Command.MAN_HEAT_STOP]: 0x12,
+  // Incoming commands
+  [ESP32Command.PONG]: 0x81,
+  [ESP32Command.STATUS_UPDATE]: 0x82,
+  [ESP32Command.SENSOR_DATA]: 0x83,
+  [ESP32Command.MAN_HEAT_STATUS]: 0x88,
+  [ESP32Command.ACK]: 0x8A,
+};
 
 // Parsed message types
 export interface PongMessage {
-  type: "PONG";
+  type: ESP32Command.PONG;
   timestamp: number;
 }
 
 export interface StatusUpdateMessage {
-  type: "STATUS_UPDATE";
+  type: ESP32Command.STATUS_UPDATE;
   relaysBitmap: number;
   inputsBitmap: number;
   mode: OperatingMode;
@@ -45,7 +52,7 @@ export interface StatusUpdateMessage {
 }
 
 export interface ManualHeatStatusMessage {
-  type: "MANUAL_HEAT_STATUS";
+  type: ESP32Command.MAN_HEAT_STATUS;
   active: number;      // uint8
   sensorId: number;    // uint8
   target: number;      // uint16
@@ -56,7 +63,7 @@ export interface ManualHeatStatusMessage {
 }
 
 export interface AckMessage {
-  type: "ACK";
+  type: ESP32Command.ACK;
   acknowledgedCommand: number;
   timestamp: number;
 }
@@ -73,7 +80,7 @@ export interface SensorReading {
 // Data format for sensor readings message
 // ESP32 -> Frontend
 export interface SensorDataMessage {
-  type: "SENSOR_DATA";
+  type: ESP32Command.SENSOR_DATA;
   timestamp: number;
   sensors: SensorReading[];
   error: boolean;
