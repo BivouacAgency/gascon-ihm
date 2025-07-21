@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableRow } from "@/app/_components/ui/table";
 import { formatElapsedTime } from "@/utils/time";
 import type { HeatingData } from "@/types/forms/HeatingData";
 

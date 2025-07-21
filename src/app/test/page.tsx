@@ -1,7 +1,7 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "@/app/_components/ui/card";
+import { Button } from "@/app/_components/ui/button";
 import { useESP32Communication } from "@/hooks/useESP32Communication";
 
 export default function Test() {

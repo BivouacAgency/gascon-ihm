@@ -5,7 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/app/_components/ui/table";
 import { StateLED } from "@/app/_components/StateLED";
 import type { FC } from "react";
 

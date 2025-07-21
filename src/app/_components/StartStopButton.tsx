@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { FaPlay, FaStop } from "react-icons/fa";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/_components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface StartStopButtonProps {

@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableRow } from "@/app/_components/ui/table";
 import { type FC } from "react";
 import type { EngineData } from "@/types/forms/EngineData";
 import { StartStopButton } from "@/app/_components/StartStopButton";

@@ -4,7 +4,7 @@ import { SENSORS } from "@/config/sensors/config";
 import { AppDurationField } from "@/app/_components/form-components/AppDurationField";
 import { AppFormSelectField } from "@/app/_components/form-components/AppFormSelectField";
 import { AppInputUnitField } from "@/app/_components/form-components/AppInputUnitField";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/_components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -12,8 +12,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Form } from "@/components/ui/form";
+} from "@/app/_components/ui/dialog";
+import { Form } from "@/app/_components/ui/form";
 import {
   HeatingDataSchema,
   R1R2Options,
