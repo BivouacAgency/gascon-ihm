@@ -34,7 +34,7 @@ export const SensorsInfo: FC<SensorsInfoProps> = ({
         <div className="flex items-center">
           <h3 className="text-lg font-semibold text-white">Capteurs</h3>
           {isStale && (
-            <span className="ml-2 text-sm text-red-400">⚠️ No recent data</span>
+            <span className="ml-2 text-sm text-red-400 whitespace-nowrap">⚠️ Pas de données récentes</span>
           )}
         </div>
         <StateLED isPlaying={isRecording} colorType="blueGrey" />

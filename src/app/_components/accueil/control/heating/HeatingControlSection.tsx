@@ -1,18 +1,20 @@
 "use client";
 
-import { useState, type FC } from "react";
+import { useState, useEffect, type FC } from "react";
 import { HeatingSettingsModal } from "./HeatingSettingsModal";
 import { HeatingControlInfo } from "./HeatingControlInfo";
 import { ControlSectionWrapper } from "../ControlSectionWrapper";
 import { R1R2Options, type HeatingData, type HeatingDataSettings } from "@/types/forms/HeatingData";
 import { useESP32Communication } from "@/hooks/useESP32Communication";
 import { Time } from "@internationalized/date";
-import { useEffect } from "react";
 import { ESP32Command } from "@/server/esp32-serial-protocol/types";
+import { useStale } from "@/hooks/useStale";
+
+const HEATING_STALE_THRESHOLD_MS = 3000;
 
 const defaultHeatingDataSettings: HeatingDataSettings = {
   temperatureSet: 80,
-  durationSet: new Time(0, 45, 0), // 45 minutes, 0 seconds
+  durationSet: new Time(0, 45, 0),
   R1R2: R1R2Options[0],
   capteur: "TT-R1",
 };
@@ -30,6 +32,9 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
   const [heatingDataSettings, setHeatingDataSettings] = useState<HeatingDataSettings>(defaultHeatingDataSettings);
   const [heatingData, setHeatingData] = useState<HeatingData>({ ...defaultHeatingDataSettings, elapsedTime: new Time(0, 0, 0), currentTemperature: 0 });
 
+  const [lastHeatStatusTimestamp, setLastHeatStatusTimestamp] = useState<number>(Date.now());
+  const isHeatStatusStale = useStale(lastHeatStatusTimestamp, HEATING_STALE_THRESHOLD_MS);
+
 
   useEffect(() => {
     if (lastMessage?.type === ESP32Command.MAN_HEAT_STATUS) {
@@ -37,7 +42,7 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
         setHeatingInProgress(lastMessage.active === 1);
         setHeatingStartTimestamp(lastMessage.timestamp);
       }
-      // Calculate elapsed time in minutes and seconds
+      setLastHeatStatusTimestamp(Date.now());
       const elapsedTime = heatingStartTimestamp
         ? (() => {
             const elapsedMs = lastMessage.timestamp - heatingStartTimestamp;
@@ -96,17 +101,24 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
   };
 
   return (
-    <ControlSectionWrapper
-      title="Chauffe"
-      settingsModal={
-        <HeatingSettingsModal data={heatingDataSettings} onSave={handleSaveSettings} />
-      }
-      playControl={{
-        isPlaying: heatingInProgress,
-        onPlayToggle: handlePlayToggle,
-      }}
-      infoComponent={<HeatingControlInfo data={heatingData} />}
-      className={className}
-    />
+    <>
+      <ControlSectionWrapper
+        title="Chauffe"
+        settingsModal={
+          <HeatingSettingsModal data={heatingDataSettings} onSave={handleSaveSettings} />
+        }
+        playControl={{
+          isPlaying: heatingInProgress,
+          onPlayToggle: handlePlayToggle,
+        }}
+        infoComponent={<HeatingControlInfo data={heatingData} />}
+        className={className}
+      />
+      {heatingInProgress && isHeatStatusStale && (
+        <div className="mt-1 text-sm text-red-400">
+          ⚠️ Pas de données récentes
+        </div>
+      )}
+    </>
   );
 };
