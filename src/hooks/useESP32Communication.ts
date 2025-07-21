@@ -26,7 +26,7 @@ export function useESP32Communication(): UseESP32CommunicationReturn {
     const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
     
     // Use environment variable if set, otherwise use current hostname
-    const host = env.NEXT_PUBLIC_WEBSOCKET_HOST || window.location.hostname;
+    const host = env.NEXT_PUBLIC_WEBSOCKET_HOST ?? window.location.hostname;
     const socketUrl = `${protocol}//${host}:8081`;
     
     console.log(`🔌 Connecting to WebSocket server at: ${socketUrl}`);

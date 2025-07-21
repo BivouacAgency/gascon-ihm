@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
  * @param thresholdMs - milliseconds after which data is considered stale
  * @returns boolean indicating if data is stale
  */
-export function useStale(resetTrigger: unknown, thresholdMs: number = 5000): boolean {
+export function useStale(resetTrigger: unknown, thresholdMs = 5000): boolean {
   const [isStale, setIsStale] = useState(false);
 
   useEffect(() => {

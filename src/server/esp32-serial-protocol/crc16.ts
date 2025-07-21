@@ -4,11 +4,10 @@
  * Initial value: 0xFFFF
  * Little Endian output (matches ESP32 implementation)
  */
-export function crc16(data: Buffer | Uint8Array, initialValue: number = 0xFFFF): number {
+export function crc16(data: Buffer, initialValue = 0xFFFF): number {
   let crc = initialValue;
   
-  for (let i = 0; i < data.length; i++) {
-    const byte = data[i];
+  for (const byte of data) {
     if (byte === undefined) continue;
     crc ^= byte << 8;
     

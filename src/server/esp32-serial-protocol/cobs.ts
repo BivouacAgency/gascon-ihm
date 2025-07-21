@@ -63,8 +63,7 @@ export function cobsEncode(data: Buffer): Buffer {
 
   encoded.push(0); // Placeholder for first code byte
 
-  for (let i = 0; i < data.length; i++) {
-    const byte = data[i];
+  for (const byte of data) {
     if (byte === undefined) continue;
 
     if (byte !== 0) {

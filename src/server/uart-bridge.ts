@@ -26,7 +26,7 @@ class UARTBridge {
     const httpServer = createServer();
     
     // Determine the host to bind to based on environment variable
-    const bindHost = env.NEXT_PUBLIC_WEBSOCKET_HOST || 'localhost';
+    const bindHost = env.NEXT_PUBLIC_WEBSOCKET_HOST ?? 'localhost';
     
     // Configure CORS based on environment variable
     const allowedOrigins = bindHost === 'localhost' 
@@ -250,10 +250,6 @@ class UARTBridge {
           case ESP32Command.MAN_HEAT_STOP:
             // Send ACK for stop command
             this.esp32Mock.sendAck(0x14); // MAN_HEAT_STOP command ID
-            break;
-            
-          default:
-            console.log(`🤖 [ESP32 Mock] No response defined for action in payload: ${payload}`);
             break;
         }
       }, 100); // Small delay to simulate processing time

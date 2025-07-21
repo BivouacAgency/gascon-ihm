@@ -46,8 +46,7 @@ export class UARTParser extends EventEmitter {
   public processData(data: Buffer): void {
     this.verboseLog("🔍 [Parser] Raw UART data received:", this.formatHex(data));
     
-    for (let i = 0; i < data.length; i++) {
-      const byte = data[i];
+    for (const byte of data) {
       if (byte === undefined) continue;
       
       this.processByte(byte);

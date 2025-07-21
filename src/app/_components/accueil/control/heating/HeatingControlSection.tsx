@@ -35,7 +35,6 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
   const [lastHeatStatusTimestamp, setLastHeatStatusTimestamp] = useState<number>(Date.now());
   const isHeatStatusStale = useStale(lastHeatStatusTimestamp, HEATING_STALE_THRESHOLD_MS);
 
-
   useEffect(() => {
     if (lastMessage?.type === ESP32Command.MAN_HEAT_STATUS) {
       if (!heatingInProgress) {
@@ -58,7 +57,7 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
         elapsedTime,
       });
     }
-  }, [lastMessage, heatingInProgress, heatingDataSettings]);
+  }, [lastMessage, heatingInProgress, heatingDataSettings, heatingStartTimestamp]);
 
   const handlePlayToggle = () => {
     const newIsPlaying = !heatingInProgress;

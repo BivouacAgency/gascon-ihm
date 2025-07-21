@@ -1,4 +1,4 @@
-import { Time } from "@internationalized/date";
+import type { Time } from "@internationalized/date";
 
 export const formatElapsedTime = (time: Time): string => {
   if (isNaN(time.second) || !isFinite(time.second) || time.second < 0) {

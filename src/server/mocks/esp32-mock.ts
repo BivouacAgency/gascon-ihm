@@ -106,10 +106,10 @@ export class ESP32Mock {
    * Send a MANUAL_HEAT_STATUS frame
    */
   public sendManualHeatStatus(
-    isActive: boolean = true,
-    command: number = 0x11,
-    param1: number = 0x22,
-    param2: number = 0x33
+    isActive = true,
+    command = 0x11,
+    param1 = 0x22,
+    param2 = 0x33
   ): void {
     const payload = Buffer.from([
       isActive ? 1 : 0,  // is_active
