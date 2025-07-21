@@ -1,11 +1,11 @@
-import { SENSOR_NAMES } from "@/config/sensors/config";
+import { SENSORS } from "@/config/sensors/config";
 import { Time } from "@internationalized/date";
 import { z } from "zod";
 
 export const R1R2Options = ["R1", "R1+R2"] as const;
 
 export const HeatingDataSchema = z.object({
-  capteur: z.enum(SENSOR_NAMES),
+  capteur: z.enum(SENSORS),
   temperatureSet: z.number(),
   durationSet: z.custom<Time>((value) => value instanceof Time),
   elapsedTime: z.custom<Time>((value) => value instanceof Time),

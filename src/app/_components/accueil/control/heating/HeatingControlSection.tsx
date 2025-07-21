@@ -4,7 +4,7 @@ import { useState, type FC } from "react";
 import { HeatingSettingsModal } from "./HeatingSettingsModal";
 import { HeatingControlInfo } from "./HeatingControlInfo";
 import { ControlSectionWrapper } from "../ControlSectionWrapper";
-import { R1R2Options, type HeatingData } from "@/types/HeatingData";
+import { R1R2Options, type HeatingData } from "@/types/forms/HeatingData";
 import { useESP32Communication } from "@/hooks/useESP32Communication";
 import { Time } from "@internationalized/date";
 

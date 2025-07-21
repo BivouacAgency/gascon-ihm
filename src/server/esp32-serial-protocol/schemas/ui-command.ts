@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { ManHeatStartDataSchema } from "./man-heat-start";
 
-// Schema for UICommand structure
+// Frontend -> ESP32
+
 export const UICommandSchema = z.object({
   type: z.enum(["command", "config"]),
   payload: z.union([

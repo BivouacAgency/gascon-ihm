@@ -14,7 +14,7 @@ import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
-import { AgitationDataSchema, type AgitationData } from "@/types/AgitationData";
+import { AgitationDataSchema, type AgitationData } from "@/types/forms/AgitationData";
 import { FaScrewdriverWrench } from "react-icons/fa6";
 import {
   AGITATOR_DURATION_OPTIONS,

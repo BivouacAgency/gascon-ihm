@@ -6,8 +6,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { type FC } from "react";
 import { StateLED } from "@/app/_components/StateLED";
+import type { FC } from "react";
 
 export interface SensorData {
   sensorName: string;
@@ -15,21 +15,28 @@ export interface SensorData {
   unit: string;
 }
 
-interface SensorsInfoProps {
+export interface SensorsInfoProps {
   className?: string;
   data: SensorData[];
   isRecording: boolean;
+  isStale?: boolean;
 }
 
 export const SensorsInfo: FC<SensorsInfoProps> = ({
   data,
   isRecording,
+  isStale = false,
   className,
-}) => {
+}: SensorsInfoProps) => {
   return (
     <div className={className}>
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-white">Capteurs</h3>
+        <div className="flex items-center">
+          <h3 className="text-lg font-semibold text-white">Capteurs</h3>
+          {isStale && (
+            <span className="ml-2 text-sm text-red-400">⚠️ No recent data</span>
+          )}
+        </div>
         <StateLED isPlaying={isRecording} colorType="blueGrey" />
       </div>
       <Table className="text-white">

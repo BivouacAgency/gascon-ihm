@@ -1,5 +1,6 @@
 "use client";
 
+import { SENSORS } from "@/config/sensors/config";
 import { AppDurationField } from "@/app/_components/form-components/AppDurationField";
 import { AppFormSelectField } from "@/app/_components/form-components/AppFormSelectField";
 import { AppInputUnitField } from "@/app/_components/form-components/AppInputUnitField";
@@ -13,12 +14,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { SENSOR_NAMES } from "@/config/sensors/config";
 import {
   HeatingDataSchema,
   R1R2Options,
   type HeatingData,
-} from "@/types/HeatingData";
+} from "@/types/forms/HeatingData";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
@@ -91,7 +91,7 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
                 control={form.control}
                 name="capteur"
                 label="Capteur"
-                options={[...SENSOR_NAMES]}
+                options={[...SENSORS]}
               />
 
               <AppInputUnitField

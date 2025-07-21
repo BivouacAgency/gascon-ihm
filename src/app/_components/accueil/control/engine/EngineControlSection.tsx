@@ -3,7 +3,7 @@
 import { useState, type FC } from "react";
 import { EngineControlInfo } from "./EngineControlInfo";
 import { ControlSectionWrapper } from "../ControlSectionWrapper";
-import type { EngineData } from "@/types/EngineData";
+import type { EngineData } from "@/types/forms/EngineData";
 
 interface EngineControlSectionProps {
   className?: string;

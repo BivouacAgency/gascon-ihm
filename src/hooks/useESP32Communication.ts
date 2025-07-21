@@ -1,12 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { io, type Socket } from "socket.io-client";
 import { env } from "@/env.js";
-
-interface ESP32Message {
-  type: "PONG" | "STATUS_UPDATE" | "MANUAL_HEAT_STATUS" | "ACK" | "SENSOR_DATA";
-  timestamp: number;
-  [key: string]: unknown; // Allow additional properties like relaysBitmap, etc.
-}
+import type { ESP32Message } from "@/server/esp32-serial-protocol/types";
 
 interface UICommand {
   type: "command" | "config";

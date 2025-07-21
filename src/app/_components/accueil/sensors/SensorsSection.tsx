@@ -1,34 +1,59 @@
 "use client";
 
-import { useEffect, useState, type FC } from "react";
-import { SENSOR_NAMES } from "@/config/sensors/config";
+import { useEffect, useState, type FC, useMemo } from "react";
 import { SensorsInfo, type SensorData } from "./SensorsInfo";
+import type { SensorReading } from "@/server/esp32-serial-protocol/types";
+import { useESP32Communication } from "@/hooks/useESP32Communication";
 
 interface SensorsSectionProps {
   className?: string;
 }
 
-export const SensorsSection: FC<SensorsSectionProps> = ({ className }) => {
-  // Sensors mock data state - using centralized sensor names
-  const [sensorsData] = useState<SensorData[]>([
-    { sensorName: SENSOR_NAMES[0], value: "85.2", unit: "°C" }, // TT-R1
-    { sensorName: SENSOR_NAMES[1], value: "1.25", unit: "bar" }, // TT-R2
-    { sensorName: SENSOR_NAMES[2], value: "75.8", unit: "%" }, // TT1
-    { sensorName: SENSOR_NAMES[3], value: "12.5", unit: "L/min" }, // PT1
-    { sensorName: SENSOR_NAMES[4], value: "ON", unit: "" }, // LV1
-  ]);
+const MAX_MISSED_UPDATES = 2;
 
-  // Global sensors status
+export const SensorsSection: FC<SensorsSectionProps> = ({ className }) => {
+  const [missedUpdates, setMissedUpdates] = useState(0);
+  const { lastMessage } = useESP32Communication();
+
+  useEffect(() => {
+    if (lastMessage == null) return;
+    if (lastMessage.type === "SENSOR_DATA") {
+      setMissedUpdates(0);
+    } else {
+      setMissedUpdates((count) => count + 1);
+    }
+  }, [lastMessage]);
+
+  const [sensorReadings, setSensorReadings] = useState<SensorReading[]>([]);
+  useEffect(() => {
+    if (lastMessage?.type === "SENSOR_DATA" && lastMessage.sensors) {
+      setSensorReadings(lastMessage.sensors);
+    }
+  }, [lastMessage]);
+
+  const sensorsData: SensorData[] = useMemo(
+    () =>
+      sensorReadings.map(sensor => ({
+        sensorName: sensor.sensorName,
+        value: sensor.error ? "-" : sensor.readingValue.toFixed(sensor.unit === "bar" ? 2 : 1),
+        unit: sensor.unit,
+      })),
+    [sensorReadings]
+  );
+
   const [isRecording, setIsRecording] = useState(true);
 
   useEffect(() => {
     setIsRecording(true);
   }, []);
 
+  const isStale = missedUpdates >= MAX_MISSED_UPDATES;
+
   return (
     <SensorsInfo
       data={sensorsData}
       isRecording={isRecording}
+      isStale={isStale}
       className={className}
     />
   );

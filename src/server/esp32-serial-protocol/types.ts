@@ -61,20 +61,28 @@ export interface AckMessage {
   timestamp: number;
 }
 
+// Data format for sensor reading
+// ESP32 -> Frontend
+export interface SensorReading {
+  sensorName: string;
+  readingValue: number;
+  unit: string;
+  error?: boolean;
+}
+
+// Data format for sensor readings message
+// ESP32 -> Frontend
 export interface SensorDataMessage {
   type: "SENSOR_DATA";
-  t_R1: number;  // Temperature R1 (°C × 10)
-  t_R2: number;  // Temperature R2 (°C × 10)
-  t_TT1: number; // Temperature TT1 (°C × 10)
-  p_PT1: number; // Pressure PT1 (bar × 10)
   timestamp: number;
+  sensors: SensorReading[];
   error: boolean;
 }
 
-export type ESP32Message = 
-  | PongMessage 
-  | StatusUpdateMessage 
-  | ManualHeatStatusMessage 
+export type ESP32Message =
+  | PongMessage
+  | StatusUpdateMessage
+  | ManualHeatStatusMessage
   | AckMessage
   | SensorDataMessage;
 

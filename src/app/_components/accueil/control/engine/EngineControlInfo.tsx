@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { type FC } from "react";
-import type { EngineData } from "@/types/EngineData";
+import type { EngineData } from "@/types/forms/EngineData";
 import { StartStopButton } from "@/app/_components/StartStopButton";
 import { StateLED } from "@/app/_components/StateLED";
 

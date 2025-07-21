@@ -4,7 +4,7 @@ import { useState, type FC } from "react";
 import { ControlSectionWrapper } from "../ControlSectionWrapper";
 import { AgitationSettingsModal } from "./AgitationSettingsModal";
 import { AgitationControlInfo } from "./AgitationControlInfo";
-import type { AgitationData } from "@/types/AgitationData";
+import type { AgitationData } from "@/types/forms/AgitationData";
 
 interface AgitationControlSectionProps {
   className?: string;

@@ -297,12 +297,14 @@ export class UARTParser extends EventEmitter {
   
     return {
       type: "SENSOR_DATA",
-      t_R1: tempR1,
-      t_R2: tempR2,
-      t_TT1: tempTT1,
-      p_PT1: pressPT1,
       timestamp,
-      error: hasError,
+      sensors: [
+        { sensorName: "TT-R1", readingValue: tempR1, unit: "°C", error: t_R1 === SENSOR_ERROR },
+        { sensorName: "TT-R2", readingValue: tempR2, unit: "°C", error: t_R2 === SENSOR_ERROR },
+        { sensorName: "TT1", readingValue: tempTT1, unit: "°C", error: t_TT1 === SENSOR_ERROR },
+        { sensorName: "PT1", readingValue: pressPT1, unit: "bar", error: p_PT1 === SENSOR_ERROR }
+      ],
+      error: hasError
     };
   }
   

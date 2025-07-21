@@ -1,12 +1,13 @@
+import { R1R2_OPTIONS } from "@/config/heaters/config";
+import { SENSORS } from "@/config/sensors/config";
 import { z } from "zod";
-import { SENSOR_NAMES } from "../../../config/sensors/config";
-import { R1R2_OPTIONS } from "../../../config/heaters/config";
+
+// Frontend -> ESP32
 
 export const TemperatureSchema = z.number().min(30).max(120);
 export const DurationSchema = z.number().positive().max(59 * 3600 + 59 * 1000); // 59 min & 59 seconds
 export const R1R2Schema = z.enum(R1R2_OPTIONS);
-
-export const SensorNameSchema = z.enum(SENSOR_NAMES);
+export const SensorNameSchema = z.enum(SENSORS);
 
 export const ManHeatStartDataSchema = z.object({
   temperatureSet: TemperatureSchema,
