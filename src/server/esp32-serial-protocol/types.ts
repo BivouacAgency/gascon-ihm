@@ -10,7 +10,7 @@ export const PROTOCOL_CONSTANTS = {
 export const OUTGOING_CMD_IDS = {
   PING: 0x01,
   MAN_HEAT_START: 0x11,
-  MAN_HEAT_STOP: 0x14,
+  MAN_HEAT_STOP: 0x12,
 } as const;
 
 // Incoming command IDs (commands we receive from ESP32) - starting with "8"
