@@ -60,6 +60,13 @@ class UARTBridge {
     httpServer.listen(8081, bindHost, () => {
       console.log(`🔌 [UART Bridge] Socket.io server running on port 8081 (${bindHost})`);
     });
+
+    process.on("SIGINT", () => {
+      console.log("✋ [UART Bridge] Shutting down…");
+      this.io.close(() => {
+        httpServer.close(() => process.exit(0));
+      });
+    });
   }
 
   /**

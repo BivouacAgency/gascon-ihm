@@ -18,13 +18,25 @@ interface UseESP32CommunicationReturn {
   connectionError: string | null;
 }
 
+// Singleton socket instance to ensure only one WebSocket connection
+let socketInstance: Socket | null = null;
+// Function to create or retrieve the existing socket instance
+function getSocketInstance(): Socket {
+  if (!socketInstance) {
+    const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
+    const host = env.NEXT_PUBLIC_WEBSOCKET_HOST ?? window.location.hostname;
+    const socketUrl = `${protocol}//${host}:8081`;
+    console.log(`🔌 [Socket] Connecting to: ${socketUrl}`);
+    socketInstance = io(socketUrl);
+  }
+  return socketInstance;
+}
+
 /**
  * Hook to send/receive commands from/to the ESP32
- * @returns The connection status, last message, send command function, and connection error
+ * Uses a shared WebSocket instance to avoid multiple connections.
  */
 export function useESP32Communication(): UseESP32CommunicationReturn {
-  // Socket connection
-  const [socket, setSocket] = useState<Socket | null>(null);
   // Connection status
   const [isConnected, setIsConnected] = useState(false);
   // Last message received from the ESP32
@@ -32,73 +44,40 @@ export function useESP32Communication(): UseESP32CommunicationReturn {
   // Connection error
   const [connectionError, setConnectionError] = useState<string | null>(null);
 
-  // Effect to connect to the WebSocket server
   useEffect(() => {
-    // Determine the WebSocket server URL
-    const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
-    
-    // Use environment variable if set, otherwise use current hostname
-    const host = env.NEXT_PUBLIC_WEBSOCKET_HOST ?? window.location.hostname;
-    const socketUrl = `${protocol}//${host}:8081`;
-    
-    console.log(`🔌 Connecting to WebSocket server at: ${socketUrl}`);
-    const newSocket = io(socketUrl);
+    const socket = getSocketInstance();
 
-    // Event listeners
-    // Connect event
-    newSocket.on("connect", () => {
-      console.log("🟢 Connected to ESP32 bridge");
-      setIsConnected(true);
-      setConnectionError(null);
-    });
+    const handleConnect = () => { console.log("🟢 Connected to ESP32 bridge"); setIsConnected(true); setConnectionError(null); };
+    const handleDisconnect = () => { console.log("🔴 Disconnected from ESP32 bridge"); setIsConnected(false); };
+    const handleEsp32Data = (message: ESP32Message) => setLastMessage(message);
+    const handleUartError = (error: { error: string }) => setConnectionError(error.error);
+    const handleSocketError = (error: { message: string }) => setConnectionError(error.message);
 
-    // Disconnect event
-    newSocket.on("disconnect", () => {
-      console.log("🔴 Disconnected from ESP32 bridge");
-      setIsConnected(false);
-    });
+    socket.on("connect", handleConnect);
+    socket.on("disconnect", handleDisconnect);
+    socket.on("esp32-data", handleEsp32Data);
+    socket.on("uart-error", handleUartError);
+    socket.on("error", handleSocketError);
 
-    // ESP32 data event
-    newSocket.on("esp32-data", (message: ESP32Message) => {
-      console.log("📡 Received from ESP32:", message);
-      setLastMessage(message);
-    });
-
-    // UART error event
-    newSocket.on("uart-error", (error: { error: string }) => {
-      console.warn("❌ UART Error:", error);
-      setConnectionError(error.error);
-    });
-
-    // Socket error event
-    newSocket.on("error", (error: { message: string }) => {
-      console.error("❌ Socket Error:", error);
-      setConnectionError(error.message);
-    });
-
-    // Set the socket connection
-    setSocket(newSocket);
-
-    // Cleanup function to close the socket connection
     return () => {
-      newSocket.close();
+      socket.off("connect", handleConnect);
+      socket.off("disconnect", handleDisconnect);
+      socket.off("esp32-data", handleEsp32Data);
+      socket.off("uart-error", handleUartError);
+      socket.off("error", handleSocketError);
     };
   }, []);
 
-  // Callback to send a command to the ESP32
-  const sendCommand = useCallback(
-    (command: UICommand) => {
-      if (socket && isConnected) {
-        console.log("📤 Sending to ESP32:", command);
-        socket.emit("send-to-esp32", command);
-      } else {
-        console.warn("⚠️ Cannot send command: Socket not connected");
-      }
-    },
-    [socket, isConnected],
-  );
+  const sendCommand = useCallback((command: UICommand) => {
+    const socket = getSocketInstance();
+    if (isConnected) {
+      console.log("📤 Sending to ESP32:", command);
+      socket.emit("send-to-esp32", command);
+    } else {
+      console.warn("⚠️ Cannot send command: Socket not connected");
+    }
+  }, [isConnected]);
 
-  // Return the connection status, last message, send command function, and connection error
   return {
     isConnected,
     lastMessage,
