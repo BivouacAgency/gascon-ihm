@@ -49,7 +49,7 @@ export function useESP32Communication(): UseESP32CommunicationReturn {
     });
 
     newSocket.on("uart-error", (error: { error: string }) => {
-      console.error("❌ UART Error:", error);
+      console.warn("❌ UART Error:", error);
       setConnectionError(error.error);
     });
 
