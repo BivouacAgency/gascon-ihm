@@ -2,7 +2,6 @@ import "@/styles/globals.css";
 
 import { type Metadata } from "next";
 import { Open_Sans } from "next/font/google";
-import { TRPCReactProvider } from "@/trpc/react";
 import { Navbar } from "./_components/Navbar";
 
 export const metadata: Metadata = {
@@ -22,7 +21,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${openSans.variable}`}>
       <body className="bg-grey min-h-screen">
-        <TRPCReactProvider>
           <div className="flex h-screen">
             {/* Desktop Layout */}
             <div className="hidden lg:flex lg:h-full lg:w-full">
@@ -40,7 +38,6 @@ export default function RootLayout({
               <Navbar />
             </div>
           </div>
-        </TRPCReactProvider>
       </body>
     </html>
   );

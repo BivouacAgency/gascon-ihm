@@ -17,7 +17,7 @@ import { SENSORS } from "@/config/form-settings/sensors/config";
 import {
   HeatingDataSchema,
   R1R2Options,
-  type HeatingDataSettings
+  type HeatingSettings
 } from "@/types/forms/HeatingData";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, type FC } from "react";
@@ -25,22 +25,31 @@ import { useForm } from "react-hook-form";
 import { FaScrewdriverWrench } from "react-icons/fa6";
 import type { z } from "zod";
 
+// Props for the HeatingSettingsModal component
 interface HeatingSettingsModalProps {
-  data: HeatingDataSettings;
-  onSave: (newData: HeatingDataSettings) => void;
+  data: HeatingSettings;
+  onSave: (newData: HeatingSettings) => void;
 }
 
+// Form schema for the HeatingSettingsModal component
 const formSchema = HeatingDataSchema.omit({
   elapsedTime: true,
   currentTemperature: true,
 });
 
+/**
+ * HeatingSettingsModal provides a dialog to configure heating settings:
+ * - sensor and temperature selection
+ * - duration and R1/R2 element selection
+ * Calls onSave with updated settings on submit.
+ */
 export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
   data,
   onSave,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  // Form for the modal with default values
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,14 +60,16 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
     },
   });
 
+  // Callback to save the form data
   const onSubmit = (formData: z.infer<typeof formSchema>) => {
-    const completeData: HeatingDataSettings = {
+    const completeData: HeatingSettings = {
       ...formData,
     };
     onSave(completeData);
     setIsOpen(false);
   };
 
+  // Callback to handle form validation errors
   const onError = (errors: unknown) => {
     console.log("Form validation errors:", errors);
   };

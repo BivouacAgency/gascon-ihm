@@ -12,6 +12,7 @@ export const StateLED: FC<StateLEDProps> = ({
   colorType = "redGreen",
   className,
 }) => {
+  // Define the colors for the LED based on the color type
   const activeColor = colorType === "blueGrey" ? "bg-blue" : "bg-green";
   const inactiveColor = colorType === "blueGrey" ? "bg-grey" : "bg-red";
 

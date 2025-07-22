@@ -2,8 +2,12 @@ import { SENSORS } from "@/config/form-settings/sensors/config";
 import { Time } from "@internationalized/date";
 import { z } from "zod";
 
+// This file contains the schema for the heating data
+
+// R1R2 options
 export const R1R2Options = ["R1", "R1+R2"] as const;
 
+// Schema for the heating data
 export const HeatingDataSchema = z.object({
   sensor: z.enum(SENSORS),
   temperatureSet: z.number(),
@@ -14,4 +18,4 @@ export const HeatingDataSchema = z.object({
 });
 
 export type HeatingData = z.infer<typeof HeatingDataSchema>;
-export type HeatingDataSettings = Omit<HeatingData, 'currentTemperature' | 'elapsedTime'>;
+export type HeatingSettings = Omit<HeatingData, 'currentTemperature' | 'elapsedTime'>;

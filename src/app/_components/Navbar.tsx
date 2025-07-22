@@ -12,6 +12,7 @@ import { AlarmeIcon } from "./icons/AlarmeIcon";
 import { NavbarItem } from "./NavbarItem";
 import { SystemTime } from "./systemTime";
 
+// List of items to display in the navbar
 const navbarItems = [
   { href: "/", label: "Accueil", icon: HomeIcon },
   {

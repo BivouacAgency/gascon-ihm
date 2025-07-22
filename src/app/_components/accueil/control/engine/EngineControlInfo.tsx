@@ -4,14 +4,20 @@ import type { EngineData } from "@/types/forms/EngineData";
 import { StartStopButton } from "@/app/_components/StartStopButton";
 import { StateLED } from "@/app/_components/StateLED";
 
+// Props for the EngineControlInfo component
 interface EngineControlInfoProps {
   className?: string;
   data: EngineData;
 }
 
+/**
+ * Renders Start/Stop buttons and status LEDs for engines and valves:
+ * - data.m1Status, ev1Status, ev2Status, ev3Status
+ * Clicking buttons logs the engine or valve ID (to be wired to backend).
+ */
 export const EngineControlInfo: FC<EngineControlInfoProps> = ({ data }) => {
   const handleButtonClick = ({ engineId }: { engineId: number }) => {
-    // BACKEND: Implement engine/valve control logic
+    // BACKEND TODO: Implement engine/valve control logic
     console.log("Engine ID:", engineId);
   };
 

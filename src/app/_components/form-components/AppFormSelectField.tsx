@@ -41,6 +41,7 @@ export const AppFormSelectField = <
   options,
   unit = "",
 }: AppFormSelectFieldProps<TFieldValues, TName>) => {
+  // Callback to get the label for the selected value
   const getLabel = (value: string | number | boolean) => {
     if (typeof value === "boolean") {
       return value ? "Oui" : "Non";

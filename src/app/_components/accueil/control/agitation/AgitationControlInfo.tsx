@@ -3,11 +3,18 @@ import { type FC } from "react";
 import type { AgitationData } from "@/types/forms/AgitationData";
 import { formatElapsedTime } from "@/utils/time";
 
+// Props for the AgitationControlInfo component
 interface AgitationControlInfoProps {
   className?: string;
   data: AgitationData;
 }
 
+/**
+ * Displays the current agitation control settings and status:
+ * - speedSet: target agitation speed in RPM
+ * - elapsedTime: formatted elapsed time
+ * - durationSet: target agitation duration in minutes
+ */
 export const AgitationControlInfo: FC<AgitationControlInfoProps> = ({
   data,
 }) => {

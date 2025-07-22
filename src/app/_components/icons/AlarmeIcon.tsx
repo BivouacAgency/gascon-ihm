@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import type { IconProps } from "./HomeIcon";
+import type { IconProps } from "./index";
 
 export const AlarmeIcon: FC<IconProps> = ({
   width = 512,

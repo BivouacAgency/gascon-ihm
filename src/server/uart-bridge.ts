@@ -12,6 +12,9 @@ import { SENSOR_ID_MAP } from "./esp32-serial-protocol/mappings/sensors.js";
 import { HEATER_MASK_MAP } from "./esp32-serial-protocol/mappings/heaters.js";
 import { esp32MessagesLogFilter } from "@/config/logging/esp32MessagesLogFilter.jsx";
 
+/**
+ * This file contains the UART bridge for the ESP32 serial protocol
+ */
 class UARTBridge {
   private io: SocketServer;
   private port!: SerialPort | SerialPortMock;
@@ -19,20 +22,26 @@ class UARTBridge {
   private esp32Mock?: ESP32Mock;
   private isUsingMock: boolean;
 
+  /**
+   * Constructor for the UART bridge
+   */
   constructor() {
+    // Determine if the UART mode is mock
     this.isUsingMock = env.UART_MODE === "mock";
     this.uartParser = new UARTParser();
 
+    // Create the HTTP server
     const httpServer = createServer();
     
-    // Determine the host to bind to based on environment variable
+    // Determine the host to bind to based on environment variable (NEXT_PUBLIC_WEBSOCKET_HOST)
     const bindHost = env.NEXT_PUBLIC_WEBSOCKET_HOST ?? 'localhost';
     
-    // Configure CORS based on environment variable
+    // Configure CORS based on environment variable (NEXT_PUBLIC_WEBSOCKET_HOST)
     const allowedOrigins = bindHost === 'localhost' 
       ? ['http://localhost:3000', 'http://127.0.0.1:3000']
       : [`http://${bindHost}:3000`, `http://localhost:3000`, 'http://127.0.0.1:3000'];
 
+    // Create the Socket.io server
     this.io = new SocketServer(httpServer, {
       cors: {
         origin: allowedOrigins,
@@ -41,30 +50,41 @@ class UARTBridge {
       },
     });
 
+    // Setup the UART parser events
     this.setupUARTParserEvents();
+
+    // Initialize the serial port
     this.initializeSerial();
 
+    // Start the HTTP server
     httpServer.listen(8081, bindHost, () => {
       console.log(`🔌 [UART Bridge] Socket.io server running on port 8081 (${bindHost})`);
     });
   }
 
+  /**
+   * Initialize the serial port
+   */
   private initializeSerial() {
     try {
+      // If the UART mode is mock
       if (this.isUsingMock) {
         console.log("🔧 [UART] Using MOCK mode");
         const mockPath = "/dev/ESP32_MOCK";
 
+        // Bind the mock port to the ESP32_MOCK device
         SerialPortMock.binding.createPort(mockPath, {
           echo: true,
           record: true,
         });
 
+        // Create the mock port
         this.port = new SerialPortMock({
           path: mockPath,
           baudRate: 115200,
         });
 
+        // Handle the open event of the mock port
         this.port.on("open", () => {
           console.log("🔌 [Mock] ESP32 port opened");
           
@@ -74,7 +94,8 @@ class UARTBridge {
             initialDelay: 3000,
             randomizeStates: true,
           });
-          
+
+          // Start the ESP32 mock
           this.esp32Mock.start((mockData: Buffer) => {
             if (this.port instanceof SerialPortMock) {
               this.port.write(mockData);
@@ -83,14 +104,16 @@ class UARTBridge {
         });
       } else {
         console.log("🔧 [UART] Using REAL mode");
-          console.log(`🔌 [UART] Device path: ${env.UART_DEVICE_PATH}`);
+        console.log(`🔌 [UART] Device path: ${env.UART_DEVICE_PATH}`);
 
+        // Create the real port
         this.port = new SerialPort({
             path: env.UART_DEVICE_PATH,
           baudRate: 115200,
         });
       }
 
+      // Setup the event handlers
       this.setupEventHandlers();
     } catch (error) {
       console.error("❌ [UART] Failed to initialize serial port:", error);
@@ -100,6 +123,9 @@ class UARTBridge {
     }
   }
 
+  /**
+   * Setup the UART parser events
+   */
   private setupUARTParserEvents() {
     // Handle parsed ESP32 messages
     this.uartParser.on("message", (message: ESP32Message) => {
@@ -126,21 +152,24 @@ class UARTBridge {
     });
   }
 
-
-
+  /**
+   * Setup the event handlers
+   */
   private setupEventHandlers() {
     if (!this.port) return;
 
-    // Handle raw UART data
+    // Handle raw UART data (when the port receives data)
     this.port.on("data", (data: Buffer) => {
       this.uartParser.processData(data);
     });
 
+    // Handle serial port errors
     this.port.on("error", (error: Error) => {
       console.error("❌ [UART] Serial port error:", error);
       this.io.emit("uart-error", { error: error.message });
     });
 
+    // Handle serial port close
     this.port.on("close", () => {
       console.log("🔌 [UART] Serial port closed");
       // Stop mock if it's running
@@ -149,9 +178,11 @@ class UARTBridge {
       }
     });
 
+    // Handle WebSocket connections
     this.io.on("connection", (socket) => {
       console.log("🟢 [WebSocket] Frontend client connected:", socket.id);
 
+      // Handle sending commands to the ESP32
       socket.on("send-to-esp32", (data: UICommand) => {
         try {
           console.log("📤 [Frontend → ESP32]", data);
@@ -170,25 +201,31 @@ class UARTBridge {
         }
       });
 
+      // Handle WebSocket disconnections
       socket.on("disconnect", () => {
         console.log("🔴 [WebSocket] Frontend client disconnected:", socket.id);
       });
     });
   }
 
-
-
+  /**
+   * Format the command for the ESP32
+   */
   private formatCommandForESP32(uiCommandRaw: unknown): Buffer | null {
     // Validate the entire UICommand structure
     const uiCommandResult = UICommandSchema.safeParse(uiCommandRaw);
+    // If the UICommand structure is not valid, return null
     if (!uiCommandResult.success) {
       console.warn(`⚠️ [UART] Invalid UICommand format:`, uiCommandResult.error.format());
       return null;
     }
-    
+
+    // Get the UICommand
     const uiCommand = uiCommandResult.data;
-    
+
+    // If the UICommand type is "command"
     if (uiCommand.type === "command") {
+      // Switch on the action of the UICommand
       switch (uiCommand.payload.action) {
         case ESP32Command.PING:
           return CommandEncoder.encodePing();

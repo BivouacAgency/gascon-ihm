@@ -16,6 +16,7 @@ export function cobsDecode(encoded: Buffer): Buffer {
   const decoded: number[] = [];
   let i = 0;
 
+  // While we are not at the end of the encoded data
   while (i < encoded.length) {
     const code = encoded[i];
     if (code === undefined) break;
@@ -66,10 +67,12 @@ export function cobsEncode(data: Buffer): Buffer {
   for (const byte of data) {
     if (byte === undefined) continue;
 
+    // If the byte is not a zero, add it to the encoded data
     if (byte !== 0) {
       encoded.push(byte);
       code++;
       
+      // If the code is 0xFF, add a new code byte
       if (code === 0xFF) {
         encoded[codeIndex] = code;
         codeIndex = encoded.length;
@@ -77,6 +80,7 @@ export function cobsEncode(data: Buffer): Buffer {
         code = 1;
       }
     } else {
+      // If the byte is a zero, add a new code byte
       encoded[codeIndex] = code;
       codeIndex = encoded.length;
       encoded.push(0); // Placeholder for next code byte
@@ -84,6 +88,7 @@ export function cobsEncode(data: Buffer): Buffer {
     }
   }
 
+  // Add the last code byte
   encoded[codeIndex] = code;
   return Buffer.from(encoded);
 } 

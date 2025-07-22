@@ -1,11 +1,6 @@
 import { cn } from "@/lib/utils";
 import React, { type FC } from "react";
-
-export interface IconProps {
-  width?: number;
-  height?: number;
-  className?: string;
-}
+import type { IconProps } from "./icons";
 
 export interface NavbarItemProps {
   className?: string;

@@ -4,38 +4,54 @@ import { useState, useEffect, type FC } from "react";
 import { HeatingSettingsModal } from "./HeatingSettingsModal";
 import { HeatingControlInfo } from "./HeatingControlInfo";
 import { ControlSectionWrapper } from "../ControlSectionWrapper";
-import { R1R2Options, type HeatingData, type HeatingDataSettings } from "@/types/forms/HeatingData";
+import { R1R2Options, type HeatingData, type HeatingSettings } from "@/types/forms/HeatingData";
 import { useESP32Communication } from "@/hooks/useESP32Communication";
 import { Time } from "@internationalized/date";
 import { ESP32Command } from "@/server/esp32-serial-protocol/types";
 import { useStale } from "@/hooks/useStale";
 import { elapsedMsToTime } from "@/utils/time";
 
+// Constants
 const HEATING_STALE_THRESHOLD_MS = 3000;
 
-const defaultHeatingDataSettings: HeatingDataSettings = {
+// Default settings for the heating control section
+const defaultHeatingSettings: HeatingSettings = {
   temperatureSet: 80,
   durationSet: new Time(0, 45, 0),
   R1R2: R1R2Options[0],
   sensor: "TT-R1",
 };
 
+// Props for the HeatingControlSection component
 interface HeatingControlSectionProps {
   className?: string;
 }
 
+/**
+ * Manages heating cycles using ESP32 commands:
+ * - Sends start/stop commands via useESP32Communication
+ * - Tracks progress and handles stale data warnings
+ * - Allows configuring settings via HeatingSettingsModal
+ */
 export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
   className,
 }) => {
+  // Hook to send/receive commands from/to the ESP32
   const { sendCommand, lastMessage } = useESP32Communication();
+
+  // Heating related states
   const [heatingInProgress, setHeatingInProgress] = useState(false);
   const [heatingStartTimestamp, setHeatingStartTimestamp] = useState<number | undefined>(undefined);
-  const [heatingDataSettings, setHeatingDataSettings] = useState<HeatingDataSettings>(defaultHeatingDataSettings);
-  const [heatingData, setHeatingData] = useState<HeatingData>({ ...defaultHeatingDataSettings, elapsedTime: new Time(0, 0, 0), currentTemperature: 0 });
+  // Heating settings, set in the settings modal
+  const [heatingSettings, setHeatingSettings] = useState<HeatingSettings>(defaultHeatingSettings);
+  // Heating data, received from the ESP32
+  const [heatingData, setHeatingData] = useState<HeatingData>({ ...defaultHeatingSettings, elapsedTime: new Time(0, 0, 0), currentTemperature: 0 });
 
+  // Tracking the last heat status timestamp
   const [lastHeatStatusTimestamp, setLastHeatStatusTimestamp] = useState<number>(Date.now());
   const isHeatStatusStale = useStale(lastHeatStatusTimestamp, HEATING_STALE_THRESHOLD_MS);
 
+  // Update the heating data when the last message is received
   useEffect(() => {
     if (lastMessage?.type === ESP32Command.MAN_HEAT_STATUS) {
       if (!heatingInProgress) {
@@ -47,20 +63,21 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
         ? elapsedMsToTime(lastMessage.timestamp - heatingStartTimestamp)
         : new Time(0, 0, 0);
       setHeatingData({
-        ...heatingDataSettings,
+        ...heatingSettings,
         currentTemperature: lastMessage.current,
         elapsedTime,
       });
     }
-  }, [lastMessage, heatingInProgress, heatingDataSettings, heatingStartTimestamp]);
+  }, [lastMessage, heatingInProgress, heatingSettings, heatingStartTimestamp]);
 
+  // Start/stop heating callback
   const handlePlayToggle = () => {
     const newIsPlaying = !heatingInProgress;
 
     if (newIsPlaying) {
       const durationInMiliseconds =
-        heatingDataSettings.durationSet.minute * 60 * 1000 +
-        heatingDataSettings.durationSet.second * 1000;
+        heatingSettings.durationSet.minute * 60 * 1000 +
+        heatingSettings.durationSet.second * 1000;
 
       sendCommand({
         type: "command",
@@ -68,9 +85,9 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
           action: ESP32Command.MAN_HEAT_START,
           data: {
             durationSet: durationInMiliseconds,
-            temperatureSet: heatingDataSettings.temperatureSet,
-            sensor: heatingDataSettings.sensor,
-            R1R2: heatingDataSettings.R1R2,
+            temperatureSet: heatingSettings.temperatureSet,
+            sensor: heatingSettings.sensor,
+            R1R2: heatingSettings.R1R2,
           },
         },
       });
@@ -81,16 +98,17 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
           action: ESP32Command.MAN_HEAT_STOP,
         },
       });
-      setHeatingData({ ...defaultHeatingDataSettings, elapsedTime: new Time(0, 0, 0), currentTemperature: 0 });
+      setHeatingData({ ...defaultHeatingSettings, elapsedTime: new Time(0, 0, 0), currentTemperature: 0 });
       setHeatingInProgress(false);
       setHeatingStartTimestamp(undefined);
     }
 
-    setHeatingDataSettings({ ...heatingDataSettings });
+    setHeatingSettings({ ...heatingSettings });
   };
 
-  const handleSaveSettings = (newData: HeatingDataSettings) => {
-    setHeatingDataSettings(newData);
+  // Save heating settings callback
+  const handleSaveSettings = (newData: HeatingSettings) => {
+    setHeatingSettings(newData);
     setHeatingData({ ...newData, elapsedTime: new Time(0, 0, 0), currentTemperature: 0 });
   };
 
@@ -99,7 +117,7 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
       <ControlSectionWrapper
         title="Chauffe"
         settingsModal={
-          <HeatingSettingsModal data={heatingDataSettings} onSave={handleSaveSettings} />
+          <HeatingSettingsModal data={heatingSettings} onSave={handleSaveSettings} />
         }
         playControl={{
           isPlaying: heatingInProgress,

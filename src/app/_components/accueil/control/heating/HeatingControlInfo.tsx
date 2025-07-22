@@ -3,10 +3,19 @@ import { Table, TableBody, TableCell, TableRow } from "@/app/_components/ui/tabl
 import { formatElapsedTime } from "@/utils/time";
 import type { HeatingData } from "@/types/forms/HeatingData";
 
+// Props for the HeatingControlInfo component
 interface HeatingControlInfoProps {
   data?: HeatingData;
 }
 
+/**
+ * Displays heating target and status:
+ * - sensor: active sensor identifier
+ * - temperatureSet: target temperature (°C)
+ * - elapsedTime: formatted elapsed time
+ * - durationSet: formatted duration
+ * - R1R2: selected heater elements
+ */
 export const HeatingControlInfo: FC<HeatingControlInfoProps> = ({ data }) => {
   return (
     <Table className="mb-2 text-white">

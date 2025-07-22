@@ -2,11 +2,13 @@ import { type FC, type ReactNode } from "react";
 import { StartStopButton } from "../../StartStopButton";
 import { StateLED } from "../../StateLED";
 
+// Props for the PlayControl component  
 interface PlayControl {
   isPlaying: boolean;
   onPlayToggle: () => void;
 }
 
+// Props for the ControlSectionWrapper component
 interface ControlSectionWrapperProps {
   title: string;
   infoComponent: ReactNode;
@@ -15,6 +17,13 @@ interface ControlSectionWrapperProps {
   className?: string;
 }
 
+/**
+ * ControlSectionWrapper wraps a control section with:
+ * - a title
+ * - optional settings modal trigger
+ * - optional play/pause controls
+ * Renders the provided infoComponent beneath the header.
+ */
 export const ControlSectionWrapper: FC<ControlSectionWrapperProps> = ({
   title,
   settingsModal,

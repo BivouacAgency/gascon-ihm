@@ -11,11 +11,15 @@ import {
 } from "./types.js";
 import { env } from "../../env.js";
 
+// This file contains the UART parser for the ESP32 serial protocol
+
+// Parser state
 enum ParserState {
   WAIT_SOF,
   IN_FRAME,
 }
 
+// UART parser class
 export class UARTParser extends EventEmitter {
   private state: ParserState = ParserState.WAIT_SOF;
   private frameBuffer: Buffer = Buffer.alloc(0);
@@ -46,16 +50,20 @@ export class UARTParser extends EventEmitter {
   public processData(data: Buffer): void {
     this.verboseLog("🔍 [Parser] Raw UART data received:", this.formatHex(data));
     
+    // For each byte in the data
     for (const byte of data) {
       if (byte === undefined) continue;
       
+      // Process the byte
       this.processByte(byte);
     }
   }
 
+  // Process a single byte
   private processByte(byte: number): void {
     switch (this.state) {
       case ParserState.WAIT_SOF:
+        // If the byte is the start of frame (SOF)
         if (byte === PROTOCOL_CONSTANTS.SOF) {
           this.state = ParserState.IN_FRAME;
           this.frameBuffer = Buffer.alloc(0);
@@ -63,16 +71,17 @@ export class UARTParser extends EventEmitter {
         break;
 
       case ParserState.IN_FRAME:
+        // If the byte is the end of frame (EOF)
         if (byte === PROTOCOL_CONSTANTS.EOF) {
           // Check for the separator byte (0x00) that should follow EOF
           this.state = ParserState.WAIT_SOF;
           this.processCompleteFrame();
         } else {
-          // Accumulate frame data
+          // If the frame buffer is not too large, add the byte to the frame buffer
           if (this.frameBuffer.length < this.maxFrameSize) {
             this.frameBuffer = Buffer.concat([this.frameBuffer, Buffer.from([byte])]);
           } else {
-            // Frame too large, reset
+            // If the frame buffer is too large, reset the parser
             console.warn("⚠️ [UART Parser] Frame too large, resetting");
             this.state = ParserState.WAIT_SOF;
             this.frameBuffer = Buffer.alloc(0);
@@ -82,11 +91,12 @@ export class UARTParser extends EventEmitter {
     }
   }
 
+  // Process a complete frame
   private processCompleteFrame(): void {
     try {
       this.verboseLog("🔍 [Parser] Raw COBS frame:", this.formatHex(this.frameBuffer));
       
-      // COBS decode the frame
+      // COBS decode the frame (remove the 0x00 bytes)
       const decodedFrame = cobsDecode(this.frameBuffer);
       this.verboseLog("🔍 [Parser] COBS decoded frame:", this.formatHex(decodedFrame));
       
@@ -95,14 +105,16 @@ export class UARTParser extends EventEmitter {
         return;
       }
 
-      // Validate CRC
+      // Validate CRC (check if the CRC is valid)
       if (!validateCrc16(decodedFrame)) {
         this.emit("error", new Error("CRC validation failed"));
         return;
       }
 
       // Parse the frame structure: [LEN][CMD_ID][Payload...][CRC-16 LO][CRC-16 HI]
+      // Get the length of the frame
       const length = decodedFrame[0];
+      // Get the command ID
       const commandId = decodedFrame[1];
       
       if (length === undefined || commandId === undefined) {
@@ -117,8 +129,11 @@ export class UARTParser extends EventEmitter {
         return;
       }
 
+      // Get the payload
       const payload = decodedFrame.subarray(2, length - 1);
+      // Get the CRC low byte
       const crcLo = decodedFrame[length - 1];
+      // Get the CRC high byte
       const crcHi = decodedFrame[length];
       
       this.verboseLog("🔍 [Parser] Frame breakdown:");
@@ -132,8 +147,10 @@ export class UARTParser extends EventEmitter {
         return;
       }
 
+      // Calculate the CRC
       const crc = (crcHi << 8) | crcLo;
 
+      // Create a new raw frame
       const rawFrame: RawFrame = {
         length,
         commandId,
@@ -157,6 +174,7 @@ export class UARTParser extends EventEmitter {
   private parseMessage(commandId: number, payload: Buffer): ESP32Message | null {
     const timestamp = Date.now();
 
+    // Parse the message based on command ID
     switch (commandId) {
       case CMD_IDS.PONG:
         return {
@@ -244,6 +262,7 @@ export class UARTParser extends EventEmitter {
   private parseManualHeatStatus(payload: Buffer, timestamp: number): ESP32Message | null {
     this.verboseLog(`🔍 MAN_HEAT_STATUS payload ${payload.length} bytes: ${this.formatHex(payload)}`);
     
+    // Check if the payload length is correct
     const EXPECTED_LENGTH = 11;
     if (payload.length !== EXPECTED_LENGTH) {
       this.emit("error", new Error(`MAN_HEAT_STATUS: Expected ${EXPECTED_LENGTH} bytes, got ${payload.length}`));
@@ -273,12 +292,14 @@ export class UARTParser extends EventEmitter {
   }
 
   private parseSensorData(payload: Buffer, timestamp: number): ESP32Message | null {
+
     this.verboseLog(`🔍 SENSOR payload ${payload.length} bytes: ${this.formatHex(payload)}`);
     if (payload.length !== 8) {
       this.emit("error", new Error(`Expected 8 bytes, got ${payload.length}`));
       return null;
     }
   
+    // Get the temperature of the R1 sensor
     const t_R1 = payload.readInt16LE(0);
     const t_R2 = payload.readInt16LE(2);
     const t_TT1 = payload.readInt16LE(4);
@@ -291,10 +312,13 @@ export class UARTParser extends EventEmitter {
   
     this.verboseLog(`Raw: ${t_R1},${t_R2},${t_TT1},${p_PT1}; Scaled: ${tempR1}°C, ${tempR2}°C, ${tempTT1}°C, ${pressPT1}bar`);
   
+    // If the sensor value is 0x7FFF, it means there is an error
     const SENSOR_ERROR = 0x7FFF;
+    // Check if there is an error in any of the sensors
     const hasError = [t_R1, t_R2, t_TT1, p_PT1].includes(SENSOR_ERROR);
     if (hasError) this.verboseLog("⚠️ Sensor error (0x7FFF)");
   
+    // Return the sensor data message
     return {
       type: ESP32Command.SENSOR_DATA,
       timestamp,

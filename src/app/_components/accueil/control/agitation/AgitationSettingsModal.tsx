@@ -22,21 +22,31 @@ import {
 } from "@/config/form-settings/agitator/config";
 import { AppFormSelectField } from "@/app/_components/form-components/AppFormSelectField";
 
+// Props for the AgitationSettingsModal component
 interface AgitationSettingsModalProps {
   data: AgitationData;
   onSave: (newData: AgitationData) => void;
 }
 
+// Form schema for the AgitationSettingsModal component
 const formSchema = AgitationDataSchema.omit({
   elapsedTime: true,
 });
-
+// Add JSDoc for AgitationSettingsModal component
+/**
+ * AgitationSettingsModal provides a dialog to edit agitation parameters:
+ * - speedSet: select agitation speed (RPM)
+ * - durationSet: select agitation duration
+ * Calls onSave with new settings when submitted.
+ */
 export const AgitationSettingsModal: FC<AgitationSettingsModalProps> = ({
   data,
   onSave,
 }) => {
+  // State for the modal
   const [isOpen, setIsOpen] = useState(false);
 
+  // Form for the modal
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,6 +55,7 @@ export const AgitationSettingsModal: FC<AgitationSettingsModalProps> = ({
     },
   });
 
+  // Callback to save the form data
   const onSubmit = (formData: z.infer<typeof formSchema>) => {
     onSave(formData as AgitationData);
     setIsOpen(false);

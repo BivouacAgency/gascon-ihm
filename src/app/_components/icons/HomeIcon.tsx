@@ -1,10 +1,5 @@
 import { type FC } from "react";
-
-export interface IconProps {
-  width?: number;
-  height?: number;
-  className?: string;
-}
+import type { IconProps } from "./index";
 
 export const HomeIcon: FC<IconProps> = ({
   width = 512,
