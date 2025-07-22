@@ -63,9 +63,10 @@ class UARTBridge {
 
     process.on("SIGINT", () => {
       console.log("✋ [UART Bridge] Shutting down…");
-      this.io.close(() => {
-        httpServer.close(() => process.exit(0));
-      });
+      // Close Socket.io server (ignore returned promise)
+      void this.io.close();
+      // Close HTTP server and exit
+      httpServer.close(() => process.exit(0));
     });
   }
 
