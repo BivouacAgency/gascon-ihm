@@ -9,6 +9,7 @@ import { useESP32Communication } from "@/hooks/useESP32Communication";
 import { Time } from "@internationalized/date";
 import { ESP32Command } from "@/server/esp32-serial-protocol/types";
 import { useStale } from "@/hooks/useStale";
+import { elapsedMsToTime } from "@/utils/time";
 
 const HEATING_STALE_THRESHOLD_MS = 3000;
 
@@ -43,13 +44,7 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
       }
       setLastHeatStatusTimestamp(Date.now());
       const elapsedTime = heatingStartTimestamp
-        ? (() => {
-            const elapsedMs = lastMessage.timestamp - heatingStartTimestamp;
-            const totalSeconds = Math.floor(elapsedMs / 1000);
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
-            return new Time(0, minutes, seconds);
-          })()
+        ? elapsedMsToTime(lastMessage.timestamp - heatingStartTimestamp)
         : new Time(0, 0, 0);
       setHeatingData({
         ...heatingDataSettings,
