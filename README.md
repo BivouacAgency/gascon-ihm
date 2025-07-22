@@ -58,11 +58,12 @@ For detailed ESP32 UART communication setup, see [UART_SETUP.md](./UART_SETUP.md
 ### Quick ESP32 Setup
 
 1. Connect your ESP32 via USB
-2. Update the serial port in `src/server/uart-bridge.ts`:
-   ```typescript
-   // Windows: "COM3", "COM4", etc.
-   // Linux: "/dev/ttyUSB0", "/dev/ttyACM0"
-   // macOS: "/dev/cu.usbserial-*"
+2. Set the `UART_DEVICE_PATH` environment variable in your `.env` file to match your ESP32 serial port:
+   ```bash
+   # Windows: COM3, COM4, etc.
+   # Linux: /dev/ttyUSB0, /dev/ttyACM0
+   # macOS: /dev/cu.usbserial-*
+   UART_DEVICE_PATH=/dev/ttyUSB0
    ```
 3. Set `UART_MODE=real` in your `.env` file
 4. Run `pnpm run dev:full`
@@ -113,11 +114,12 @@ gascon-ihm/
 
 ### Environment Variables
 
-- `UART_MODE`: Set to `"mock"` for development or `"real"` for actual ESP32
+- `UART_MODE`: Set to "mock" for development or "real" for actual ESP32
 - `UART_DEVICE_PATH`: Linux device path for ESP32 (default: `/dev/ttyUSB0`)
 - `UART_VERBOSE`: Enable detailed UART parsing logs (default: `false`)
 - `DATABASE_URL`: Your database connection string
 - `NODE_ENV`: Development environment
+- `NEXT_PUBLIC_WEBSOCKET_HOST`: Optional host for WebSocket server (defaults to current hostname or 'localhost')
 
 ### Available Scripts
 
@@ -128,6 +130,10 @@ gascon-ihm/
 - `pnpm run start` - Start production server
 - `pnpm run lint` - Run ESLint
 - `pnpm run typecheck` - Run TypeScript checks
+
+### Logging
+
+Set the ESP32 messages that you want to log, in src/config/logging/esp32MessagesLogFilter.ts
 
 ## 🐛 Troubleshooting
 

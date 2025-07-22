@@ -64,6 +64,9 @@ DATABASE_URL="your-database-url"
 UART_MODE=mock                    # Use "mock" for development, "real" for actual ESP32
 UART_DEVICE_PATH=/dev/ttyUSB0     # Linux device path for ESP32 (when UART_MODE=real)
 UART_VERBOSE=false                # Enable detailed UART parsing logs (true/false)
+# WebSocket Configuration (optional)
+# NEXT_PUBLIC_WEBSOCKET_HOST=192.168.1.xx  # Set to external IP to allow remote access from PC
+# NEXT_PUBLIC_WEBSOCKET_HOST=localhost     # Set to localhost for local access only (default)
 ```
 
 **Environment Variable Options:**
@@ -81,6 +84,8 @@ UART_VERBOSE=false                # Enable detailed UART parsing logs (true/fals
 - **UART_VERBOSE**:
   - `false` - Normal operation with minimal logs (default)
   - `true` - Enable detailed UART parsing and frame analysis logs
+- **NEXT_PUBLIC_WEBSOCKET_HOST**:
+  - Optional host or IP for WebSocket server (defaults to current hostname or 'localhost')
 
 ### ESP32 Serial Port Detection
 
@@ -257,7 +262,7 @@ This is a known typing issue with the `serialport` mock functionality. The code 
 2. Copy `.env.example` to `.env` and configure
 3. Set `UART_MODE=mock` for development
 4. Connect your ESP32 via USB (for real mode)
-5. Update the serial port path in `uart-bridge.ts` (for real mode)
+5. Set `UART_DEVICE_PATH` in your `.env` file to the correct device path (for real mode)
 6. Test with: `pnpm run dev:full`
 7. Open `http://localhost:3000/turbocuve` to see the example interface
 
