@@ -36,8 +36,8 @@ export const SystemTime: FC<SystemTimeProps> = ({ className }) => {
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString("fr-FR", {
       day: "2-digit",
-      month: "long",
-      year: "numeric",
+      month: "2-digit",
+      year: "2-digit",
     });
   };
 
