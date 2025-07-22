@@ -7,8 +7,6 @@ import { ESP32Command } from "../types";
 
 // Schema for the UI command
 export const UICommandSchema = z.object({
-  // Type of the command
-  type: z.enum(["command", "config"]),
   // Payload of the command
   payload: z.union([
     z.object({

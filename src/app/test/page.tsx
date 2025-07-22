@@ -3,6 +3,7 @@
 import { Card } from "@/app/_components/ui/card";
 import { Button } from "@/app/_components/ui/button";
 import { useESP32Communication } from "@/hooks/useESP32Communication";
+import { ESP32Command } from "@/server/esp32-serial-protocol/types";
 
 export default function Test() {
   const { isConnected, lastMessage, sendCommand, connectionError } =
@@ -10,8 +11,7 @@ export default function Test() {
 
   const handlePing = () => {
     sendCommand({
-      type: "command",
-      payload: { action: "ping" },
+      payload: { action: ESP32Command.PING },
     });
   };
 

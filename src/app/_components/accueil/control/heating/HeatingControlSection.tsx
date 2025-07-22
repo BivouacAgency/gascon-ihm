@@ -80,7 +80,6 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
         heatingSettings.durationSet.second * 1000;
 
       sendCommand({
-        type: "command",
         payload: {
           action: ESP32Command.MAN_HEAT_START,
           data: {
@@ -93,7 +92,6 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
       });
     } else {
       sendCommand({
-        type: "command",
         payload: {
           action: ESP32Command.MAN_HEAT_STOP,
         },

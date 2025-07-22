@@ -7,7 +7,6 @@ import type { ESP32Message } from "@/server/esp32-serial-protocol/types";
 
 // Props for the UICommand
 interface UICommand {
-  type: "command" | "config";
   payload: unknown;
 }
 

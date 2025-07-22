@@ -223,37 +223,31 @@ class UARTBridge {
     // Get the UICommand
     const uiCommand = uiCommandResult.data;
 
-    // If the UICommand type is "command"
-    if (uiCommand.type === "command") {
-      // Switch on the action of the UICommand
-      switch (uiCommand.payload.action) {
-        case ESP32Command.PING:
-          return CommandEncoder.encodePing();
-          
-        case ESP32Command.MAN_HEAT_START:
-          const data = uiCommand.payload.data;
-          
-          // Convert sensor to sensor ID using the mapping
-          const sensorId = SENSOR_ID_MAP[data.sensor];
-          
-          // Convert R1R2 to heater mask using the mapping
-          const heaterMask = HEATER_MASK_MAP[data.R1R2];
-          
-          // Convert temperature to scaled value (×10)
-          const targetTemp = Math.round(data.temperatureSet * 10);
-          
-          console.log(`🔥 [UART] Starting heating: Sensor=${sensorId}, Target=${targetTemp} (${data.temperatureSet}°C), Duration=${data.durationSet}ms, Mask=${heaterMask}`);
-          
-          return CommandEncoder.encodeManualHeatStart(sensorId, targetTemp, data.durationSet, heaterMask);
-          
-        case ESP32Command.MAN_HEAT_STOP:
-          console.log("🛑 [UART] Stop heating command received");
-          return CommandEncoder.encodeManualHeatStop();
-      }
+    // Switch on the action of the UICommand
+    switch (uiCommand.payload.action) {
+      case ESP32Command.PING:
+        return CommandEncoder.encodePing();
+        
+      case ESP32Command.MAN_HEAT_START:
+        const data = uiCommand.payload.data;
+        
+        // Convert sensor to sensor ID using the mapping
+        const sensorId = SENSOR_ID_MAP[data.sensor];
+        
+        // Convert R1R2 to heater mask using the mapping
+        const heaterMask = HEATER_MASK_MAP[data.R1R2];
+        
+        // Convert temperature to scaled value (×10)
+        const targetTemp = Math.round(data.temperatureSet * 10);
+        
+        console.log(`🔥 [UART] Starting heating: Sensor=${sensorId}, Target=${targetTemp} (${data.temperatureSet}°C), Duration=${data.durationSet}ms, Mask=${heaterMask}`);
+        
+        return CommandEncoder.encodeManualHeatStart(sensorId, targetTemp, data.durationSet, heaterMask);
+        
+      case ESP32Command.MAN_HEAT_STOP:
+        console.log("🛑 [UART] Stop heating command received");
+        return CommandEncoder.encodeManualHeatStop();
     }
-
-    console.warn("⚠️ [UART] Unknown command format:", uiCommand);
-    return null;
   }
 
   /**
@@ -262,35 +256,35 @@ class UARTBridge {
   private simulateResponseForCommand(uiCommand: UICommand): void {
     if (!this.esp32Mock) return;
 
-    if (uiCommand.type === "command") {
-      const payload = uiCommand.payload;
-      
-      // Simulate responses with a slight delay to mimic real ESP32
-      setTimeout(() => {
-        if (!this.esp32Mock) return;
+    // Get the payload of the UICommand
+    const payload = uiCommand.payload;
+    
+    // Simulate responses with a slight delay to mimic real ESP32
+    setTimeout(() => {
+      if (!this.esp32Mock) return;
 
-        switch (payload.action) {
-          case ESP32Command.PING:
-            this.esp32Mock.sendPong();
-            break;
-            
-          case ESP32Command.MAN_HEAT_START:
-            // Send ACK first
-            this.esp32Mock.sendAck(0x11); // MAN_HEAT_START command ID
-            
-            // Then send multiple MANUAL_HEAT_STATUS messages (like real ESP32)
-            setTimeout(() => this.esp32Mock?.sendManualHeatStatus(true, 0x11, 0x22, 0x33), 500);
-            setTimeout(() => this.esp32Mock?.sendManualHeatStatus(true, 0x11, 0x22, 0x33), 1500);
-            setTimeout(() => this.esp32Mock?.sendManualHeatStatus(false, 0x11, 0x22, 0x33), 2500);
-            break;
-            
-          case ESP32Command.MAN_HEAT_STOP:
-            // Send ACK for stop command
-            this.esp32Mock.sendAck(0x14); // MAN_HEAT_STOP command ID
-            break;
-        }
-      }, 100); // Small delay to simulate processing time
-    }
+      // Switch on the action of the UICommand
+      switch (payload.action) {
+        case ESP32Command.PING:
+          this.esp32Mock.sendPong();
+          break;
+          
+        case ESP32Command.MAN_HEAT_START:
+          // Send ACK first
+          this.esp32Mock.sendAck(0x11); // MAN_HEAT_START command ID
+          
+          // Then send multiple MANUAL_HEAT_STATUS messages (like real ESP32)
+          setTimeout(() => this.esp32Mock?.sendManualHeatStatus(true, 0x11, 0x22, 0x33), 500);
+          setTimeout(() => this.esp32Mock?.sendManualHeatStatus(true, 0x11, 0x22, 0x33), 1500);
+          setTimeout(() => this.esp32Mock?.sendManualHeatStatus(false, 0x11, 0x22, 0x33), 2500);
+          break;
+          
+        case ESP32Command.MAN_HEAT_STOP:
+          // Send ACK for stop command
+          this.esp32Mock.sendAck(0x14); // MAN_HEAT_STOP command ID
+          break;
+      }
+    }, 100); // Small delay to simulate processing time
   }
 }
 

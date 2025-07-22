@@ -86,7 +86,6 @@ Serial.println("STATUS:READY");
 const { sendCommand } = useESP32Communication();
 
 sendCommand({
-  type: "command",
   payload: { action: "start_pump" },
 });
 ```

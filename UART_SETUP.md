@@ -147,7 +147,6 @@ The frontend sends JSON objects that get converted to commands:
 
 ```typescript
 sendCommand({
-  type: "command",
   payload: { action: "start_pump" },
 });
 ```
@@ -168,7 +167,6 @@ function MyComponent() {
 
   const handlePumpControl = () => {
     sendCommand({
-      type: "command",
       payload: { action: "start_pump" },
     });
   };
