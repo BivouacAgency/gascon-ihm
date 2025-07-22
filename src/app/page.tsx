@@ -4,6 +4,7 @@ import { AgitationControlSection } from "./_components/accueil/control/agitation
 import { EngineControlSection } from "./_components/accueil/control/engine/EngineControlSection";
 import { HeatingControlSection } from "./_components/accueil/control/heating/HeatingControlSection";
 import { SensorsSection } from "./_components/accueil/sensors/SensorsSection";
+import { InformationSection } from "./_components/accueil/InformationSection";
 
 export default function Home() {
   return (
@@ -33,9 +34,7 @@ export default function Home() {
           </Card>
 
           <Card>
-            <p className="text-center leading-relaxed text-white">
-              Lorem ipsum dolor: sit amet consecteur
-            </p>
+            <InformationSection/>
           </Card>
         </div>
       </div>
