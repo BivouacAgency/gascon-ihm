@@ -84,6 +84,12 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
         setHeatingData({ ...defaultHeatingSettings, elapsedTime: 0, currentTemperature: 0 });
       } else if (lastMessage.acknowledgedCommand === ESP32Command.MAN_HEAT_START) {
         setHeatingInProgress(true);
+        // Initialize heating data with current settings to avoid visual bump
+        setHeatingData({
+          ...heatingSettings,
+          elapsedTime: 0,
+          currentTemperature: 0
+        });
       }
     }
   }, [lastMessage, heatingSettings, activeHeatStatusCount]);
@@ -96,6 +102,13 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
       const durationInMiliseconds =
         heatingSettings.durationSet.minute * 60 * 1000 +
         heatingSettings.durationSet.second * 1000;
+
+      // Initialize heating data immediately when starting
+      setHeatingData({
+        ...heatingSettings,
+        elapsedTime: 0,
+        currentTemperature: 0
+      });
 
       sendCommand({
         payload: {
