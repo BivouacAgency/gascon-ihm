@@ -9,7 +9,6 @@ import { useESP32Communication } from "@/hooks/useESP32Communication";
 import { Time } from "@internationalized/date";
 import { ESP32Command } from "@/server/esp32-serial-protocol/types";
 import { useStale } from "@/hooks/useStale";
-import { elapsedMsToTime } from "@/utils/time";
 
 // Constants
 const HEATING_STALE_THRESHOLD_MS = 3000;
@@ -45,7 +44,7 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
   // Heating settings, set in the settings modal
   const [heatingSettings, setHeatingSettings] = useState<HeatingSettings>(defaultHeatingSettings);
   // Heating data, received from the ESP32
-  const [heatingData, setHeatingData] = useState<HeatingData>({ ...defaultHeatingSettings, elapsedTime: new Time(0, 0, 0), currentTemperature: 0 });
+  const [heatingData, setHeatingData] = useState<HeatingData>({ ...defaultHeatingSettings, elapsedTime: 0, currentTemperature: 0 });
 
   // Tracking the last heat status timestamp
   const [lastHeatStatusTimestamp, setLastHeatStatusTimestamp] = useState<number>(Date.now());
@@ -59,13 +58,10 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
         setHeatingStartTimestamp(lastMessage.timestamp);
       }
       setLastHeatStatusTimestamp(Date.now());
-      const elapsedTime = heatingStartTimestamp
-        ? elapsedMsToTime(lastMessage.timestamp - heatingStartTimestamp)
-        : new Time(0, 0, 0);
       setHeatingData({
         ...heatingSettings,
         currentTemperature: lastMessage.current,
-        elapsedTime,
+        elapsedTime: lastMessage.elapsedTime,
       });
     }
   }, [lastMessage, heatingInProgress, heatingSettings, heatingStartTimestamp]);
@@ -96,7 +92,7 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
           action: ESP32Command.MAN_HEAT_STOP,
         },
       });
-      setHeatingData({ ...defaultHeatingSettings, elapsedTime: new Time(0, 0, 0), currentTemperature: 0 });
+      setHeatingData({ ...defaultHeatingSettings, elapsedTime: 0, currentTemperature: 0 });
       setHeatingInProgress(false);
       setHeatingStartTimestamp(undefined);
     }
@@ -107,7 +103,7 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
   // Save heating settings callback
   const handleSaveSettings = (newData: HeatingSettings) => {
     setHeatingSettings(newData);
-    setHeatingData({ ...newData, elapsedTime: new Time(0, 0, 0), currentTemperature: 0 });
+    setHeatingData({ ...newData, elapsedTime: 0, currentTemperature: 0 });
   };
 
   return (

@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { Table, TableBody, TableCell, TableRow } from "@/app/_components/ui/table";
-import { formatElapsedTime } from "@/utils/time";
+import { formatElapsedMsToTime, formatElapsedTime } from "@/utils/time";
 import type { HeatingData } from "@/types/forms/HeatingData";
 
 // Props for the HeatingControlInfo component
@@ -28,7 +28,7 @@ export const HeatingControlInfo: FC<HeatingControlInfoProps> = ({ data }) => {
         <TableRow>
           <TableCell className="font-bold">Temps </TableCell>
           <TableCell>
-            {data?.elapsedTime ? formatElapsedTime(data.elapsedTime) : "--:--"}
+            {data?.elapsedTime ? formatElapsedMsToTime(data.elapsedTime) : "--:--"}
           </TableCell>
           <TableCell>
             {data?.durationSet

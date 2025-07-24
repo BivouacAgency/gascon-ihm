@@ -12,7 +12,7 @@ export const HeatingDataSchema = z.object({
   sensor: z.enum(SENSORS),
   temperatureSet: z.number(),
   durationSet: z.custom<Time>((value) => value instanceof Time),
-  elapsedTime: z.custom<Time>((value) => value instanceof Time),
+  elapsedTime: z.number(),
   R1R2: z.enum(R1R2Options),
   currentTemperature: z.number(),
 });

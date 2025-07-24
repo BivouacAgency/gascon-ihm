@@ -59,6 +59,7 @@ export interface ManualHeatStatusMessage {
   current: number;     // uint16
   remainMs: number;    // uint32
   heaterMask: number;  // uint8
+  elapsedTime: number; // uint32
   timestamp: number;
 }
 

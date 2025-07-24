@@ -263,19 +263,20 @@ export class UARTParser extends EventEmitter {
     this.verboseLog(`🔍 MAN_HEAT_STATUS payload ${payload.length} bytes: ${this.formatHex(payload)}`);
     
     // Check if the payload length is correct
-    const EXPECTED_LENGTH = 11;
+    const EXPECTED_LENGTH = 15;
     if (payload.length !== EXPECTED_LENGTH) {
       this.emit("error", new Error(`MAN_HEAT_STATUS: Expected ${EXPECTED_LENGTH} bytes, got ${payload.length}`));
       return null;
     }
 
-    // Structure: [active:uint8][sensor_id:uint8][target:uint16][current:uint16][remain_ms:uint32][heater_mask:uint8]
+    // Structure: [active:uint8][sensor_id:uint8][target:uint16][current:uint16][remain_ms:uint32][heater_mask:uint8][elapsed_time:uint32]
     const active = payload.readUInt8(0);
     const sensorId = payload.readUInt8(1);
     const target = payload.readUInt16LE(2);
     const current = payload.readUInt16LE(4);
     const remainMs = payload.readUInt32LE(6);
     const heaterMask = payload.readUInt8(10);
+    const elapsedTime = payload.readUInt32LE(11);
 
     this.verboseLog(`Active: ${active}, Sensor ID: ${sensorId}, Target: ${target}, Current: ${current}, Remain Ms: ${remainMs}, Heater Mask: ${heaterMask}`);
 
@@ -287,6 +288,7 @@ export class UARTParser extends EventEmitter {
       current,
       remainMs,
       heaterMask,
+      elapsedTime,
       timestamp,
     };
   }
