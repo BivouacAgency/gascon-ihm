@@ -10,6 +10,7 @@ import {
   ESP32Command,
 } from "./types.js";
 import { env } from "../../env.js";
+import { getCmdFromId } from "./utils/getCmdFromId.js";
 
 // This file contains the UART parser for the ESP32 serial protocol
 
@@ -193,8 +194,15 @@ export class UARTParser extends EventEmitter {
           return null;
         }
 
-        const acknowledgedCommand = payload[0]!;
-        this.verboseLog(`Acknowledged command: 0x${acknowledgedCommand.toString(16)}`);
+        const acknowledgedCommandId = payload[0]!;
+        const acknowledgedCommand = getCmdFromId(acknowledgedCommandId);
+        
+        if (!acknowledgedCommand) {
+          this.emit("error", new Error(`Unknown acknowledged command ID: 0x${acknowledgedCommandId.toString(16)}`));
+          return null;
+        }
+        
+        this.verboseLog(`Acknowledged command: ${acknowledgedCommand} (0x${acknowledgedCommandId.toString(16)})`);
 
         return {
           type: ESP32Command.ACK,

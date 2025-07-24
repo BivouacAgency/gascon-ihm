@@ -65,7 +65,7 @@ export interface ManualHeatStatusMessage {
 
 export interface AckMessage {
   type: ESP32Command.ACK;
-  acknowledgedCommand: number;
+  acknowledgedCommand: ESP32Command;
   timestamp: number;
 }
 
