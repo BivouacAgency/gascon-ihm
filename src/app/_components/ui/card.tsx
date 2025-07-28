@@ -9,7 +9,7 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
       className={cn(
         "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm",
         // Overrides
-        "bg-dark-grey border-grey rounded-lg border p-4 shadow-lg",
+        "bg-dark-grey border-grey rounded-lg border p-6 shadow-lg",
         className,
       )}
       {...props}

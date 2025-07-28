@@ -62,7 +62,7 @@ export const AppFormSelectField = <
           <FormControl>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="default" className="w-full justify-between">
+                <Button size="xl" variant="default" className="w-full justify-between text-2xl">
                   {getLabel(field.value)}
                   <FaChevronDown />
                 </Button>

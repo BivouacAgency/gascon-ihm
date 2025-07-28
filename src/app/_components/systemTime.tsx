@@ -44,7 +44,7 @@ export const SystemTime: FC<SystemTimeProps> = ({ className }) => {
   // If the client is not loaded, display a loading message
   if (!isClient) {
     return (
-      <div className={cn("text-center font-mono text-sm", className)}>
+      <div className={cn("text-center font-mono text-md", className)}>
         <div className="text-white">--:--:--</div>
         <div className="text-white">Chargement...</div>
       </div>
@@ -53,7 +53,7 @@ export const SystemTime: FC<SystemTimeProps> = ({ className }) => {
 
   // If the client is loaded, display the current time and date
   return (
-    <div className={cn("text-center font-mono text-sm", className)}>
+    <div className={cn("text-center font-mono text-xl", className)}>
       <div className="text-white opacity-60">{formatTime(currentTime)}</div>
       <div className="text-white opacity-60">{formatDate(currentTime)}</div>
     </div>

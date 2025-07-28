@@ -64,7 +64,7 @@ export const AgitationSettingsModal: FC<AgitationSettingsModalProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-grey text-white">
+        <Button size="xl" className="bg-grey text-white">
           <FaScrewdriverWrench />
         </Button>
       </DialogTrigger>

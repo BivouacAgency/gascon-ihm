@@ -25,7 +25,7 @@ export const EngineControlInfo: FC<EngineControlInfoProps> = ({ data }) => {
     <Table className="text-white">
       <TableBody>
         <TableRow>
-          <TableCell className="flex items-center gap-2 font-bold">
+          <TableCell className="flex items-center gap-4 font-bold">
             <StartStopButton
               isPlaying={data.m1Status}
               onClick={() => handleButtonClick({ engineId: 1 })}
@@ -39,7 +39,7 @@ export const EngineControlInfo: FC<EngineControlInfoProps> = ({ data }) => {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell className="flex items-center gap-2 font-bold">
+          <TableCell className="flex items-center gap-4 font-bold">
             <StartStopButton
               isPlaying={data.ev1Status}
               onClick={() => handleButtonClick({ engineId: 2 })}
@@ -53,7 +53,7 @@ export const EngineControlInfo: FC<EngineControlInfoProps> = ({ data }) => {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell className="flex items-center gap-2 font-bold">
+          <TableCell className="flex items-center gap-4 font-bold">
             <StartStopButton
               isPlaying={data.ev2Status}
               onClick={() => handleButtonClick({ engineId: 3 })}
@@ -67,7 +67,7 @@ export const EngineControlInfo: FC<EngineControlInfoProps> = ({ data }) => {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell className="flex items-center gap-2 font-bold">
+          <TableCell className="flex items-center gap-4 font-bold">
             <StartStopButton
               isPlaying={data.ev3Status}
               onClick={() => handleButtonClick({ engineId: 4 })}

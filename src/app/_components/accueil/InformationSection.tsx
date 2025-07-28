@@ -2,7 +2,7 @@
 
 import { useESP32Communication } from '@/hooks/useESP32Communication'
 import { ESP32Command } from '@/server/esp32-serial-protocol/types';
-import React, { useEffect, useState, type FC } from 'react'
+import React, { useEffect, useMemo, useState, type FC } from 'react'
 
 /**
  * Displays information about the current state of the system:
@@ -24,9 +24,18 @@ export const InformationSection: FC = () => {
     }
   }, [lastMessage, heatingInProgress]);
 
+  const messageToDisplay = useMemo(() => {
+    if (heatingInProgress) {
+      return "Chauffe en cours...";
+    }
+    return "Turbocuve 3000";
+  }, [heatingInProgress]);
+
   return (
-    <p className="text-center leading-relaxed text-white">
-        {heatingInProgress && "Chauffe en cours..."}
-    </p>
+    <div className="flex flex-col items-center justify-center h-full">
+      <p className="text-center leading-relaxed text-white text-2xl">
+        {messageToDisplay}
+      </p>
+    </div>
   )
 }

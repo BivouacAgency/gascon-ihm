@@ -32,9 +32,9 @@ export const SensorsInfo: FC<SensorsInfoProps> = ({
     <div className={className}>
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center">
-          <h3 className="text-lg font-semibold text-white">Capteurs</h3>
+          <div className="text-4xl font-semibold text-white mb-4">Capteurs</div>
           {isStale && (
-            <span className="ml-2 text-sm text-red-400 whitespace-nowrap">⚠️ Pas de données récentes</span>
+            <span className="ml-2 text-md text-red-400 whitespace-nowrap">⚠️ Pas de données récentes</span>
           )}
         </div>
         <StateLED isPlaying={isRecording} colorType="blueGrey" />

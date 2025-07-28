@@ -19,7 +19,7 @@ export const StateLED: FC<StateLEDProps> = ({
   return (
     <div
       className={cn(
-        "h-4 w-4 rounded-full",
+        "h-6 w-6 rounded-full",
         isPlaying ? activeColor : inactiveColor,
         className,
       )}
