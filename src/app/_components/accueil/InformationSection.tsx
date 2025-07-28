@@ -18,8 +18,11 @@ export const InformationSection: FC = () => {
   // Effect to update the heating in progress when the last message is received
   useEffect(() => {
     if (lastMessage) {
-        if (lastMessage.type === ESP32Command.MAN_HEAT_STATUS && !heatingInProgress) {
-            setHeatingInProgress(lastMessage.active === 1);
+        if (lastMessage.type === ESP32Command.MAN_HEAT_STATUS && !heatingInProgress && lastMessage.active === 1) {
+            setHeatingInProgress(true);
+        }
+        if (lastMessage.type === ESP32Command.MAN_HEAT_STATUS && heatingInProgress && lastMessage.active === 0) {
+            setHeatingInProgress(false);
         }
     }
   }, [lastMessage, heatingInProgress]);
@@ -30,6 +33,7 @@ export const InformationSection: FC = () => {
     }
     return "Turbocuve 3000";
   }, [heatingInProgress]);
+
 
   return (
     <div className="flex flex-col items-center justify-center h-full">
