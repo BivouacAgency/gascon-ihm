@@ -36,17 +36,14 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
   className,
 }) => {
   // Hook to send/receive commands from/to the ESP32
-  const { sendCommand, lastMessage } = useESP32Communication();
+  const { sendCommand, lastMessage: newMessage } = useESP32Communication();
 
   // Heating related states
   const [heatingInProgress, setHeatingInProgress] = useState(false);
-  const [heatingStartTimestamp, setHeatingStartTimestamp] = useState<number | undefined>(undefined);
   // Heating settings, set in the settings modal
   const [heatingSettings, setHeatingSettings] = useState<HeatingSettings>(defaultHeatingSettings);
   // Heating data, received from the ESP32
   const [heatingData, setHeatingData] = useState<HeatingData>({ ...defaultHeatingSettings, elapsedTime: 0, currentTemperature: 0 });
-  // Counter for consecutive active heat status frames
-  const [activeHeatStatusCount, setActiveHeatStatusCount] = useState(0);
 
   // Tracking the last heat status timestamp
   const [lastHeatStatusTimestamp, setLastHeatStatusTimestamp] = useState<number>(Date.now());
@@ -54,45 +51,22 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
 
   // Update the heating data when the last message is received
   useEffect(() => {
-    if (lastMessage?.type === ESP32Command.MAN_HEAT_STATUS) {
+    if (newMessage?.type === ESP32Command.MAN_HEAT_STATUS) {
       setLastHeatStatusTimestamp(Date.now());
-      
       // Update active status counter
-      if (lastMessage.active === 1) {
-        setActiveHeatStatusCount(prev => prev + 1);
-        if (activeHeatStatusCount >= 1) { // Wait for 2 consecutive active frames
-          setHeatingInProgress(true);
-          setHeatingStartTimestamp(lastMessage.timestamp);
-        }
+      if (newMessage.active === 1) {
+        setHeatingInProgress(true);
         setHeatingData({
           ...heatingSettings,
-          currentTemperature: lastMessage.current,
-          elapsedTime: lastMessage.elapsedTime,
+          currentTemperature: newMessage.current,
+          elapsedTime: newMessage.elapsedTime,
         });
       } else {
-        setActiveHeatStatusCount(0);
         setHeatingInProgress(false);
-        setHeatingStartTimestamp(undefined);
         setHeatingData({ ...defaultHeatingSettings, elapsedTime: 0, currentTemperature: 0 });
       }
     }
-    if (lastMessage?.type === ESP32Command.ACK) {
-      setActiveHeatStatusCount(0);
-      if (lastMessage.acknowledgedCommand === ESP32Command.MAN_HEAT_STOP) {
-        setHeatingInProgress(false);
-        setHeatingStartTimestamp(undefined);
-        setHeatingData({ ...defaultHeatingSettings, elapsedTime: 0, currentTemperature: 0 });
-      } else if (lastMessage.acknowledgedCommand === ESP32Command.MAN_HEAT_START) {
-        setHeatingInProgress(true);
-        // Initialize heating data with current settings to avoid visual bump
-        setHeatingData({
-          ...heatingSettings,
-          elapsedTime: 0,
-          currentTemperature: 0
-        });
-      }
-    }
-  }, [lastMessage, heatingSettings, activeHeatStatusCount]);
+  }, [newMessage, heatingSettings]);
 
   // Start/stop heating callback
   const handlePlayToggle = () => {
