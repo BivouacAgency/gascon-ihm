@@ -1,6 +1,6 @@
 "use client"
 
-import { useESP32Communication } from '@/hooks/useESP32Communication'
+import { useESP32Communication } from '@/app/_hooks/useESP32Communication'
 import { ESP32Command } from '@/server/esp32-serial-protocol/types';
 import React, { useEffect, useMemo, useState, type FC } from 'react'
 
