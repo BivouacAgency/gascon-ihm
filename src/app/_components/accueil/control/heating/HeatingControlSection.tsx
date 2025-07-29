@@ -5,10 +5,10 @@ import { HeatingSettingsModal } from "./HeatingSettingsModal";
 import { HeatingControlInfo } from "./HeatingControlInfo";
 import { ControlSectionWrapper } from "../ControlSectionWrapper";
 import { R1R2Options, type HeatingData, type HeatingSettings } from "@/types/forms/HeatingData";
-import { useESP32Communication } from "@/hooks/useESP32Communication";
+import { useESP32Communication } from "@/app/_hooks/useESP32Communication";
 import { Time } from "@internationalized/date";
 import { ESP32Command } from "@/server/esp32-serial-protocol/types";
-import { useStale } from "@/hooks/useStale";
+import { useStale } from "@/app/_hooks/useStale";
 
 // Constants
 const HEATING_STALE_THRESHOLD_MS = 3000;

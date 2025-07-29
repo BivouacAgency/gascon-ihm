@@ -8,6 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/app/_components/ui/form";
+import { useVirtualKeyboard } from "@/app/_hooks/useVirtualKeyboard";
 import { ClockIcon } from "lucide-react";
 import { DateInput } from "react-aria-components";
 import type { Control, FieldPath, FieldValues } from "react-hook-form";
@@ -29,6 +30,8 @@ export const AppDurationField = <
   name,
   label,
 }: AppDurationFieldProps<TFieldValues, TName>) => {
+  const { showKeyboard, hideKeyboard } = useVirtualKeyboard();
+
   return (
     <FormField
       control={control}
@@ -47,6 +50,13 @@ export const AppDurationField = <
                 shouldForceLeadingZeros={true}
                 hideTimeZone
                 hourCycle={undefined}
+                onFocusChange={(isFocused) => {
+                  if (isFocused) {
+                    void showKeyboard();
+                  } else {
+                    void hideKeyboard();
+                  }
+                }}
               >
                 <div className="relative">
                   <DateInput className="bg-grey border-input bg-background relative inline-flex h-9 w-full items-center overflow-hidden rounded-md border border-none px-3 py-2 text-sm whitespace-nowrap text-white shadow-xs transition-[color,box-shadow] outline-none [&>:first-child]:hidden [&>:nth-child(2)]:hidden [&>:nth-child(3)]:hidden">

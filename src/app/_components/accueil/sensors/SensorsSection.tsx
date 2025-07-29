@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState, type FC, useMemo } from "react";
-import { useStale } from "@/hooks/useStale";
+import { useStale } from "@/app/_hooks/useStale";
 import { SensorsInfo, type SensorData } from "./SensorsInfo";
 import { ESP32Command, type SensorReading } from "@/server/esp32-serial-protocol/types";
-import { useESP32Communication } from "@/hooks/useESP32Communication";
+import { useESP32Communication } from "@/app/_hooks/useESP32Communication";
 
 interface SensorsSectionProps {
   className?: string;

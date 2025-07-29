@@ -2,7 +2,7 @@
 
 import { Card } from "@/app/_components/ui/card";
 import { Button } from "@/app/_components/ui/button";
-import { useESP32Communication } from "@/hooks/useESP32Communication";
+import { useESP32Communication } from "@/app/_hooks/useESP32Communication";
 import { ESP32Command } from "@/server/esp32-serial-protocol/types";
 
 export default function Test() {

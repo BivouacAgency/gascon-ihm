@@ -7,6 +7,7 @@ import {
   FormLabel,
 } from "@/app/_components/ui/form";
 import { Input } from "@/app/_components/ui/input";
+import { useVirtualKeyboard } from "@/app/_hooks/useVirtualKeyboard";
 import type { Control, FieldPath, FieldValues } from "react-hook-form";
 
 export interface AppInputUnitFieldProps<
@@ -29,6 +30,8 @@ export const AppInputUnitField = <
   unit,
 }: AppInputUnitFieldProps<TFieldValues, TName>) => {
   const id = useId();
+  const { showKeyboard, hideKeyboard } = useVirtualKeyboard();
+
   return (
     <FormField
       control={control}
@@ -47,6 +50,7 @@ export const AppInputUnitField = <
                     {...field}
                     value={field.value}
                     onBlur={(e) => {
+                      void hideKeyboard();
                       const value = e.target.value;
                       if (value === "") {
                         field.onChange("");
@@ -55,6 +59,7 @@ export const AppInputUnitField = <
                       }
                     }}
                     onFocus={(e) => {
+                      void showKeyboard();
                       e.target.select();
                     }}
                   />
