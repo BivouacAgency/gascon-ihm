@@ -95,6 +95,7 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
           },
         },
       });
+      setLastHeatStatusTimestamp(Date.now());
     } else {
       sendCommand({
         payload: {
