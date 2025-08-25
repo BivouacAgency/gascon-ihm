@@ -27,7 +27,7 @@ export function useVirtualKeyboard() {
       if (!response.ok) {
         setState(prev => ({ 
           ...prev, 
-          error: data.error || 'Failed to show keyboard'
+          error: data.error ?? 'Failed to show keyboard'
         }));
         return;
       }
@@ -53,7 +53,7 @@ export function useVirtualKeyboard() {
       if (!response.ok) {
         setState(prev => ({ 
           ...prev, 
-          error: data.error || 'Failed to hide keyboard'
+          error: data.error ?? 'Failed to hide keyboard'
         }));
         return;
       }
