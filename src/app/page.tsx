@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Card } from "@/app/_components/ui/card";
 import { AgitationControlSection } from "./_components/accueil/control/agitation/AgitationControlSection";
 import { EngineControlSection } from "./_components/accueil/control/engine/EngineControlSection";
@@ -14,11 +13,11 @@ export default function Home() {
           <Card className="flex flex-col gap-4">
             <HeatingControlSection />
           </Card>
-          <Card className="flex flex-col gap-4">  
+          <Card className="flex flex-col gap-4">
             <AgitationControlSection />
           </Card>
           <Card className="grow">
-            <InformationSection/>
+            <InformationSection />
           </Card>
         </div>
 
@@ -27,7 +26,7 @@ export default function Home() {
             <EngineControlSection />
           </Card>
           <Card>
-            <SensorsSection className="grow"/>
+            <SensorsSection className="grow" />
           </Card>
         </div>
       </div>

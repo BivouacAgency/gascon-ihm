@@ -1,11 +1,27 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { z } from "zod";
 
 interface KeyboardState {
   isShowing: boolean;
   error: string | null;
 }
+
+// Zod schema for responses from /api/keyboard/show and /api/keyboard/hide
+const KeyboardOkResponseSchema = z.object({
+  status: z.enum(["shown", "hidden"]),
+  message: z.string().optional(),
+});
+
+const KeyboardErrorResponseSchema = z.object({
+  error: z.string(),
+});
+
+const KeyboardResponseSchema = z.union([
+  KeyboardOkResponseSchema,
+  KeyboardErrorResponseSchema,
+]);
 
 /**
  * useVirtualKeyboard
@@ -15,57 +31,79 @@ interface KeyboardState {
 export function useVirtualKeyboard() {
   const [state, setState] = useState<KeyboardState>({
     isShowing: false,
-    error: null
+    error: null,
   });
 
   const showKeyboard = useCallback(async () => {
     try {
-      setState(prev => ({ ...prev, error: null }));
+      setState((prev) => ({ ...prev, error: null }));
       const response = await fetch("/api/keyboard/show");
-      const data = await response.json();
-      
-      if (!response.ok) {
-        setState(prev => ({ 
-          ...prev, 
-          error: data.error ?? 'Failed to show keyboard'
+      const dataUnknown = await response.json();
+      const parsed = KeyboardResponseSchema.safeParse(dataUnknown);
+
+      if (!parsed.success) {
+        setState((prev) => ({
+          ...prev,
+          error: "Invalid response from server while showing keyboard",
         }));
         return;
       }
 
-      setState(prev => ({ 
-        ...prev, 
-        isShowing: true 
+      const data = parsed.data;
+
+      if ("error" in data) {
+        setState((prev) => ({ ...prev, error: data.error }));
+        return;
+      }
+
+      setState((prev) => ({
+        ...prev,
+        isShowing: true,
       }));
     } catch (error) {
-      setState(prev => ({ 
-        ...prev, 
-        error: error instanceof Error ? error.message : 'Unknown error showing keyboard'
+      setState((prev) => ({
+        ...prev,
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unknown error showing keyboard",
       }));
     }
   }, []);
 
   const hideKeyboard = useCallback(async () => {
     try {
-      setState(prev => ({ ...prev, error: null }));
+      setState((prev) => ({ ...prev, error: null }));
       const response = await fetch("/api/keyboard/hide");
-      const data = await response.json();
+      const dataUnknown = await response.json();
+      const parsed = KeyboardResponseSchema.safeParse(dataUnknown);
 
-      if (!response.ok) {
-        setState(prev => ({ 
-          ...prev, 
-          error: data.error ?? 'Failed to hide keyboard'
+      if (!parsed.success) {
+        setState((prev) => ({
+          ...prev,
+          error: "Invalid response from server while hiding keyboard",
         }));
         return;
       }
 
-      setState(prev => ({ 
-        ...prev, 
-        isShowing: false 
+      const data = parsed.data;
+
+      if ("error" in data) {
+        setState((prev) => ({ ...prev, error: data.error }));
+        return;
+      }
+
+      setState((prev) => ({
+        ...prev,
+        isShowing: false,
       }));
     } catch (error) {
-      setState(prev => ({ 
-        ...prev, 
-        error: error instanceof Error ? error.message : 'Unknown error hiding keyboard'
+      setState((prev) => ({
+        ...prev,
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unknown error hiding keyboard",
       }));
     }
   }, []);
@@ -74,6 +112,6 @@ export function useVirtualKeyboard() {
     showKeyboard,
     hideKeyboard,
     isShowing: state.isShowing,
-    error: state.error
+    error: state.error,
   };
-} 
+}
