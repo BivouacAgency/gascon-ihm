@@ -38,18 +38,7 @@ export function useVirtualKeyboard() {
     try {
       setState((prev) => ({ ...prev, error: null }));
       const response = await fetch("/api/keyboard/show");
-      const dataUnknown = await response.json();
-      const parsed = KeyboardResponseSchema.safeParse(dataUnknown);
-
-      if (!parsed.success) {
-        setState((prev) => ({
-          ...prev,
-          error: "Invalid response from server while showing keyboard",
-        }));
-        return;
-      }
-
-      const data = parsed.data;
+      const data = KeyboardResponseSchema.parse(await response.json());
 
       if ("error" in data) {
         setState((prev) => ({ ...prev, error: data.error }));
@@ -75,18 +64,7 @@ export function useVirtualKeyboard() {
     try {
       setState((prev) => ({ ...prev, error: null }));
       const response = await fetch("/api/keyboard/hide");
-      const dataUnknown = await response.json();
-      const parsed = KeyboardResponseSchema.safeParse(dataUnknown);
-
-      if (!parsed.success) {
-        setState((prev) => ({
-          ...prev,
-          error: "Invalid response from server while hiding keyboard",
-        }));
-        return;
-      }
-
-      const data = parsed.data;
+      const data = KeyboardResponseSchema.parse(await response.json());
 
       if ("error" in data) {
         setState((prev) => ({ ...prev, error: data.error }));
