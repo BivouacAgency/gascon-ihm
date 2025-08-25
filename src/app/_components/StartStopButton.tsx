@@ -15,7 +15,7 @@ export const StartStopButton: FC<StartStopButtonProps> = ({
   className,
 }) => {
   return (
-    <Button className={cn("bg-grey", className)} onClick={onClick}>
+    <Button size="xl" className={cn("bg-grey", className)} onClick={onClick}>
       {isPlaying ? <FaStop /> : <FaPlay />}
     </Button>
   );

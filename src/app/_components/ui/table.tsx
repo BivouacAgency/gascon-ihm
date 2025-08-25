@@ -12,7 +12,12 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
     >
       <table
         data-slot="table"
-        className={cn("w-full caption-bottom text-sm", className)}
+        className={cn(
+          "w-full caption-bottom text-sm",
+          // Override the defaults
+          "text-2xl",
+          className,
+        )}
         {...props}
       />
     </div>
@@ -87,7 +92,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
       className={cn(
         "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
         // Override the defaults
-        "p-1",
+        "p-3 px-0",
         className,
       )}
       {...props}

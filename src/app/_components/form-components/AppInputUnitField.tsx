@@ -45,7 +45,7 @@ export const AppInputUnitField = <
                 <div className="bg-grey flex rounded-md text-white shadow-xs">
                   <Input
                     id={id}
-                    className="-me-px rounded-e-none border-none shadow-none"
+                    className="rounded-e-none border-none shadow-none"
                     type="number"
                     {...field}
                     value={field.value}
@@ -63,7 +63,7 @@ export const AppInputUnitField = <
                       e.target.select();
                     }}
                   />
-                  <span className="bg-grey z-10 inline-flex items-center rounded-e-md border border-none px-3 text-sm text-white">
+                  <span className="bg-grey z-10 inline-flex items-center rounded-e-md border border-none px-6 text-2xl text-white">
                     {unit}
                   </span>
                 </div>

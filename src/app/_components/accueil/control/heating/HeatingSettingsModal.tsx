@@ -77,7 +77,7 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-grey text-white">
+        <Button size="xl" className="bg-grey text-white" >
           <FaScrewdriverWrench />
         </Button>
       </DialogTrigger>
@@ -132,10 +132,11 @@ export const HeatingSettingsModal: FC<HeatingSettingsModalProps> = ({
                 type="button"
                 variant="default"
                 onClick={() => setIsOpen(false)}
+                size="xl"
               >
                 Annuler
               </Button>
-              <Button type="submit" variant="default">
+              <Button type="submit" variant="default" size="xl">
                 Sauvegarder
               </Button>
             </div>

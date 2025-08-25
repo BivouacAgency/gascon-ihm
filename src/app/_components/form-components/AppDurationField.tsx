@@ -8,6 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/app/_components/ui/form";
+import { cn } from "@/lib/utils";
 import { useVirtualKeyboard } from "@/app/_hooks/useVirtualKeyboard";
 import { ClockIcon } from "lucide-react";
 import { DateInput } from "react-aria-components";
@@ -59,7 +60,10 @@ export const AppDurationField = <
                 }}
               >
                 <div className="relative">
-                  <DateInput className="bg-grey border-input bg-background relative inline-flex h-9 w-full items-center overflow-hidden rounded-md border border-none px-3 py-2 text-sm whitespace-nowrap text-white shadow-xs transition-[color,box-shadow] outline-none [&>:first-child]:hidden [&>:nth-child(2)]:hidden [&>:nth-child(3)]:hidden">
+                  <DateInput className={cn("bg-grey border-input bg-background relative inline-flex h-9 w-full items-center overflow-hidden rounded-md border border-none px-3 py-2 text-md whitespace-nowrap text-white shadow-xs transition-[color,box-shadow] outline-none [&>:first-child]:hidden [&>:nth-child(2)]:hidden [&>:nth-child(3)]:hidden", 
+                    // Override the defaults
+                    "text-2xl p-6 h-16 bg-grey",
+                  )}>
                     {(segment) => (
                       <DateSegment
                         className="rounded-none focus:bg-white/30"
@@ -67,8 +71,8 @@ export const AppDurationField = <
                       />
                     )}
                   </DateInput>
-                  <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 end-0 z-10 flex items-center justify-center pe-3 text-white">
-                    <ClockIcon size={16} aria-hidden="true" />
+                  <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 end-0 z-10 flex items-center justify-center p-6 text-white">
+                    <ClockIcon size={24} aria-hidden="true" />
                   </div>
                 </div>
               </TimeField>

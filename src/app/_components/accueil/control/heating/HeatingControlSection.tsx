@@ -128,7 +128,7 @@ export const HeatingControlSection: FC<HeatingControlSectionProps> = ({
         className={className}
       />
       {heatingInProgress && isHeatStatusStale && (
-        <div className="mt-1 text-sm text-red-400">
+        <div className="mt-1 text-md text-red-400">
           ⚠️ Pas de données récentes
         </div>
       )}

@@ -34,7 +34,7 @@ export const Navbar: FC = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="bg-dark-grey border-grey fixed right-0 bottom-0 left-0 z-40 flex border-t p-3 text-white lg:static lg:h-full lg:w-24 lg:flex-col lg:border-t-0 lg:border-r lg:p-4">
+    <nav className="bg-dark-grey border-grey fixed right-0 bottom-0 left-0 z-40 flex border-t p-3 text-white lg:static lg:h-full lg:w-32 lg:flex-col lg:border-t-0 lg:border-r lg:p-4">
       <div className="flex flex-1 flex-row items-center justify-center gap-4 md:gap-8 lg:flex-1 lg:flex-col lg:justify-center lg:gap-4">
         {navbarItems.map((item) => {
           const isActive = pathname === item.href;
@@ -47,7 +47,7 @@ export const Navbar: FC = () => {
               <NavbarItem
                 isActive={isActive}
                 IconComponent={item.icon}
-                size={28}
+                size={42}
               />
             </Link>
           );

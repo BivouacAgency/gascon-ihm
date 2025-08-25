@@ -12,7 +12,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
         "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
         "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
         // Overrides,
-        "focus-visible:ring-0 focus-visible:outline-none",
+        "focus-visible:ring-0 focus-visible:outline-none md:text-2xl p-6 h-16",
         className,
       )}
       {...props}
