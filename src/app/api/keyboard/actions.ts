@@ -5,64 +5,33 @@ import { promisify } from "util";
 
 const execAsync = promisify(exec);
 
-async function isKeyboardRunning(): Promise<boolean> {
-  try {
-    const { stdout } = await execAsync("pgrep squeekboard");
-    return stdout.trim().length > 0;
-  } catch {
-    return false;
-  }
-}
+// squeekboard is controlled via DBus (sm.puri.OSK0) rather than process
+// start/stop, so it doesn't require Wayland env vars in the Node.js process.
+const DBUS_SEND =
+  "dbus-send --session --type=method_call --dest=sm.puri.OSK0 /sm/puri/OSK0 sm.puri.OSK0.SetVisible";
 
-async function startKeyboard(): Promise<void> {
-  try {
-    // Start squeekboard in the background
-    await execAsync("squeekboard &");
-    
-    // Wait a bit to ensure the process starts
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // Verify it's running
-    const running = await isKeyboardRunning();
-    if (!running) {
-      throw new Error("Failed to start keyboard process");
-    }
-  } catch (error) {
-    throw new Error(`Failed to start keyboard: ${error instanceof Error ? error.message : String(error)}`);
-  }
+async function setKeyboardVisible(visible: boolean): Promise<void> {
+  await execAsync(`${DBUS_SEND} boolean:${visible}`);
 }
 
 export async function showKeyboard() {
   try {
-    const isRunning = await isKeyboardRunning();
-    if (isRunning) {
-      return { status: "shown", message: "Keyboard was already running" };
-    }
-
-    await startKeyboard();
+    await setKeyboardVisible(true);
     return { status: "shown" };
   } catch (error) {
-    throw new Error(`Failed to show keyboard: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to show keyboard: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }
 
 export async function hideKeyboard() {
   try {
-    const isRunning = await isKeyboardRunning();
-    if (!isRunning) {
-      return { status: "hidden", message: "Keyboard was not running" };
-    }
-
-    await execAsync("pkill squeekboard");
-    
-    // Verify it's stopped
-    const stillRunning = await isKeyboardRunning();
-    if (stillRunning) {
-      throw new Error("Failed to stop keyboard process");
-    }
-    
+    await setKeyboardVisible(false);
     return { status: "hidden" };
   } catch (error) {
-    throw new Error(`Failed to hide keyboard: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to hide keyboard: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 } 
