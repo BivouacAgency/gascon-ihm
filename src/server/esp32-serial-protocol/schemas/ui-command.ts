@@ -23,6 +23,7 @@ export const UICommandSchema = z.object({
       action: z.literal(ESP32Command.MAN_ACT),
       data: z.object({
         command: z.number().min(0).max(1),
+        actuator: z.number().min(0).max(15),
       }),
     }),
   ]),
