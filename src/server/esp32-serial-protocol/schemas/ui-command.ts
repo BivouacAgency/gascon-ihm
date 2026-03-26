@@ -19,6 +19,12 @@ export const UICommandSchema = z.object({
     z.object({
       action: z.literal(ESP32Command.MAN_HEAT_STOP),
     }),
+    z.object({
+      action: z.literal(ESP32Command.MAN_ACT),
+      data: z.object({
+        command: z.number().min(0).max(1),
+      }),
+    }),
   ]),
 });
 

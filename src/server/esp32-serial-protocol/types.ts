@@ -13,8 +13,9 @@ export enum ESP32Command {
   MAN_HEAT_STATUS = "MAN_HEAT_STATUS",
   STATUS_UPDATE = "STATUS_UPDATE",
   SENSOR_DATA = "SENSOR_DATA",
-  ACK = "ACK",    
+  ACK = "ACK",
   PONG = "PONG",
+  MAN_ACT= "MAN_ACTUATOR"
 }
 
 // Operating modes
@@ -29,6 +30,7 @@ export const CMD_IDS: Record<ESP32Command, number> = {
   [ESP32Command.PING]: 0x01,
   [ESP32Command.MAN_HEAT_START]: 0x11,
   [ESP32Command.MAN_HEAT_STOP]: 0x12,
+  [ESP32Command.MAN_ACT]: 0x04,
   // Incoming commands
   [ESP32Command.PONG]: 0x81,
   [ESP32Command.STATUS_UPDATE]: 0x82,

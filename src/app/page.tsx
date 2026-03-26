@@ -4,6 +4,7 @@ import { EngineControlSection } from "./_components/accueil/control/engine/Engin
 import { HeatingControlSection } from "./_components/accueil/control/heating/HeatingControlSection";
 import { SensorsSection } from "./_components/accueil/sensors/SensorsSection";
 import { InformationSection } from "./_components/accueil/InformationSection";
+import { TempCmd } from "./_components/accueil/control/act/TempCmd";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
         <div className="flex min-w-128 flex-col gap-4">
           <Card className="flex flex-col gap-4">
             <HeatingControlSection />
+            <TempCmd />
           </Card>
           <Card className="flex flex-col gap-4">
             <AgitationControlSection />

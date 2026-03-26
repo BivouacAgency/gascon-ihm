@@ -23,14 +23,30 @@ export class CommandEncoder {
    */
   public static encodeManualHeatStart(sensorId: number, target: number, holdMs: number, mask: number): Buffer {
     const payload = Buffer.alloc(8);
-    
+
     payload.writeUInt8(sensorId, 0);      // sensor_id: uint8
     payload.writeUInt16LE(target, 1);     // target: uint16 (little-endian)
     payload.writeUInt32LE(holdMs, 3);     // hold_ms: uint32 (little-endian)
     payload.writeUInt8(mask, 7);          // mask: uint8
-    
+
     return CommandEncoder.encodeCommand(CMD_IDS.MAN_HEAT_START, payload);
   }
+
+
+  /**
+   * Encodes a manual actuator command
+   */
+  public static encodeManualActuator(command: number): Buffer {
+    const payload = Buffer.alloc(2);
+
+    payload.writeUInt8(0, 0);
+    payload.writeUInt8(command, 0);
+
+
+    return CommandEncoder.encodeCommand(CMD_IDS.MAN_ACTUATOR, Buffer.alloc(1));
+  }
+
+
 
   /**
    * Encodes a manual heat stop command
