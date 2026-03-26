@@ -36,7 +36,7 @@ export class CommandEncoder {
   /**
    * Encodes a manual actuator command
    */
-  public static encodeManualActuator(command: number, actuator: number): Buffer {
+  public static encodeManualActuator(actuator: number, command: number): Buffer {
     const payload = Buffer.alloc(2);
 
     payload.writeUInt8(actuator, 0);

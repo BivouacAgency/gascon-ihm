@@ -196,6 +196,13 @@ class UARTBridge {
           console.log("📤 [Frontend → ESP32]", data);
           const command = this.formatCommandForESP32(data);
           if (this.port && command) {
+            const frameHex = command.toString("hex").toUpperCase();
+            const frameBytes = Array.from(command)
+              .map((byte) => byte.toString(16).padStart(2, "0").toUpperCase())
+              .join(" ");
+            console.log(
+              `🧾 [UART TX] len=${command.length} bytes | hex=${frameHex} | bytes=[${frameBytes}]`,
+            );
             this.port.write(command);
             
             // In mock mode, simulate ESP32 responses
