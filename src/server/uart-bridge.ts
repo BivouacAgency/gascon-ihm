@@ -261,8 +261,8 @@ class UARTBridge {
           `🔌 [UART] Manual actuator command: command=${uiCommand.payload.data.command}, actuator=${uiCommand.payload.data.actuator}`,
         );
         return CommandEncoder.encodeManualActuator(
-          uiCommand.payload.data.command,
           uiCommand.payload.data.actuator,
+          uiCommand.payload.data.command,
         );
     }
   }
