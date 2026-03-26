@@ -59,6 +59,8 @@ export function useESP32Communication(): UseESP32CommunicationReturn {
     socket.on("uart-error", handleUartError);
     socket.on("error", handleSocketError);
 
+    if (socket.connected) setIsConnected(true);
+
     return () => {
       socket.off("connect", handleConnect);
       socket.off("disconnect", handleDisconnect);
