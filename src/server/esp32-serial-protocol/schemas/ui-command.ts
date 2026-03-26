@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ManHeatStartDataSchema } from "./man-heat-start";
 import { ESP32Command } from "../types";
+import { ActuatorDataSchema } from "./actuator";
 
 // This file contains the schemas for the UI command
 // Frontend -> ESP32
@@ -21,12 +22,9 @@ export const UICommandSchema = z.object({
     }),
     z.object({
       action: z.literal(ESP32Command.MAN_ACT),
-      data: z.object({
-        command: z.number().min(0).max(1),
-        actuator: z.number().min(0).max(15),
-      }),
+      data: ActuatorDataSchema,
     }),
   ]),
 });
 
-export type UICommand = z.infer<typeof UICommandSchema>; 
+export type UICommand = z.infer<typeof UICommandSchema>;

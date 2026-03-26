@@ -20,6 +20,7 @@ export const SelectActuator: FC = () => {
     }));
 
     const handleActuatorON = () => {
+        console.log(`🔌 [SelectActuator] Actuator ON: ${actuatorId}`);
         sendCommand({
             payload: {
                 action: ESP32Command.MAN_ACT,
@@ -32,6 +33,7 @@ export const SelectActuator: FC = () => {
     }
 
     const handleActuatorOFF = () => {
+        console.log(`🔌 [SelectActuator] Actuator OFF: ${actuatorId}`);
         sendCommand({
             payload: {
                 action: ESP32Command.MAN_ACT,

@@ -255,6 +255,15 @@ class UARTBridge {
       case ESP32Command.MAN_HEAT_STOP:
         console.log("🛑 [UART] Stop heating command received");
         return CommandEncoder.encodeManualHeatStop();
+
+      case ESP32Command.MAN_ACT:
+        console.log(
+          `🔌 [UART] Manual actuator command: command=${uiCommand.payload.data.command}, actuator=${uiCommand.payload.data.actuator}`,
+        );
+        return CommandEncoder.encodeManualActuator(
+          uiCommand.payload.data.command,
+          uiCommand.payload.data.actuator,
+        );
     }
   }
 

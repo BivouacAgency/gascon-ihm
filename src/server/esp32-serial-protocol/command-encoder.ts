@@ -36,14 +36,14 @@ export class CommandEncoder {
   /**
    * Encodes a manual actuator command
    */
-  public static encodeManualActuator(command: number): Buffer {
+  public static encodeManualActuator(command: number, actuator: number): Buffer {
     const payload = Buffer.alloc(2);
 
-    payload.writeUInt8(0, 0);
+    payload.writeUInt8(actuator, 0);
     payload.writeUInt8(command, 0);
 
 
-    return CommandEncoder.encodeCommand(CMD_IDS.MAN_ACTUATOR, Buffer.alloc(1));
+    return CommandEncoder.encodeCommand(CMD_IDS[ESP32Command.MAN_ACT], payload);
   }
 
 
